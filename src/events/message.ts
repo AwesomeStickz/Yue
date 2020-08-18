@@ -15,6 +15,7 @@ export const run = async (client: Client, message: Message): Promise<Message | v
         let command = args.shift()?.toUpperCase() || '';
 
         if (aliases.has(command)) command = aliases.get(command) as string;
+        else if (aliases.has(`${command} ${args[0].toUpperCase()}`)) command = aliases.get(`${command} ${args.shift()?.toUpperCase()}`) as string;
         else return;
 
         const owners = await database.getProp('yue', client.user!.id, 'owners');
@@ -22,6 +23,8 @@ export const run = async (client: Client, message: Message): Promise<Message | v
         if ((commands.get(command) as any).config.owner == true && !owners.includes(message.author.id)) return;
 
         if ((commands.get(command) as any).config.args > args.length) return message.channel.send(`Invalid arguments. Correct usage: \`${prefix}${(commands.get(command) as any).help.usage}\``);
+
+        if (!(commands.get(command) as any).config.subCommand) command = command.replace(/ /g, '');
 
         const commandName = command.toLowerCase();
         const commandFile = require(`../commands/${commandName}`);
