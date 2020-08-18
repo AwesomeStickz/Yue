@@ -24,7 +24,7 @@ export const run = async (client: Client, message: Message): Promise<Message | v
         if ((commands.get(command) as any).config.args > args.length) return message.channel.send(`Invalid arguments. Correct usage: \`${prefix}${(commands.get(command) as any).help.usage}\``);
 
         const commandName = command.toLowerCase();
-        const commandFile = require(`../commands/${commandName}.js`);
+        const commandFile = require(`../commands/${commandName}`);
 
         commandFile.run(message, client, args);
     } catch (error) {
