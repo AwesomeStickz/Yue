@@ -34,5 +34,5 @@ export const help = {
 
 export const config = {
     args: 1,
-    restricted: true,
+    owner: true,
 };
