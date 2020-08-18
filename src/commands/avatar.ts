@@ -19,7 +19,7 @@ export const run = async (message: Message, client: Client, args: string[]) => {
 };
 
 export const help = {
-    aliases: ['avatar'],
+    aliases: ['avatar', 'av'],
     name: 'AVATAR',
     description: 'Displays the avatar of someone',
     usage: 'avatar @user',
