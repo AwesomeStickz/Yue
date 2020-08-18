@@ -25,14 +25,14 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     const luckOptions = ['0%', '100%', 'default'];
 
     if (luckOptions.includes(args[1])) {
-        if (args[2] === '0%') {
+        if (args[1] === '0%') {
             database.setProp('economy', user.id, 0, 'luck');
         } else if (args[1] === '100%') {
             database.setProp('economy', user.id, 100, 'luck');
         } else if (args[1] === 'default') {
             database.deleteProp('economy', user.id, 'luck');
         }
-        luckSetEmbed.setDescription(`${emojis.tickYes} <@${user}>'s luck has been set to **${args[1]}**`);
+        luckSetEmbed.setDescription(`${emojis.tickYes} ${user.toString()}'s luck has been set to **${args[1]}**`);
         return message.channel.send(luckSetEmbed);
     } else {
         luckSetEmbed.setDescription(`${emojis.tickNo} That's not a valid option! The valid options are \`0%\`, \`100%\`, \`default\``);
