@@ -2,7 +2,7 @@ import { Client, Message } from 'discord.js';
 import { aliases, commands } from '../utils/commandsAndAliases';
 import { database } from '../utils/databaseFunctions';
 
-export const run = async (message: Message, client: Client): Promise<Message | void> => {
+export const run = async (client: Client, message: Message): Promise<Message | void> => {
     if (message.author.bot) return;
     if (message.channel.type !== 'text' || !message.member || !message.guild) return;
 
