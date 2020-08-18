@@ -34,7 +34,7 @@ export const database = {
     async getProp(model: DatbaseModelNames, userid: string, prop: PropertyNames) {
         const result: any = (await sequelize.models[model].findOne({ attributes: ['data'], raw: true, where: { userid } })) || { data: null };
 
-        return lodash.get(result.data, prop) || null;
+        return lodash.get(result.data, prop);
     },
 
     async set(model: DatbaseModelNames, userid: string, data: any) {
