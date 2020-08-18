@@ -12,9 +12,9 @@ fs.readdir('./commands/', (error, files) => {
     files.forEach((file) => {
         const props = require(`./commands/${file}`);
         props.fileName = file;
-        commands.set(props.help.name.replace(/ /g, '').toUpperCase(), props);
+        commands.set(props.help.name.toUpperCase(), props);
         props.help.aliases.forEach((alias: string) => {
-            aliases.set(alias.toUpperCase(), props.help.name.replace(/ /g, '').toUpperCase());
+            aliases.set(alias.toUpperCase(), props.help.name.toUpperCase());
         });
     });
     console.log(`[Commands]\tLoaded a total amount of ${files.length} commands`);
