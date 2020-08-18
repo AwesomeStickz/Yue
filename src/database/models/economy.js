@@ -8,6 +8,7 @@ export const economy = define('economy', {
     data: {
         type: JSONB,
         balance: NUMBER,
+        luck: NUMBER,
         streak: NUMBER,
         defaultValue: {},
     },
