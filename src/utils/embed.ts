@@ -7,7 +7,7 @@ interface EmbedField {
 }
 
 interface EmbedOptions {
-    author?: { name: string; image: string | undefined };
+    author?: { name: string; image?: string | undefined };
     color?: string;
     desc?: string;
     fields?: EmbedField[];
