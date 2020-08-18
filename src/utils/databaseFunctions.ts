@@ -87,7 +87,7 @@ export const database = {
         else await sequelize.models[model].create({ userid, data: -number });
     },
 
-    async subtractProp(model: DatbaseModelNames, userid: string, number: number | string, prop: PropertyNames, deleteIfZero = true) {
+    async subtractProp(model: DatbaseModelNames, userid: string, number: number | string, prop: PropertyNames) {
         let exist = (await this.get(model, userid)) || {};
         if (exist === 0 || exist === '') exist = true;
 
@@ -95,8 +95,9 @@ export const database = {
 
         const previous = lodash.get(exist, prop) || 0;
         const obj = lodash.set(exist, prop, previous - number);
+        const keepIfLesserThanZero = ['winnings'];
 
-        if (lodash.get(obj, prop) <= 0 && deleteIfZero) await this.deleteProp(model, userid, prop);
+        if (lodash.get(obj, prop) <= 0 && !keepIfLesserThanZero.includes(prop)) await this.deleteProp(model, userid, prop);
         else await this.set(model, userid, obj);
     },
 };
