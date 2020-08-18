@@ -8,6 +8,10 @@ export const run = async (message: Message): Promise<Message | void> => {
     if (balance == 0)
         return message.channel.send(
             embed({
+                author: {
+                    image: message.author.displayAvatarURL(),
+                    name: message.author.username,
+                },
                 color: message.guild?.me?.displayHexColor,
                 desc: `${emojis.tickNo} You need at least **$1** to use this command!`,
             })
