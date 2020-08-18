@@ -39,7 +39,11 @@ export const run = async (message: Message): Promise<Message | void> => {
 
                 const donMessage = await message.channel.send(donEmbed);
                 const rand = ['w', 'l'];
-                const result = rand[Math.floor(Math.random() * rand.length)];
+                let result = rand[Math.floor(Math.random() * rand.length)];
+
+                const userLuck = await database.getProp('economy', message.author.id, 'luck');
+                if (userLuck == 0) result = 'l';
+                else if (userLuck == 100) result = 'w';
 
                 if (result === 'w') {
                     setTimeout(async () => {
