@@ -1,7 +1,7 @@
 import { ARRAY, JSONB, STRING } from 'sequelize';
 import { define } from '../sequelize';
 
-export const ventura = define('ventura', {
+export const yue = define('yue', {
     userid: {
         type: STRING,
     },

@@ -1,7 +1,7 @@
 import lodash from 'lodash';
 import sequelize from '../database/sequelize';
 
-type DatbaseModelNames = 'cooldown' | 'economy' | 'guildsettings' | 'ventura';
+type DatbaseModelNames = 'cooldown' | 'economy' | 'guildsettings' | 'yue';
 type PropertyNames = 'balance' | 'daily' | 'owners' | 'prefix' | 'streak' | 'winnings';
 
 export const database = {

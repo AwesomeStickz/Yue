@@ -17,7 +17,7 @@ export const run = async (message: Message, client: Client): Promise<Message | v
         if (aliases.has(command)) command = aliases.get(command) as string;
         else return;
 
-        const owners = await database.getProp('ventura', client.user!.id, 'owners');
+        const owners = await database.getProp('yue', client.user!.id, 'owners');
 
         if ((commands.get(command) as any).config.restricted == true && !owners.includes(message.author.id)) return;
 
