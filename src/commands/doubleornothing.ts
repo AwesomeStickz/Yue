@@ -57,6 +57,7 @@ export const run = async (message: Message): Promise<Message | void> => {
             .then(async (collected) => {
                 const response = collected.first()?.content.toLowerCase();
                 if ((response === 'yes' || response === 'y') && collected.first()?.author.id === message.author.id) {
+                    tempCache.set(`don_${message.author.id}`, Date.now());
                     await donMessage.edit(donEmbed.setDescription('You bet all of your money and...'));
 
                     const rand = ['w', 'l'];
