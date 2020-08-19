@@ -11,7 +11,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     });
 
     if (!user) return message.channel.send(balanceEmbed.setDescription(`${emojis.tickNo} I couldn't find that user!`));
-    if (user.bot) return message.channel.send(balanceEmbed.setDescription(`${emojis.tickNo} Bots doesn't have bank accounts!`));
+    if (user.bot) return message.channel.send(balanceEmbed.setDescription(`${emojis.tickNo} You can't set balance of bots!`));
     if (isNaN(Number(args[1]))) return message.channel.send(balanceEmbed.setDescription(`${emojis.tickNo} Balance amount must be a number!`));
 
     const balance = Number(args[1]);

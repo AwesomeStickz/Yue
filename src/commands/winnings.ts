@@ -6,7 +6,7 @@ import { utils } from '../utils/utils';
 
 export const run = async (message: Message, client: Client, args: string[]): Promise<Message | void> => {
     const user = (await utils.getUser(args.join(' '), client)) || message.author;
-    if (user.bot) return message.channel.send(`${emojis.tickNo} Bots doesn't have bank accounts`);
+    if (user.bot) return message.channel.send(`${emojis.tickNo} Bots don't have bank accounts!`);
 
     const winnings = (await database.getProp('economy', user.id, 'winnings')) || 0;
 
