@@ -18,7 +18,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     if (user.bot) return message.channel.send(giveEmbed.setDescription(`${emojis.tickNo} You can't give money to bots!`));
     if (user.id === message.author.id) return message.channel.send(giveEmbed.setDescription(`${emojis.tickNo} You can't give money to yourself`));
 
-    const balance: number = await database.getProp('economy', message.author.id, 'balance');
+    const balance: number = (await database.getProp('economy', message.author.id, 'balance')) || 0;
 
     const amountString = args[1].toLowerCase();
     let amount = Number(amountString);
