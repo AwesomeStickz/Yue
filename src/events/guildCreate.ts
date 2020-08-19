@@ -5,7 +5,7 @@ export const run = async (client: Client, guild: Guild) => {
     const logChannel = client.channels.cache.get('744852807437516871') as TextChannel;
 
     const logEmbed = embed({
-        color: '#00b0ff',
+        color: logChannel.guild.me?.displayHexColor,
         thumbnail: guild.iconURL() || '',
         title: `Joined ${guild.name}`,
         fields: [
