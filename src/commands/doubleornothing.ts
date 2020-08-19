@@ -3,11 +3,12 @@ import prettyMs from 'pretty-ms';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
+import { tempCache } from '../utils/tempCache';
 
 export const run = async (message: Message): Promise<Message | void> => {
     const { cooldown } = help;
 
-    const lastDon = (await database.getProp('cooldown', message.author.id, 'don')) || 0;
+    const lastDon = tempCache.get(`don_${message.author.id}`) || 0;
     const time = prettyMs(cooldown - (Date.now() - lastDon), { secondsDecimalDigits: 0, verbose: true });
 
     if (cooldown - (Date.now() - lastDon) > 0) {
@@ -22,6 +23,8 @@ export const run = async (message: Message): Promise<Message | void> => {
             })
         );
     } else if (cooldown - (Date.now() - lastDon) <= 0) {
+        tempCache.set(`don_${message.author.id}`, Date.now());
+
         const balance = (await database.getProp('economy', message.author.id, 'balance')) || 0;
         if (balance == 0)
             return message.channel.send(
@@ -46,7 +49,6 @@ export const run = async (message: Message): Promise<Message | void> => {
         });
 
         await message.channel.send(donEmbed);
-        await database.setProp('cooldown', message.author.id, Date.now(), 'don');
         donEmbed.setFooter('');
 
         message.channel
