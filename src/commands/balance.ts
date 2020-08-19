@@ -6,20 +6,20 @@ import { utils } from '../utils/utils';
 
 export const run = async (message: Message, client: Client, args: string[]): Promise<Message | void> => {
     const user = (await utils.getUser(args.join(' '), client)) || message.author;
-    if (user.bot) return message.channel.send(`${emojis.tickNo} Bots don't have bank accounts!`);
+    const balanceEmbed = embed({
+        author: {
+            image: message.author.displayAvatarURL(),
+            name: message.author.username,
+        },
+        color: message.guild?.me?.displayHexColor,
+    });
+
+    if (user.bot) return message.channel.send(balanceEmbed.setDescription(`${emojis.tickNo} Bots don't have bank accounts!`));
 
     const balance = (await database.getProp('economy', user.id, 'balance')) || 0;
 
-    const balanceEmbed = embed({
-        author: {
-            image: user.displayAvatarURL(),
-            name: user.username,
-        },
-        color: message.guild?.me?.displayHexColor,
-        desc: `${user.id === message.author.id ? 'Your' : 'Their'} balance: **$${balance.toLocaleString()}**`,
-    });
-
-    message.channel.send(balanceEmbed);
+    balanceEmbed.setAuthor(user.username, user.displayAvatarURL());
+    message.channel.send(balanceEmbed.setDescription(`${user.id === message.author.id ? 'Your' : 'Their'} balance: **$${balance.toLocaleString()}**`));
 };
 
 export const help = {
