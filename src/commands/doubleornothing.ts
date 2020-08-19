@@ -9,9 +9,10 @@ export const run = async (message: Message): Promise<Message | void> => {
     const { cooldown } = help;
 
     const lastDon = tempCache.get(`don_${message.author.id}`) || 0;
-    const time = prettyMs(cooldown - (Date.now() - lastDon), { secondsDecimalDigits: 0, verbose: true });
+    const remainingCooldown = cooldown - (Date.now() - lastDon);
+    const time = remainingCooldown > 1000 ? prettyMs(remainingCooldown, { secondsDecimalDigits: 0, verbose: true }) : `${(remainingCooldown / 1000).toFixed(1)} seconds`;
 
-    if (cooldown - (Date.now() - lastDon) > 0) {
+    if (remainingCooldown > 0) {
         message.channel.send(
             embed({
                 author: {
@@ -22,7 +23,7 @@ export const run = async (message: Message): Promise<Message | void> => {
                 desc: `${emojis.tickNo} This command is in cooldown! Come back in ${time}`,
             })
         );
-    } else if (cooldown - (Date.now() - lastDon) <= 0) {
+    } else if (remainingCooldown <= 0) {
         tempCache.set(`don_${message.author.id}`, Date.now());
 
         const balance = (await database.getProp('economy', message.author.id, 'balance')) || 0;

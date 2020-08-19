@@ -7,7 +7,8 @@ export const run = async (message: Message): Promise<Message | void> => {
     const { cooldown } = help;
 
     const lastWeekly = (await database.getProp('cooldown', message.author.id, 'weekly')) || 0;
-    const time = prettyMs(cooldown - (Date.now() - lastWeekly), { secondsDecimalDigits: 0, verbose: true });
+    const remainingCooldown = cooldown - (Date.now() - lastWeekly);
+    const time = remainingCooldown > 1000 ? prettyMs(remainingCooldown, { secondsDecimalDigits: 0, verbose: true }) : `${(remainingCooldown / 1000).toFixed(1)} seconds`;
 
     const weeklyEmbed = embed({
         author: {
@@ -17,9 +18,9 @@ export const run = async (message: Message): Promise<Message | void> => {
         color: message.guild?.me?.displayHexColor,
     });
 
-    if (cooldown - (Date.now() - lastWeekly) > 0) {
+    if (remainingCooldown > 0) {
         weeklyEmbed.setDescription(`You collected your weekly reward already! Come back in ${time}!`);
-    } else if (cooldown - (Date.now() - lastWeekly) <= 0) {
+    } else if (remainingCooldown <= 0) {
         await database.setProp('cooldown', message.author.id, Date.now(), 'weekly');
 
         weeklyEmbed.setDescription(`You collected your weekly bonus of **$4,000**`);

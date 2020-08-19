@@ -8,7 +8,8 @@ export const run = async (message: Message): Promise<Message | void> => {
     const streakResetTime = 1.728e8;
 
     const lastDaily = (await database.getProp('cooldown', message.author.id, 'daily')) || 0;
-    const time = prettyMs(cooldown - (Date.now() - lastDaily), { secondsDecimalDigits: 0, verbose: true });
+    const remainingCooldown = cooldown - (Date.now() - lastDaily);
+    const time = remainingCooldown > 1000 ? prettyMs(remainingCooldown, { secondsDecimalDigits: 0, verbose: true }) : `${(remainingCooldown / 1000).toFixed(1)} seconds`;
 
     const dailyEmbed = embed({
         author: {
@@ -18,9 +19,9 @@ export const run = async (message: Message): Promise<Message | void> => {
         color: message.guild?.me?.displayHexColor,
     });
 
-    if (cooldown - (Date.now() - lastDaily) > 0) {
+    if (remainingCooldown > 0) {
         dailyEmbed.setDescription(`You collected your daily reward already! Come back in ${time}!`);
-    } else if (cooldown - (Date.now() - lastDaily) <= 0) {
+    } else if (remainingCooldown <= 0) {
         const streak = (await database.getProp('economy', message.author.id, 'streak')) || 0;
 
         if (lastDaily && streakResetTime - (Date.now() - lastDaily) <= 0) {
