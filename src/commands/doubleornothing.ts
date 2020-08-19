@@ -57,9 +57,8 @@ export const run = async (message: Message): Promise<Message | void> => {
             .then(async (collected) => {
                 const response = collected.first()?.content.toLowerCase();
                 if ((response === 'yes' || response === 'y') && collected.first()?.author.id === message.author.id) {
-                    donEmbed.setDescription('You bet all of your money and...');
+                    await donMessage.edit(donEmbed.setDescription('You bet all of your money and...'));
 
-                    await donMessage.edit(donEmbed);
                     const rand = ['w', 'l'];
                     let result = rand[Math.floor(Math.random() * rand.length)];
 
@@ -69,15 +68,13 @@ export const run = async (message: Message): Promise<Message | void> => {
 
                     if (result === 'w') {
                         setTimeout(async () => {
-                            donEmbed.setDescription(`You just doubled your money and got **+$${(balance * 2).toLocaleString()}** totally!`);
-                            donMessage.edit(donEmbed);
+                            donMessage.edit(donEmbed.setDescription(`You just doubled your money and got **+$${(balance * 2).toLocaleString()}**`));
                             await database.addProp('economy', message.author.id, balance, 'balance');
                             await database.addProp('economy', message.author.id, balance, 'winnings');
                         }, 2000);
                     } else {
                         setTimeout(async () => {
-                            donEmbed.setDescription(`You just lost your bet money **-$${balance.toLocaleString()}**`);
-                            donMessage.edit(donEmbed);
+                            donMessage.edit(donEmbed.setDescription(`You just lost your bet money **-$${balance.toLocaleString()}**`));
                             await database.deleteProp('economy', message.author.id, 'balance');
                             await database.subtractProp('economy', message.author.id, balance, 'winnings');
                         }, 2000);
