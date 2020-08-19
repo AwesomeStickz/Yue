@@ -53,5 +53,4 @@ export const help = {
 
 export const config = {
     args: 0,
-    owner: false,
 };
