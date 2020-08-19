@@ -26,7 +26,7 @@ export const help = {
     name: 'Balance Set',
     description: "Set someone's balance",
     usage: 'balance set <user> <amount>',
-    example: 'balance set @* 500',
+    example: 'balance set @Conor#0751 500',
 };
 
 export const config = {

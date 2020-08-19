@@ -27,7 +27,7 @@ export const help = {
     name: 'winnings',
     description: 'Sends your winnings',
     usage: 'winnings <user>',
-    example: 'winnings\nwinnings @*',
+    example: 'winnings\nwinnings @Conor#0751',
 };
 
 export const config = {

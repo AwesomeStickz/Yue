@@ -27,7 +27,7 @@ export const help = {
     name: 'Balance',
     description: 'Sends your balance',
     usage: 'balance <user>',
-    example: 'balance\nbalance @*',
+    example: 'balance\nbalance @Conor#0751',
 };
 
 export const config = {

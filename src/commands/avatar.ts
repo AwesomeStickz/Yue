@@ -23,7 +23,7 @@ export const help = {
     name: 'AVATAR',
     description: 'Displays the avatar of someone',
     usage: 'avatar @user',
-    example: 'avatar @*',
+    example: 'avatar @Conor#0751',
 };
 
 export const config = {

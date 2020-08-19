@@ -45,7 +45,7 @@ export const help = {
     name: 'Luck Set',
     description: "Change someone's luck",
     usage: 'luck set <user> <luck %>',
-    example: 'luck set @* 0%',
+    example: 'luck set @Conor#0751 0%\nluck set @Conor#0751 100%\nluck set @Conor#0751 default',
 };
 
 export const config = {
