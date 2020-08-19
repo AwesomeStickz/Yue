@@ -7,7 +7,7 @@ export const run = async (message: Message): Promise<Message | void> => {
     const { cooldown } = help;
     const streakResetTime = 1.728e8;
 
-    const lastDaily = await database.getProp('cooldown', message.author.id, 'daily');
+    const lastDaily = (await database.getProp('cooldown', message.author.id, 'daily')) || 0;
     const time = prettyMs(cooldown - (Date.now() - lastDaily), { secondsDecimalDigits: 0, verbose: true });
 
     const dailyEmbed = embed({
