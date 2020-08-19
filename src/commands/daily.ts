@@ -26,7 +26,6 @@ export const run = async (message: Message): Promise<Message | void> => {
         if (lastDaily && streakResetTime - (Date.now() - lastDaily) <= 0) {
             await database.addProp('economy', message.author.id, 250, 'balance');
             await database.setProp('economy', message.author.id, 1, 'streak');
-            await database.setProp('cooldown', message.author.id, Date.now(), 'daily');
 
             dailyEmbed.setDescription(`You collected your daily bonus of **$250** (Streak: **1**) You didn't collect your bonus for 2 days so your streak has been reset`);
         } else {
@@ -34,10 +33,10 @@ export const run = async (message: Message): Promise<Message | void> => {
 
             await database.addProp('economy', message.author.id, money, 'balance');
             await database.addProp('economy', message.author.id, 1, 'streak');
-            await database.setProp('cooldown', message.author.id, Date.now(), 'daily');
 
             dailyEmbed.setDescription(`You collected your daily bonus of **$${money}** (Streak: **${streak + 1}**)`);
         }
+        await database.setProp('cooldown', message.author.id, Date.now(), 'daily');
     }
     message.channel.send(dailyEmbed);
 };
