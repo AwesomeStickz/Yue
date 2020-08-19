@@ -4,7 +4,7 @@ import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
 
 export const run = async (message: Message): Promise<Message | void> => {
-    const cooldown = 8.64e7;
+    const { cooldown } = help;
     const streakResetTime = 1.728e8;
 
     const lastDaily = await database.getProp('cooldown', message.author.id, 'daily');
@@ -46,6 +46,7 @@ export const help = {
     aliases: ['daily'],
     name: 'Daily',
     description: 'Collect daily reward',
+    cooldown: 8.64e7,
     usage: 'daily',
     example: 'daily',
 };
