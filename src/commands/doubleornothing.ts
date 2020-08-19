@@ -48,7 +48,7 @@ export const run = async (message: Message): Promise<Message | void> => {
             footer: 'Are you sure you want to bet this (Yes or No)',
         });
 
-        await message.channel.send(donEmbed);
+        const donMessage = await message.channel.send(donEmbed);
         donEmbed.setFooter('');
 
         message.channel
@@ -58,7 +58,7 @@ export const run = async (message: Message): Promise<Message | void> => {
                 if ((response === 'yes' || response === 'y') && collected.first()?.author.id === message.author.id) {
                     donEmbed.setDescription('You bet all of your money and...');
 
-                    const donMessage = await message.channel.send(donEmbed);
+                    await donMessage.edit(donEmbed);
                     const rand = ['w', 'l'];
                     let result = rand[Math.floor(Math.random() * rand.length)];
 
