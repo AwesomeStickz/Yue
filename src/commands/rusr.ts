@@ -5,7 +5,7 @@ import { emojis } from '../utils/emojis';
 
 export const run = async (message: Message, _client: Client, args: string[]): Promise<Message | void> => {
     const balance: number = (await database.getProp('economy', message.author.id, 'balance')) || 0;
-    const bullets = Number(args[0]);
+    const bullets = Math.round(Number(args[0]));
 
     const rusrEmbed = embed({
         author: {
@@ -29,6 +29,8 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
     if (bullets >= 6 || bullets <= 0) return message.channel.send(rusrEmbed.setDescription(`${emojis.tickNo} Invalid number of bullets. 1-5 bullets only are allowed`));
     if (bet < 20) return message.channel.send(rusrEmbed.setDescription(`${emojis.tickNo} You should bet a minimum of $20`));
     if (bet > balance) return message.channel.send(rusrEmbed.setDescription(`${emojis.tickNo} You don't have enough balance`));
+
+    bet = Math.round(bet);
 
     const multiplier = [1.15, 1.45, 1.9, 2.85, 5.7];
     const randomNumber = Math.round(Math.random() * 6);
