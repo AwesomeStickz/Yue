@@ -38,8 +38,8 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     await database.addProp('economy', user.id, amount, 'balance');
     await database.subtractProp('economy', message.author.id, amount, 'balance');
 
-    const senderBalance = await database.getProp('economy', message.author.id, 'balance');
-    const receiverBalance = await database.getProp('economy', user.id, 'balance');
+    const senderBalance = (await database.getProp('economy', message.author.id, 'balance')) || 0;
+    const receiverBalance = (await database.getProp('economy', user.id, 'balance')) || 0;
 
     giveEmbed.setAuthor('Money Transfer', message.author.displayAvatarURL());
     giveEmbed.setDescription(`You gave **$${amount.toLocaleString()}** to **${user.username}**\n\n**${message.author.username}**'s new balance is **$${senderBalance.toLocaleString()}**\n**${user.username}**'s new balance is **$${receiverBalance.toLocaleString()}**`);
