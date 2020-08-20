@@ -1,4 +1,5 @@
 import { Client, Message } from 'discord.js';
+import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
 import { utils } from '../utils/utils';
@@ -16,7 +17,27 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
     if (!member) return message.channel.send(rpsEmbed.setDescription(`${emojis.tickNo} I couldn't find that user!`));
     if (member.user.bot) return message.channel.send(rpsEmbed.setDescription(`${emojis.tickNo} You can't play rps with bots!`));
 
-    message.channel.send(rpsEmbed.setDescription(`${member.toString()} Type \`yes\` to play Rock Paper Scissors with ${message.author.toString()}`));
+    const amountString = args[1]?.toLowerCase();
+    let amount = Number(amountString);
+
+    if (amountString) {
+        const authorBalance = (await database.getProp('economy', message.author.id, 'balance')) || 0;
+        const userBalance = (await database.getProp('economy', member.id, 'balance')) || 0;
+
+        if (amountString === 'all') amount = authorBalance;
+        else if (amountString === 'half') amount = authorBalance / 2;
+        else if (amountString === 'quarter') amount = authorBalance / 4;
+        else if (amountString.endsWith('%')) amount = (Number(amountString.slice(0, -1)) * authorBalance) / 100;
+
+        if (isNaN(amount)) return message.channel.send(rpsEmbed.setDescription(`${emojis.tickNo} Your bet is not a number!`));
+
+        amount = Math.round(Number(amount));
+
+        if (amount > authorBalance) return message.channel.send(rpsEmbed.setDescription(`${emojis.tickNo} You don't have **$${amount.toLocaleString()}**!`));
+        if (amount > userBalance) return message.channel.send(rpsEmbed.setDescription(`${emojis.tickNo} ${member.toString()} doesn't have **$${amount.toLocaleString()}**!`));
+    }
+
+    message.channel.send(rpsEmbed.setDescription(`${member.toString()} Type \`yes\` to play Rock Paper Scissors with ${message.author.toString()} ${!isNaN(amount) ? `for **$${amount}**` : ''}`));
     message.channel
         .awaitMessages((msg) => !msg.author.bot && msg.author.id === member.id, { max: 1, time: 20000, errors: ['time'] })
         .then(async (collected) => {
@@ -62,9 +83,15 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
                                         else if (authorChoice === 'paper' && memberChoice === 'rock') authorWonRPS = true;
                                         else if (authorChoice === memberChoice) isDraw = true;
 
-                                        if (authorWonRPS) message.channel.send(rpsEmbed.setDescription(`${member.toString()} chose ${memberChoiceEmoji}\n${message.author.toString()} chose ${authorChoiceEmoji}\n\n${message.author.toString()} won the Rock Paper Scissors!`));
-                                        else if (isDraw) message.channel.send(rpsEmbed.setDescription(`${member.toString()} chose ${memberChoiceEmoji}\n${message.author.toString()} chose ${authorChoiceEmoji}\n\nThe game has ended in a tie!`));
-                                        else if (!authorWonRPS) message.channel.send(rpsEmbed.setDescription(`${member.toString()} chose ${memberChoiceEmoji}\n${message.author.toString()} chose ${authorChoiceEmoji}\n\n${member.toString()} won the Rock Paper Scissors!`));
+                                        if (authorWonRPS) {
+                                            message.channel.send(rpsEmbed.setDescription(`${member.toString()} chose ${memberChoiceEmoji}\n${message.author.toString()} chose ${authorChoiceEmoji}\n\n${message.author.toString()} won ${isNaN(amount) ? 'the Rock Paper Scissors!' : `**$${amount.toLocaleString()}**`}`));
+                                            await database.addProp('economy', message.author.id, amount, 'balance');
+                                            await database.subtractProp('economy', member.id, amount, 'balance');
+                                        } else if (isDraw) {
+                                            message.channel.send(rpsEmbed.setDescription(`${member.toString()} chose ${memberChoiceEmoji}\n${message.author.toString()} chose ${authorChoiceEmoji}\n\nThe game has ended in a tie!`));
+                                            await database.addProp('economy', member.id, amount, 'balance');
+                                            await database.subtractProp('economy', message.author.id, amount, 'balance');
+                                        } else if (!authorWonRPS) message.channel.send(rpsEmbed.setDescription(`${member.toString()} chose ${memberChoiceEmoji}\n${message.author.toString()} chose ${authorChoiceEmoji}\n\n${member.toString()} won ${isNaN(amount) ? 'the Rock Paper Scissors!' : `**$${amount.toLocaleString()}**`}`));
                                     } else {
                                         dmMessageOfAuthor.channel.send(rpsEmbed.setDescription(`${emojis.tickNo} That's not a valid input!`));
                                         message.channel.send(`${emojis.tickNo} ${message.author.toString()} didn't send a correct input!`);
