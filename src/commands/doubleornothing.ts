@@ -69,15 +69,25 @@ export const run = async (message: Message): Promise<Message | void> => {
 
                     if (result === 'w') {
                         setTimeout(async () => {
-                            donMessage.edit(donEmbed.setDescription(`You just doubled your money and got **+$${(balance * 2).toLocaleString()}**`));
-                            await database.addProp('economy', message.author.id, balance, 'balance');
-                            await database.addProp('economy', message.author.id, balance, 'winnings');
+                            const balanceNow = (await database.getProp('economy', message.author.id, 'balance')) || 0;
+
+                            if (balanceNow !== balance) donMessage.edit(donEmbed.setDescription(`${emojis.tickYes} Cancelled double or nothing because your balance is not the same as before!`));
+                            else {
+                                donMessage.edit(donEmbed.setDescription(`You just doubled your money and got **+$${(balance * 2).toLocaleString()}**`));
+                                await database.addProp('economy', message.author.id, balance, 'balance');
+                                await database.addProp('economy', message.author.id, balance, 'winnings');
+                            }
                         }, 2000);
                     } else {
                         setTimeout(async () => {
-                            donMessage.edit(donEmbed.setDescription(`You just lost your bet money **-$${balance.toLocaleString()}**`));
-                            await database.deleteProp('economy', message.author.id, 'balance');
-                            await database.subtractProp('economy', message.author.id, balance, 'winnings');
+                            const balanceNow = (await database.getProp('economy', message.author.id, 'balance')) || 0;
+
+                            if (balanceNow !== balance) donMessage.edit(donEmbed.setDescription(`${emojis.tickYes} Cancelled double or nothing because your balance is not the same as before!`));
+                            else {
+                                donMessage.edit(donEmbed.setDescription(`You just lost your bet money **-$${balance.toLocaleString()}**`));
+                                await database.deleteProp('economy', message.author.id, 'balance');
+                                await database.subtractProp('economy', message.author.id, balance, 'winnings');
+                            }
                         }, 2000);
                     }
                 } else {
