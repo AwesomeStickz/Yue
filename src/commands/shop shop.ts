@@ -36,7 +36,7 @@ export const run = async (message: Message, client: Client): Promise<Message | v
 };
 
 export const help = {
-    aliases: ['shop shops', 'shop shop'],
+    aliases: ['shop shop', 'shop shop'],
     name: 'Shop Shops',
     description: 'View the list of shops you can buy from shop',
     usage: 'shop shops',
