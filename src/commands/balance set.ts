@@ -32,5 +32,4 @@ export const help = {
 export const config = {
     args: 2,
     owner: true,
-    subCommand: true,
 };
