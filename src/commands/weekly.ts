@@ -22,6 +22,7 @@ export const run = async (message: Message): Promise<Message | void> => {
         weeklyEmbed.setDescription(`You collected your weekly reward already! Come back in ${time}!`);
     } else if (remainingCooldown <= 0) {
         await database.setProp('cooldown', message.author.id, Date.now(), 'weekly');
+        await database.addProp('economy', message.author.id, 4000, 'balance');
 
         weeklyEmbed.setDescription(`You collected your weekly bonus of **$4,000**`);
     }
