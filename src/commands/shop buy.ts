@@ -55,22 +55,24 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
     let validItem = false;
 
     for (const [shopItemName, shopItemPrice] of Object.entries(shopItems)) {
-        if (itemName.includes(shopItemName.toLowerCase())) {
+        if (itemName.startsWith(shopItemName.toLowerCase())) {
             const balance = (await database.getProp('economy', message.author.id, 'balance')) || 0;
 
             let itemAmountString = args[args.length - 1].toLowerCase();
-            let amountUserInvests = Number(itemAmountString);
+            let amountUserInvests = 0;
             let itemAmount = 0;
 
             if (itemAmountString === 'all') amountUserInvests = balance;
             else if (itemAmountString === 'half') amountUserInvests = balance / 2;
             else if (itemAmountString === 'quarter') amountUserInvests = balance / 4;
             else if (itemAmountString.endsWith('%')) amountUserInvests = (Number(itemAmountString.slice(0, -1)) * balance) / 100;
-            else if (isNaN(amountUserInvests)) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} The amount of item must be a number!`));
             else {
                 itemAmount = Number(itemAmountString);
+                if (isNaN(itemAmount)) itemAmount = 1;
                 amountUserInvests = itemAmount * shopItemPrice;
             }
+
+            if (isNaN(amountUserInvests)) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} The amount of item must be a number!`));
 
             const inventoryItemType = shopItemName.slice(-1) === 's' ? 'Shop' : 'Worker';
             const inventoryItemName = shopItemName.slice(0, -2);
@@ -83,7 +85,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
             if (totalMoney > balance) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough money to buy **${numberOfItemsToBuy.toLocaleString()} ${inventoryItemName} ${inventoryItemType}${numberOfItemsToBuy > 1 ? 's' : ''}**`));
 
             // @ts-expect-error
-            await database.addProp('economy', message.author.id, numberOfItemsToBuy, `inventory.${inventoryItemType}.${inventoryItemName.toLowerCase()}s`);
+            await database.addProp('economy', message.author.id, numberOfItemsToBuy, `inventory.${inventoryItemType.toLowerCase()}s.${inventoryItemName.toLowerCase()}`);
             await database.subtractProp('economy', message.author.id, totalMoney, 'balance');
 
             validItem = true;
