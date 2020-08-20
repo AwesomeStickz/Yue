@@ -19,8 +19,11 @@ export const run = async (client: Client, message: Message): Promise<Message | v
         else return;
 
         const owners = await database.getProp('yue', client.user!.id, 'owners');
+        const commandObj = commands.get(command) as any;
 
-        if ((commands.get(command) as any).config.owner === true && !owners.includes(message.author.id)) return;
+        if (commandObj.config.owner === true && !owners.includes(message.author.id)) return;
+        if (commandObj.config.args > args.length) return message.channel.send(`Invalid arguments. Correct usage: \`${prefix}${(commands.get(command) as any).help.usage}\``);
+        if (!commandObj.config.subCommand === true) command = command.replace(/ /g, '');
 
         const commandName = commandObj.help.fileName ? commandObj.help.fileName : command.toLowerCase();
         const commandFile = require(`../commands/${commandName}`);
