@@ -51,7 +51,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
         color: message.guild?.me?.displayHexColor,
     });
 
-    const itemName = args.slice(0, -1).join(' ').toLowerCase();
+    const itemName = args.length > 2 ? args.slice(0, -1).join(' ').toLowerCase() : args.join(' ').toLowerCase();
     let validItem = false;
 
     for (const [shopItemName, shopItemPrice] of Object.entries(shopItems)) {
