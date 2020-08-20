@@ -26,7 +26,8 @@ export const help = {
     aliases: ['eval'],
     name: 'Eval',
     description: 'Eval',
-    usage: '>eval <code>',
+    usage: 'eval <code>',
+    example: 'eval console.log(true)',
 };
 
 export const config = {

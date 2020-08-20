@@ -10,7 +10,8 @@ export const help = {
     aliases: ['restart'],
     name: 'Restart',
     description: 'Restarts the Bot',
-    usage: '>restart',
+    usage: 'restart',
+    example: 'restart',
 };
 
 export const config = {

@@ -29,7 +29,8 @@ export const help = {
     aliases: ['reload'],
     name: 'Reload',
     description: 'Reloads a command',
-    usage: '>reload',
+    usage: 'reload',
+    example: 'reload reload',
 };
 
 export const config = {

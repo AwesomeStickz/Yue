@@ -14,7 +14,8 @@ export const help = {
     aliases: ['setprefix'],
     name: 'Set Prefix',
     description: 'Change the prefix of the bot in the server',
-    usage: '>setprefix <prefix>',
+    usage: 'setprefix <prefix>',
+    example: 'setprefix !',
 };
 
 export const config = {
