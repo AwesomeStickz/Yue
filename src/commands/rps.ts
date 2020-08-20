@@ -119,7 +119,6 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
 
 export const help = {
     aliases: ['rps'],
-    fileName: 'rps',
     name: 'Rock Paper Scissors',
     description: 'Play Rock Paper Scissors with a user',
     usage: 'rps <user> [amount]',
