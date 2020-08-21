@@ -11,7 +11,7 @@ export const run = async (message: Message, client: Client): Promise<Message | v
         color: message.guild?.me?.displayHexColor,
         desc: 'Houses are a good way to increase income, the pricier the house the more they will leave behind for rent.',
         fields: [
-            { name: `${emojis.houses.house} Mud House`, value: '$22,500', inline: true },
+            { name: `${emojis.houses.mud} Mud House`, value: '$22,500', inline: true },
             { name: `${emojis.houses.tent} Tent`, value: '$50,000', inline: true },
             { name: `${emojis.houses.caravan} Caravan`, value: '$75,000', inline: true },
             { name: `${emojis.houses.shack} Shack`, value: '$280,000', inline: true },
