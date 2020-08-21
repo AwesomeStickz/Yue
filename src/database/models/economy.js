@@ -20,6 +20,14 @@ export const economy = define('economy', {
                 penthouse: INTEGER,
                 mansion: INTEGER
             },
+            navigators: {
+                bronze: INTEGER,
+                diamond: INTEGER,
+                gold: INTEGER,
+                iron: INTEGER,
+                platinum: INTEGER,
+                silver: INTEGER,
+            },
             shops: {
                 flower: INTEGER,
                 taco: INTEGER,
