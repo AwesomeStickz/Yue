@@ -73,12 +73,15 @@ export const run = async (message: Message, client: Client): Promise<Message | v
         let totalMoney = 0;
         let totalText = '';
 
-        for (const [shopName, shopAmount] of Object.entries(shops)) {
-            let percentOfIncome = Math.floor(Math.random() * 5 + 15);
-            const moneyToAdd = Math.round((percentOfIncome / 100) * allShops[shopName] * (shopAmount as number));
+        for (const [shopName, shopPrice] of Object.entries(allShops)) {
+            if (shops[shopName]) {
+                const shopAmount = shops[shopName];
+                let percentOfIncome = Math.floor(Math.random() * 5 + 15);
+                const moneyToAdd = Math.round((percentOfIncome / 100) * (shopPrice as number) * shopAmount);
 
-            totalMoney += moneyToAdd;
-            totalText += `${allShopsEmoji[shopName]} ${(shopAmount as number).toLocaleString()} ${shopName[0].toUpperCase()}${shopName.slice(1)} Shop: **$${moneyToAdd.toLocaleString()}**\n`;
+                totalMoney += moneyToAdd;
+                totalText += `${allShopsEmoji[shopName]} ${shopAmount.toLocaleString()} ${shopName[0].toUpperCase()}${shopName.slice(1)} Shop: **$${moneyToAdd.toLocaleString()}**\n`;
+            }
         }
 
         totalMoney = Math.round(totalMoney);

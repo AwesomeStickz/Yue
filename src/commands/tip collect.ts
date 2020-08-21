@@ -73,20 +73,23 @@ export const run = async (message: Message, client: Client): Promise<Message | v
         let totalMoney = 0;
         let totalText = '';
 
-        for (const [workerName, workerAmount] of Object.entries(workers)) {
-            let percentOfIncome = 0;
+        for (const [workerName, workerPrice] of Object.entries(allWorkers)) {
+            if (workers[workerName]) {
+                const workerAmount = workers[workerName];
+                let percentOfIncome = 0;
 
-            if ((workerAmount as number) <= 10) percentOfIncome = 6;
-            else if ((workerAmount as number) <= 20) percentOfIncome = 5;
-            else if ((workerAmount as number) <= 30) percentOfIncome = 4;
-            else if ((workerAmount as number) <= 40) percentOfIncome = 3;
-            else if ((workerAmount as number) <= 50) percentOfIncome = 2;
-            else percentOfIncome = 1;
+                if ((workerAmount as number) <= 10) percentOfIncome = 6;
+                else if ((workerAmount as number) <= 20) percentOfIncome = 5;
+                else if ((workerAmount as number) <= 30) percentOfIncome = 4;
+                else if ((workerAmount as number) <= 40) percentOfIncome = 3;
+                else if ((workerAmount as number) <= 50) percentOfIncome = 2;
+                else percentOfIncome = 1;
 
-            const moneyToAdd = Math.round((percentOfIncome / 100) * allWorkers[workerName] * (workerAmount as number));
+                const moneyToAdd = Math.round((percentOfIncome / 100) * (workerPrice as number) * workerAmount);
 
-            totalMoney += moneyToAdd;
-            totalText += `${allWorkersEmoji[workerName]} ${(workerAmount as number).toLocaleString()} ${workerName[0].toUpperCase()}${workerName.slice(1)} Worker: **$${moneyToAdd.toLocaleString()}**\n`;
+                totalMoney += moneyToAdd;
+                totalText += `${allWorkersEmoji[workerName]} ${workerAmount.toLocaleString()} ${workerName[0].toUpperCase()}${workerName.slice(1)} Shop: **$${moneyToAdd.toLocaleString()}**\n`;
+            }
         }
 
         totalMoney = Math.round(totalMoney);
