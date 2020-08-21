@@ -21,7 +21,7 @@ export const run = async (message: Message): Promise<Message | void> => {
 
     if (remainingCooldown > 0) {
         dailyEmbed.setDescription(`You collected your daily reward already! Come back in ${time}!`);
-    } else if (remainingCooldown <= 0) {
+    } else {
         const streak = (await database.getProp('economy', message.author.id, 'streak')) || 0;
 
         if (lastDaily && streakResetTime - (Date.now() - lastDaily) <= 0) {

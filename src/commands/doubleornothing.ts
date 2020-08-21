@@ -23,7 +23,7 @@ export const run = async (message: Message): Promise<Message | void> => {
                 desc: `${emojis.tickNo} This command is in cooldown! Come back in ${time}`,
             })
         );
-    } else if (remainingCooldown <= 0) {
+    } else {
         tempCache.set(`don_${message.author.id}`, Date.now());
 
         const balance = (await database.getProp('economy', message.author.id, 'balance')) || 0;
