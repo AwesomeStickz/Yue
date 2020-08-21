@@ -23,15 +23,15 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     const workers = inventory.workers || {};
 
     const house = {
-        '<:MudHouse:746026271749701722> Mud House': houses.mud,
-        '<:Caravan:746031340830589020> Caravan': houses.caravan,
-        '🎪 Tent': houses.tent,
-        '<:Shack:746027605010022531> Shack': houses.shack,
-        '<:Apartment:744302863391391834> Apartment': houses.apartment,
-        '🏠 Bungalow': houses.bungalow,
-        '<:Bungalow:744304109888208986> House': houses.house,
-        '<:Penthouse:744302835662979072> Penthouse': houses.penthouse,
-        '<:Mansion:744302803098533898> Mansion': houses.mansion,
+        [`${emojis.houses.mud} Mud House`]: houses.mud,
+        [`${emojis.houses.caravan} Caravan`]: houses.caravan,
+        [`${emojis.houses.tent} Tent`]: houses.tent,
+        [`${emojis.houses.shack} Shack`]: houses.shack,
+        [`${emojis.houses.apartment} Apartment`]: houses.apartment,
+        [`${emojis.houses.bungalow} Bungalow`]: houses.bungalow,
+        [`${emojis.houses.house} House`]: houses.house,
+        [`${emojis.houses.penthouse} Penthouse`]: houses.penthouse,
+        [`${emojis.houses.mansion} Mansion`]: houses.mansion,
     };
 
     const houseInv = Object.entries(house)
