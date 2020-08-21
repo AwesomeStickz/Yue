@@ -41,15 +41,15 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
         'Music w': 8300000,
         'Jewelry w': 16500000,
         'Plane w': 30000000,
-        'Mud h': 22500,
-        'Tent h': 50000,
-        'Caravan h': 75000,
-        'Shack h': 280000,
-        'Apartment h': 500000,
-        'Bungalow h': 5000000,
-        'House h': 10000000,
-        'Penthouse h': 15000000,
-        'Mansion h': 30000000,
+        Mud: 22500,
+        Tent: 50000,
+        Caravan: 75000,
+        Shack: 280000,
+        Apartment: 500000,
+        Bungalow: 5000000,
+        House: 10000000,
+        Penthouse: 15000000,
+        Mansion: 30000000,
         'Iron n': 500,
         'Bronze n': 1250,
         'Silver n': 4500,
@@ -66,7 +66,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
         color: message.guild?.me?.displayHexColor,
     });
 
-    const itemName = args.length > 2 ? args.slice(0, -1).join(' ').toLowerCase() : args.join(' ').toLowerCase();
+    const itemName = args.length > 1 ? args.slice(0, -1).join(' ').toLowerCase() : args.join(' ').toLowerCase();
     let validItem = false;
 
     for (const [shopItemName, shopItemPrice] of Object.entries(shopItems)) {
@@ -89,22 +89,23 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
 
             if (isNaN(amountUserInvests)) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} The amount of item must be a number!`));
 
-            const inventoryItemType = shopItemName.slice(-1) === 'h' ? 'House' : shopItemName.slice(-1) === 'n' ? 'Navigator' : shopItemName.slice(-1) === 's' ? 'Shop' : 'Worker';
-            const inventoryItemName = shopItemName.slice(0, -2);
+            const itemIsNotHouse = shopItemName.charAt(shopItemName.length - 2) === ' ';
+            const inventoryItemType = shopItemName.slice(-1) === 'n' && itemIsNotHouse ? 'Navigator' : shopItemName.slice(-1) === 's' && itemIsNotHouse ? 'Shop' : shopItemName.slice(-1) === 'w' && itemIsNotHouse ? 'Worker' : 'House';
+            const inventoryItemName = itemIsNotHouse ? shopItemName.slice(0, -2) : shopItemName;
 
-            if (amountUserInvests < shopItemPrice) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough money to buy 1 **${inventoryItemName} ${inventoryItemType}**!`));
+            if (amountUserInvests < shopItemPrice) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough money to buy 1 **${inventoryItemName} ${inventoryItemType !== 'House' ? inventoryItemType : ''}**!`));
 
             const numberOfItemsToBuy = itemAmount > 0 ? Math.round(itemAmount) : Math.floor(amountUserInvests / shopItemPrice);
 
             const totalMoney = numberOfItemsToBuy * shopItemPrice;
-            if (totalMoney > balance) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough money to buy **${numberOfItemsToBuy.toLocaleString()} ${inventoryItemName} ${inventoryItemType}${numberOfItemsToBuy > 1 ? 's' : ''}**`));
+            if (totalMoney > balance) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough money to buy **${numberOfItemsToBuy.toLocaleString()} ${inventoryItemName} ${inventoryItemType !== 'House' ? inventoryItemType : ''}${numberOfItemsToBuy > 1 && inventoryItemType !== 'House' ? 's' : ''}**`));
 
             // @ts-expect-error
             await database.addProp('economy', message.author.id, numberOfItemsToBuy, `inventory.${inventoryItemType.toLowerCase()}s.${inventoryItemName.toLowerCase()}`);
             await database.subtractProp('economy', message.author.id, totalMoney, 'balance');
 
             validItem = true;
-            message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickYes} You've successfully bought **${numberOfItemsToBuy.toLocaleString()} ${inventoryItemName} ${inventoryItemType}${numberOfItemsToBuy > 1 ? 's' : ''}** for **$${totalMoney.toLocaleString()}**`));
+            message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickYes} You've successfully bought **${numberOfItemsToBuy.toLocaleString()} ${inventoryItemName} ${inventoryItemType !== 'House' ? inventoryItemType : ''}${numberOfItemsToBuy > 1 && inventoryItemType !== 'House' ? 's' : ''}** for **$${totalMoney.toLocaleString()}**`));
             break;
         }
     }
@@ -121,5 +122,5 @@ export const help = {
 };
 
 export const config = {
-    args: 2,
+    args: 1,
 };
