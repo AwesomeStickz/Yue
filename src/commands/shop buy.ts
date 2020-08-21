@@ -41,6 +41,15 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
         'Music w': 8300000,
         'Jewelry w': 16500000,
         'Plane w': 30000000,
+        'Mud h': 22500,
+        'Caravan h': 50000,
+        'Tent h': 75000,
+        'Shack h': 280000,
+        'Apartment h': 500000,
+        'Bungalow h': 5000000,
+        'House h': 10000000,
+        'Penthouse h': 15000000,
+        'Mansion h': 30000000,
     };
 
     const shopBuyEmbed = embed({
@@ -74,7 +83,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
 
             if (isNaN(amountUserInvests)) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} The amount of item must be a number!`));
 
-            const inventoryItemType = shopItemName.slice(-1) === 's' ? 'Shop' : 'Worker';
+            const inventoryItemType = shopItemName.slice(-1) === 's' ? 'Shop' : shopItemName.slice(-1) === 'w' ? 'Worker' : 'House';
             const inventoryItemName = shopItemName.slice(0, -2);
 
             if (amountUserInvests < shopItemPrice) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough money to buy 1 **${inventoryItemName} ${inventoryItemType}**!`));
@@ -102,7 +111,7 @@ export const help = {
     name: 'Shop Buy',
     description: 'Buy items from the shop',
     usage: 'shop buy <item name> [amount]',
-    example: 'shop buy flower shop\nshop buy flower worker',
+    example: 'shop buy flower shop\nshop buy flower worker\nshop buy mud house',
 };
 
 export const config = {
