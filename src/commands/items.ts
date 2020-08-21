@@ -18,8 +18,26 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 
     const inventory = (await database.getProp('economy', user.id, 'inventory')) || {};
 
+    const houses = inventory.houses || {};
     const shops = inventory.shops || {};
     const workers = inventory.workers || {};
+
+    const house = {
+        '<:MudHouse:746026271749701722> Mud House': houses.mud,
+        '<:Caravan:746031340830589020> Caravan': houses.caravan,
+        '🎪 Tent': houses.tent,
+        '<:Shack:746027605010022531> Shack': houses.shack,
+        '<:Apartment:744302863391391834> Apartment': houses.apartment,
+        '🏠 Bungalow': houses.bungalow,
+        '<:Bungalow:744304109888208986> House': houses.house,
+        '<:Penthouse:744302835662979072> Penthouse': houses.penthouse,
+        '<:Mansion:744302803098533898> Mansion': houses.mansion,
+    };
+
+    const houseInv = Object.entries(house)
+        .filter(([, amount]) => amount)
+        .map(([houseName, houseAmount]) => `${houseName}: ${houseAmount.toLocaleString()}`)
+        .join('\n');
 
     const shop = {
         '🌸 Flower': shops.flower,
@@ -73,8 +91,9 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         .map(([workerName, workerAmount]) => `${workerName}: ${workerAmount.toLocaleString()}`)
         .join('\n');
 
-    if (typeof shopInv === 'string' && shopInv.length < 1 && shopInv.length < 1 && workerInv.length < 1) return message.channel.send(itemsEmbed.setDescription(`${user.id === message.author.id ? `${emojis.tickNo} You don't` : `**${user.tag}** doesn't`} have any items`));
+    if (houseInv.length < 1 && shopInv.length < 1 && workerInv.length < 1) return message.channel.send(itemsEmbed.setDescription(`${user.id === message.author.id ? `${emojis.tickNo} You don't` : `**${user.tag}** doesn't`} have any items`));
 
+    if (houseInv) itemsEmbed.addField('Houses', houseInv, true);
     if (shopInv) itemsEmbed.addField('Shops', shopInv, true);
     if (workerInv) itemsEmbed.addField('Workers', workerInv, true);
 
