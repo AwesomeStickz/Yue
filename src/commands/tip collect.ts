@@ -21,7 +21,7 @@ export const run = async (message: Message, client: Client): Promise<Message | v
 
     if (remainingCooldown > 0) {
         workerEmbed.setAuthor(message.author.username, message.author.displayAvatarURL());
-        workerEmbed.setDescription(`You collected tips from your miners! Come back in ${time}!`);
+        workerEmbed.setDescription(`You already collected tips from your workers! Come back in ${time}!`);
     } else {
         // @ts-expect-error
         const workers = (await database.getProp('economy', message.author.id, 'inventory.workers')) || {};
@@ -93,7 +93,7 @@ export const run = async (message: Message, client: Client): Promise<Message | v
         await database.addProp('economy', message.author.id, totalMoney, 'balance');
         await database.setProp('cooldown', message.author.id, Date.now(), 'tipcollect');
 
-        workerEmbed.setDescription(`Your miners made you **$${totalMoney.toLocaleString()}**\n\n${totalText}`);
+        workerEmbed.setDescription(`Your workers made you **$${totalMoney.toLocaleString()}**\n\n${totalText}`);
         workerEmbed.setFooter('Yue');
         workerEmbed.setTimestamp();
     }
