@@ -9,6 +9,17 @@ export const economy = define('economy', {
         type: JSONB,
         balance: NUMBER,
         inventory: {
+            houses: {
+                mud: INTEGER,
+                caravan: INTEGER,
+                tent: INTEGER,
+                shack: INTEGER,
+                apartment: INTEGER,
+                bungalow: INTEGER,
+                house: INTEGER,
+                penthouse: INTEGER,
+                mansion: INTEGER
+            },
             shops: {
                 flower: INTEGER,
                 taco: INTEGER,
