@@ -86,7 +86,7 @@ export const run = async (message: Message, client: Client): Promise<Message | v
             const moneyToAdd = Math.round((percentOfIncome / 100) * allWorkers[workerName] * (workerAmount as number));
 
             totalMoney += moneyToAdd;
-            totalText += `${allWorkersEmoji[workerName]} **${(workerAmount as number).toLocaleString()}** ${workerName[0].toUpperCase()}${workerName.slice(1)} Worker: **$${moneyToAdd.toLocaleString()}**\n`;
+            totalText += `${allWorkersEmoji[workerName]} ${(workerAmount as number).toLocaleString()} ${workerName[0].toUpperCase()}${workerName.slice(1)} Worker: **$${moneyToAdd.toLocaleString()}**\n`;
         }
 
         totalMoney = Math.round(totalMoney);
