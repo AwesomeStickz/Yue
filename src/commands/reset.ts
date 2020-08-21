@@ -18,6 +18,8 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     if (user.bot) return message.channel.send(resetEmbed.setDescription(`${emojis.tickNo} You can't reset bots!`));
 
     await database.delete('economy', user.id);
+
+    resetEmbed.setAuthor(user.username, user.displayAvatarURL());
     message.channel.send(resetEmbed.setDescription(`${emojis.tickYes} **${user.tag}**'s stats has been reset successfully`));
 };
 
