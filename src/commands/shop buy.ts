@@ -50,6 +50,12 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
         'House h': 10000000,
         'Penthouse h': 15000000,
         'Mansion h': 30000000,
+        'Iron n': 500,
+        'Bronze n': 1250,
+        'Silver n': 4500,
+        'Gold n': 17500,
+        'Platinum n': 90000,
+        'Diamond n': 500000,
     };
 
     const shopBuyEmbed = embed({
@@ -83,7 +89,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
 
             if (isNaN(amountUserInvests)) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} The amount of item must be a number!`));
 
-            const inventoryItemType = shopItemName.slice(-1) === 's' ? 'Shop' : shopItemName.slice(-1) === 'w' ? 'Worker' : 'House';
+            const inventoryItemType = shopItemName.slice(-1) === 'h' ? 'House' : shopItemName.slice(-1) === 'n' ? 'Navigator' : shopItemName.slice(-1) === 's' ? 'Shop' : 'Worker';
             const inventoryItemName = shopItemName.slice(0, -2);
 
             if (amountUserInvests < shopItemPrice) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough money to buy 1 **${inventoryItemName} ${inventoryItemType}**!`));
