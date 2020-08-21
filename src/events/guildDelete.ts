@@ -2,7 +2,7 @@ import { Client, Guild, TextChannel } from 'discord.js';
 import { embed } from '../utils/embed';
 
 export const run = async (client: Client, guild: Guild) => {
-    const logChannel = client.channels.cache.get('744852807437516871') as TextChannel;
+    const logChannel = client.channels.cache.get('745931234211004477') as TextChannel;
 
     const logEmbed = embed({
         color: logChannel.guild.me?.displayHexColor,
