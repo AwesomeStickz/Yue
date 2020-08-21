@@ -7,8 +7,8 @@ import { emojis } from '../utils/emojis';
 export const run = async (message: Message, client: Client): Promise<Message | void> => {
     const { cooldown } = help;
 
-    const lastDaily = (await database.getProp('cooldown', message.author.id, 'rentcollect')) || 0;
-    const remainingCooldown = cooldown - (Date.now() - lastDaily);
+    const lastRentCollect = (await database.getProp('cooldown', message.author.id, 'rentcollect')) || 0;
+    const remainingCooldown = cooldown - (Date.now() - lastRentCollect);
     const time = remainingCooldown > 1000 ? prettyMs(remainingCooldown, { secondsDecimalDigits: 0, verbose: true }) : `${(remainingCooldown / 1000).toFixed(1)} seconds`;
 
     const rentEmbed = embed({
