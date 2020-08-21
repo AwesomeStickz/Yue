@@ -101,7 +101,7 @@ export const run = async (message: Message, client: Client): Promise<Message | v
 };
 
 export const help = {
-    aliases: ['tip collect'],
+    aliases: ['tip collect', 'worker collect'],
     name: 'Tip Collect',
     cooldown: 900000,
     description: 'Collect tips from workers every 15 mins',
