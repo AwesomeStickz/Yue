@@ -13,7 +13,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         color: message.guild?.me?.displayHexColor,
     });
 
-    const user = await utils.getUser(args[0], client);
+    const user = await utils.getUser(args[0], client, message.guild!);
     if (!user) return message.channel.send(giveEmbed.setDescription(`${emojis.tickNo} I couldn't find that user!`));
     if (user.bot) return message.channel.send(giveEmbed.setDescription(`${emojis.tickNo} You can't give money to bots!`));
     if (user.id === message.author.id) return message.channel.send(giveEmbed.setDescription(`${emojis.tickNo} You can't give money to yourself`));

@@ -3,7 +3,7 @@ import { embed } from '../utils/embed';
 import { utils } from '../utils/utils';
 
 export const run = async (message: Message, client: Client, args: string[]) => {
-    const user = (await utils.getUser(args.join(' '), client)) || message.author;
+    const user = (await utils.getUser(args.join(' '), client, message.guild!)) || message.author;
 
     const avatarEmbed = embed({
         author: {

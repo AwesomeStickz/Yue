@@ -5,7 +5,7 @@ import { emojis } from '../utils/emojis';
 import { utils } from '../utils/utils';
 
 export const run = async (message: Message, client: Client, args: string[]): Promise<Message | void> => {
-    const user = await utils.getUser(args[0], client);
+    const user = await utils.getUser(args[0], client, message.guild!);
     const balanceEmbed = embed({
         color: message.guild?.me?.displayHexColor,
     });

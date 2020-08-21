@@ -5,7 +5,7 @@ import { emojis } from '../utils/emojis';
 import { utils } from '../utils/utils';
 
 export const run = async (message: Message, client: Client, args: string[]): Promise<Message | void> => {
-    const user = await utils.getUser(args.join(' '), client);
+    const user = await utils.getUser(args.join(' '), client, message.guild!);
     const resetEmbed = embed({
         author: {
             image: message.author.displayAvatarURL(),

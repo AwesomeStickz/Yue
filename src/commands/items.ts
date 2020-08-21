@@ -5,7 +5,7 @@ import { emojis } from '../utils/emojis';
 import { utils } from '../utils/utils';
 
 export const run = async (message: Message, client: Client, args: string[]): Promise<Message | void> => {
-    const user = (await utils.getUser(args.join(' '), client)) || message.author;
+    const user = (await utils.getUser(args.join(' '), client, message.guild!)) || message.author;
     if (user.bot) return message.channel.send(`${emojis.tickNo} Bots don't have inventory!`);
 
     const itemsEmbed = embed({
