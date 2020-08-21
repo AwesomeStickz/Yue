@@ -19,6 +19,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     const inventory = (await database.getProp('economy', user.id, 'inventory')) || {};
 
     const houses = inventory.houses || {};
+    const navigators = inventory.navigators || {};
     const shops = inventory.shops || {};
     const workers = inventory.workers || {};
 
@@ -35,6 +36,20 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     };
 
     const houseInv = Object.entries(house)
+        .filter(([, amount]) => amount)
+        .map(([houseName, houseAmount]) => `${houseName}: ${houseAmount.toLocaleString()}`)
+        .join('\n');
+
+    const navigator = {
+        [`${emojis.navigators.iron} Iron Navigator`]: navigators.iron,
+        [`${emojis.navigators.bronze} Bronze Navigator`]: navigators.bronze,
+        [`${emojis.navigators.silver} Silver Navigator`]: navigators.silver,
+        [`${emojis.navigators.gold} Gold Navigator`]: navigators.gold,
+        [`${emojis.navigators.platinum} Platinum Navigator`]: navigators.platinum,
+        [`${emojis.navigators.diamond} Diamond Navigator`]: navigators.diamond,
+    };
+
+    const navigatorInv = Object.entries(navigator)
         .filter(([, amount]) => amount)
         .map(([houseName, houseAmount]) => `${houseName}: ${houseAmount.toLocaleString()}`)
         .join('\n');
@@ -94,6 +109,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     if (houseInv.length < 1 && shopInv.length < 1 && workerInv.length < 1) return message.channel.send(itemsEmbed.setDescription(`${user.id === message.author.id ? `${emojis.tickNo} You don't` : `**${user.tag}** doesn't`} have any items`));
 
     if (houseInv) itemsEmbed.addField('Houses', houseInv, true);
+    if (navigatorInv) itemsEmbed.addField('Navigators', navigatorInv, true);
     if (shopInv) itemsEmbed.addField('Shops', shopInv, true);
     if (workerInv) itemsEmbed.addField('Workers', workerInv, true);
 
