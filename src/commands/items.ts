@@ -39,7 +39,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         '🧸 Toy': shops.toy,
         '🎸 Music': shops.music,
         '💍 Jewelry': shops.jewelry,
-        '✈️ Plane': shops.plance,
+        '✈️ Plane': shops.plane,
     };
 
     const shopInv = Object.entries(shop)
@@ -65,7 +65,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         '🧸 Toy': workers.toy,
         '🎸 Music': workers.music,
         '💍 Jewelry': workers.jewelry,
-        '✈️ Plane': workers.plance,
+        '✈️ Plane': workers.plane,
     };
 
     const workerInv = Object.entries(worker)
