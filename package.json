@@ -12,12 +12,12 @@
         "pg-hstore": "^2.3.3",
         "pretty-ms": "^7.0.0",
         "sequelize": "^6.3.3",
-        "tslib": "^2.0.0",
-        "typescript": "^3.9.6"
+        "tslib": "^2.0.0"
     },
     "license": "MIT",
     "author": "Awesome Stickz",
     "devDependencies": {
-        "prettier": "^2.0.5"
+        "prettier": "^2.0.5",
+        "typescript": "^4.0.2"
     }
 }
