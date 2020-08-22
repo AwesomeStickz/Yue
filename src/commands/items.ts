@@ -6,7 +6,6 @@ import { utils } from '../utils/utils';
 
 export const run = async (message: Message, client: Client, args: string[]): Promise<Message | void> => {
     const user = (await utils.getUser(args.join(' '), client, message.guild!)) || message.author;
-    if (user.bot) return message.channel.send(`${emojis.tickNo} Bots don't have inventory!`);
 
     const itemsEmbed = embed({
         author: {
@@ -15,6 +14,8 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         },
         color: message.guild?.me?.displayHexColor,
     });
+
+    if (user.bot) return message.channel.send(itemsEmbed.setDescription(`${emojis.tickNo} Bots don't have inventory!`));
 
     const inventory = (await database.getProp('economy', user.id, 'inventory')) || {};
 
