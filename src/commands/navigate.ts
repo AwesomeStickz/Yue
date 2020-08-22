@@ -74,7 +74,7 @@ export const run = async (message: Message, client: Client): Promise<Message | v
 };
 
 export const help = {
-    aliases: ['navigate', 'navigator collect'],
+    aliases: ['navigate', 'navi', 'navigator collect'],
     name: 'Navigate',
     cooldown: 1800000,
     description: 'Collect essence from your navigators every 45 minutes',
