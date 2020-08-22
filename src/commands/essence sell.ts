@@ -29,7 +29,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
 
     amountOfEssence = Math.round(amountOfEssence);
 
-    const balanceToAdd = amountOfEssence * 50;
+    const balanceToAdd = amountOfEssence * 25;
 
     // @ts-expect-error
     await database.subtractProp('economy', message.author.id, amountOfEssence, 'inventory.essence');
