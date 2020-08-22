@@ -26,7 +26,7 @@ export const run = async (client: Client, message: Message): Promise<Message | v
         if (commandObj.config.args > args.length) return message.channel.send(`Invalid arguments. Correct usage: \`${prefix}${(commands.get(command) as any).help.usage}\``);
 
         const commandFile = require(`../commands/${commandObj.fileName}`);
-        commandFile.run(message, client, args);
+        await commandFile.run(message, client, args);
 
         const networth = await utils.getNetworth(message.author.id);
         await database.setProp('economy', message.author.id, networth, 'networth');
