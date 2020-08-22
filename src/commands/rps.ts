@@ -37,7 +37,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
         if (amount > userBalance) return message.channel.send(rpsEmbed.setDescription(`${emojis.tickNo} ${member.toString()} doesn't have **$${amount.toLocaleString()}**!`));
     }
 
-    message.channel.send(rpsEmbed.setDescription(`${member.toString()} Type \`yes\` to play Rock Paper Scissors with ${message.author.toString()} ${!isNaN(amount) ? `for **$${amount}**` : ''}`));
+    message.channel.send(rpsEmbed.setDescription(`${member.toString()} Type \`yes\` to play Rock Paper Scissors with ${message.author.toString()} ${!isNaN(amount) ? `for **$${amount.toLocaleString()}**` : ''}`));
     message.channel
         .awaitMessages((msg) => !msg.author.bot && msg.author.id === member.id, { max: 1, time: 20000, errors: ['time'] })
         .then(async (collected) => {
@@ -89,9 +89,11 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
                                             await database.subtractProp('economy', member.id, amount, 'balance');
                                         } else if (isDraw) {
                                             message.channel.send(rpsEmbed.setDescription(`${member.toString()} chose ${memberChoiceEmoji}\n${message.author.toString()} chose ${authorChoiceEmoji}\n\nThe game has ended in a tie!`));
+                                        } else if (!authorWonRPS) {
+                                            message.channel.send(rpsEmbed.setDescription(`${member.toString()} chose ${memberChoiceEmoji}\n${message.author.toString()} chose ${authorChoiceEmoji}\n\n${member.toString()} won ${isNaN(amount) ? 'the Rock Paper Scissors!' : `**$${amount.toLocaleString()}**`}`));
                                             await database.addProp('economy', member.id, amount, 'balance');
                                             await database.subtractProp('economy', message.author.id, amount, 'balance');
-                                        } else if (!authorWonRPS) message.channel.send(rpsEmbed.setDescription(`${member.toString()} chose ${memberChoiceEmoji}\n${message.author.toString()} chose ${authorChoiceEmoji}\n\n${member.toString()} won ${isNaN(amount) ? 'the Rock Paper Scissors!' : `**$${amount.toLocaleString()}**`}`));
+                                        }
                                     } else {
                                         dmMessageOfAuthor.channel.send(rpsEmbed.setDescription(`${emojis.tickNo} That's not a valid input!`));
                                         message.channel.send(`${emojis.tickNo} ${message.author.toString()} didn't send a correct input!`);
