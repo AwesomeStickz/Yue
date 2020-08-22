@@ -64,8 +64,7 @@ export const run = async (message: Message, client: Client): Promise<Message | v
 
         // @ts-expect-error
         await database.addProp('economy', message.author.id, totalEssence, 'inventory.essence');
-        // @ts-expect-error
-        await database.setProp('cooldown', message.author.id, Date.now(), 'inventory.navigate');
+        await database.setProp('cooldown', message.author.id, Date.now(), 'navigate');
 
         navigateEmbed.setDescription(`Your navigators made you **${totalEssence.toLocaleString()}** Essence\n\n${totalText}`);
         navigateEmbed.setFooter('Yue');
