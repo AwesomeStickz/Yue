@@ -25,7 +25,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     const shops = inventory.shops || {};
     const workers = inventory.workers || {};
 
-    const essenceInv = `Essence: ${essences.toLocaleString()}`;
+    const essenceInv = `${emojis.essence} Essence: ${essences.toLocaleString()}`;
 
     const house = {
         [`${emojis.houses.mud} Mud House`]: houses.mud,
