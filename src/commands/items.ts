@@ -9,8 +9,8 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 
     const itemsEmbed = embed({
         author: {
-            image: client.user!.displayAvatarURL(),
-            name: 'Items',
+            image: user.displayAvatarURL(),
+            name: `${user.username}'s Items`,
         },
         color: message.guild?.me?.displayHexColor,
     });
