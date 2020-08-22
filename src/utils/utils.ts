@@ -19,7 +19,7 @@ export const utils = {
         if (economyData.balance) networth += economyData.balance;
         if (economyData.inventory) {
             const { inventory } = economyData;
-            
+
             if (inventory.essence) networth += inventory.essence * 25;
 
             if (inventory.houses) {
@@ -124,9 +124,9 @@ export const utils = {
         }
         return networth;
     },
-    async getUser(arg: string, client: Client, guild: Guild) {
+    async getUser(arg: string, client: Client, guild?: Guild) {
         if (arg.length < 1) return undefined;
-        let user = this.getMember(arg, guild)?.user;
+        let user = guild ? this.getMember(arg, guild)?.user : undefined;
         if (!user) user = client.users.cache.filter((u) => u.username.toLowerCase().includes(arg.toLowerCase())).first();
         if (!user) user = client.users.cache.filter((u) => u.tag.toLowerCase() === arg.toLowerCase()).first();
         if (!user && /[0-9]{17,20}/.test(arg)) {
