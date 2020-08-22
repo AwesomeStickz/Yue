@@ -110,7 +110,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         .map(([workerName, workerAmount]) => `${workerName}: ${workerAmount.toLocaleString()}`)
         .join('\n');
 
-    if (essenceInv.length < 1 && houseInv.length < 1 && shopInv.length < 1 && workerInv.length < 1) return message.channel.send(itemsEmbed.setDescription(`${user.id === message.author.id ? `${emojis.tickNo} You don't` : `**${user.tag}** doesn't`} have any items`));
+    if (essences < 1 && houseInv.length < 1 && shopInv.length < 1 && workerInv.length < 1) return message.channel.send(itemsEmbed.setDescription(`${user.id === message.author.id ? `${emojis.tickNo} You don't` : `**${user.tag}** doesn't`} have any items`));
 
     if (houseInv) itemsEmbed.addField('Houses', houseInv, true);
     if (navigatorInv) itemsEmbed.addField('Navigators', navigatorInv, true);
