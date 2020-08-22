@@ -1,4 +1,5 @@
 export const emojis = {
+    essence: '💨',
     houses: {
         apartment: '<:Apartment:744302863391391834>',
         bungalow: '🏠',
