@@ -24,7 +24,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 };
 
 export const help = {
-    aliases: ['reset cooldown', 'cooldown reset>'],
+    aliases: ['reset cooldown', 'cooldown reset'],
     name: 'Reset Cooldown',
     description: 'Reset all cooldowns of someone',
     usage: 'reset cooldown <user>',
