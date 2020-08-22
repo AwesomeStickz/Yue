@@ -19,7 +19,7 @@ export const run = async (message: Message, client: Client): Promise<Message | v
     });
 
     if (remainingCooldown > 0) {
-        begEmbed.setDescription(`You begged me a lot of times already! I'm not giving you money for the next **${time}**`);
+        begEmbed.setDescription(`You begged me a lot of times already! I'm not giving you money for the next ${time}`);
     } else {
         let begMoney = Math.ceil(Math.random() * 150 + 100);
 
