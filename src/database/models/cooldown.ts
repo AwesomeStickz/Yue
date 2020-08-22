@@ -1,4 +1,4 @@
-import { JSONB, NUMBER, STRING } from 'sequelize';
+import { JSONB, STRING } from 'sequelize';
 import { define } from '../sequelize';
 
 export const cooldown = define('cooldown', {
@@ -7,8 +7,6 @@ export const cooldown = define('cooldown', {
     },
     data: {
         type: JSONB,
-        daily: NUMBER,
-        weekly: NUMBER,
         defaultValue: {},
     },
 });

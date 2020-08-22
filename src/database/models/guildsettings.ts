@@ -1,13 +1,12 @@
-import { ARRAY, JSONB, STRING } from 'sequelize';
+import { JSONB, STRING } from 'sequelize';
 import { define } from '../sequelize';
 
-export const yue = define('yue', {
+export const guildsettings = define('guildsettings', {
     userid: {
         type: STRING,
     },
     data: {
         type: JSONB,
-        owners: ARRAY(STRING),
         defaultValue: {},
     },
 });
