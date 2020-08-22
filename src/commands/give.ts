@@ -41,6 +41,9 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     const senderBalance = (await database.getProp('economy', message.author.id, 'balance')) || 0;
     const receiverBalance = (await database.getProp('economy', user.id, 'balance')) || 0;
 
+    const receiverNetworth = await utils.getNetworth(user.id);
+    await database.setProp('economy', user.id, receiverNetworth, 'networth');
+
     giveEmbed.setAuthor('Money Transfer', message.author.displayAvatarURL());
     giveEmbed.setDescription(`You gave **$${amount.toLocaleString()}** to **${user.username}**\n\n**${message.author.username}**'s new balance is **$${senderBalance.toLocaleString()}**\n**${user.username}**'s new balance is **$${receiverBalance.toLocaleString()}**`);
 
