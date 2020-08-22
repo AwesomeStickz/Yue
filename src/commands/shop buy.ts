@@ -66,14 +66,15 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
         color: message.guild?.me?.displayHexColor,
     });
 
-    const itemName = args.length > 1 ? args.slice(0, -1).join(' ').toLowerCase() : args.join(' ').toLowerCase();
+    const itemAmountString = args[args.length - 1].toLowerCase();
+    const itemName = itemAmountString !== 'all' && itemAmountString !== 'half' && itemAmountString !== 'quarter' && !itemAmountString.endsWith('%') && isNaN(Number(itemAmountString)) ? args.join(' ').toLowerCase() : args.slice(0, -1).join(' ').toLowerCase();
+
     let validItem = false;
 
     for (const [shopItemName, shopItemPrice] of Object.entries(shopItems)) {
         if (itemName.startsWith(shopItemName.toLowerCase())) {
             const balance = (await database.getProp('economy', message.author.id, 'balance')) || 0;
 
-            let itemAmountString = args[args.length - 1].toLowerCase();
             let amountUserInvests = 0;
             let itemAmount = 0;
 
