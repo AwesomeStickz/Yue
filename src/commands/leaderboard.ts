@@ -14,9 +14,12 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     });
 
     const sendLeaderboard = async (dataname: string, lbname: string, prefix = '', suffix = ''): Promise<Message> => {
-        let allData = await database.all('economy');
-
-        const sortedData: any = allData.sort((a: any, b: any) => b.data?.[dataname] - a.data[dataname]);
+        const allData = await database.all('economy');
+        const sortedData: any = allData.sort((a: any, b: any) => {
+            if (a.data[dataname] > b.data[dataname] || (a.data[dataname] && !b.data[dataname])) return -1;
+            if (a.data[dataname] < b.data[dataname] || (b.data[dataname] && !a.data[dataname])) return 1;
+            return 0;
+        });
         const leaderboardData = [];
 
         const page = !isNaN(Number(args[1])) ? Number(args[1]) : 1;
