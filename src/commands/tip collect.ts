@@ -14,7 +14,7 @@ export const run = async (message: Message, client: Client): Promise<Message | v
     const workerEmbed = embed({
         author: {
             image: client.user!.displayAvatarURL(),
-            name: 'Worker Collect',
+            name: 'Tip Collect',
         },
         color: message.guild?.me?.displayHexColor,
     });
@@ -88,7 +88,7 @@ export const run = async (message: Message, client: Client): Promise<Message | v
                 const moneyToAdd = Math.round((percentOfIncome / 100) * (workerPrice as number) * workerAmount);
 
                 totalMoney += moneyToAdd;
-                totalText += `${allWorkersEmoji[workerName]} ${workerAmount.toLocaleString()} ${workerName[0].toUpperCase()}${workerName.slice(1)} Shop: **$${moneyToAdd.toLocaleString()}**\n`;
+                totalText += `${allWorkersEmoji[workerName]} ${workerAmount.toLocaleString()} ${workerName[0].toUpperCase()}${workerName.slice(1)} Worker: **$${moneyToAdd.toLocaleString()}**\n`;
             }
         }
 
