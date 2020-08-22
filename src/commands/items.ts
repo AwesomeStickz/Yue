@@ -18,10 +18,13 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 
     const inventory = (await database.getProp('economy', user.id, 'inventory')) || {};
 
+    const essences = inventory.essence || 0;
     const houses = inventory.houses || {};
     const navigators = inventory.navigators || {};
     const shops = inventory.shops || {};
     const workers = inventory.workers || {};
+
+    const essenceInv = `Essence: ${essences.toLocaleString()}`;
 
     const house = {
         [`${emojis.houses.mud} Mud House`]: houses.mud,
@@ -106,8 +109,9 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         .map(([workerName, workerAmount]) => `${workerName}: ${workerAmount.toLocaleString()}`)
         .join('\n');
 
-    if (houseInv.length < 1 && shopInv.length < 1 && workerInv.length < 1) return message.channel.send(itemsEmbed.setDescription(`${user.id === message.author.id ? `${emojis.tickNo} You don't` : `**${user.tag}** doesn't`} have any items`));
+    if (essenceInv.length < 1 && houseInv.length < 1 && shopInv.length < 1 && workerInv.length < 1) return message.channel.send(itemsEmbed.setDescription(`${user.id === message.author.id ? `${emojis.tickNo} You don't` : `**${user.tag}** doesn't`} have any items`));
 
+    if (essenceInv) itemsEmbed.addField('Essence', essenceInv, true);
     if (houseInv) itemsEmbed.addField('Houses', houseInv, true);
     if (navigatorInv) itemsEmbed.addField('Navigators', navigatorInv, true);
     if (shopInv) itemsEmbed.addField('Shops', shopInv, true);
