@@ -20,7 +20,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     await database.delete('economy', user.id);
 
     resetEmbed.setAuthor(user.username, user.displayAvatarURL());
-    message.channel.send(resetEmbed.setDescription(`${emojis.tickYes} **${user.tag}**'s stats has been reset successfully`));
+    message.channel.send(resetEmbed.setDescription(`${emojis.tickYes} **${user.tag}**'s stats has been reset successfully!`));
 };
 
 export const help = {
@@ -33,4 +33,5 @@ export const help = {
 
 export const config = {
     args: 0,
+    owner: true,
 };
