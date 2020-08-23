@@ -33,11 +33,11 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
             const user = await utils.getUser(sortedData[i].userid, client);
             const userData = sortedData[i].data[dataname];
 
-            leaderboardData.push(`${i + 1}. ${user?.tag || 'unknown#0000'} - **${prefix}${Number(userData).toLocaleString()} ${suffix}**\n`);
+            leaderboardData.push(`**${i + 1}**. ${user?.tag || 'unknown#0000'} - \`${prefix}${Number(userData).toLocaleString()}${suffix}\`\n`);
         }
 
         let position = sortedData.findIndex((lbData: any) => lbData.userid === message.author.id) + 1;
-        if (position <= 0) position = sortedData.length + 1;
+        if (!sortedData.filter((lbData: any) => lbData.userid === message.author.id)?.data?.[dataname]) position = sortedData.filter((lbData: any) => lbData.data?.[dataname]).length + 1;
         if (leaderboardData.length < 1) return message.channel.send(leaderboardEmbed.setDescription(`${emojis.tickNo} There's no data for that leaderboard!`));
 
         leaderboardEmbed.setAuthor(`${lbname} Leaderboard`, client.user?.displayAvatarURL());
@@ -52,7 +52,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     } else if (args[0] === 'networth') {
         sendLeaderboard('networth', 'Networth', '$');
     } else if (args[0] === 'streak') {
-        sendLeaderboard('streak', 'Streak', '', 'days streak');
+        sendLeaderboard('streak', 'Streak', '', ' days streak');
     } else if (args[0] === 'winnings' || args[0] === 'winning') {
         sendLeaderboard('winnings', 'Winnings', '$');
     }
