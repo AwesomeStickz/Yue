@@ -12,9 +12,6 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         color: message.guild?.me?.displayHexColor,
     });
 
-    if (!message.member!.hasPermission('BAN_MEMBERS')) return message.channel.send(banEmbed.setDescription(`${emojis.tickNo} You need **Ban Members** permission to use this command!`));
-    if (!message.guild!.me!.hasPermission('BAN_MEMBERS')) return message.channel.send(banEmbed.setDescription(`${emojis.tickNo} I need **Ban Members** permission to ban someone!`));
-
     const user = await utils.getUser(args[0], client, message.guild!);
     if (!user) return message.channel.send(`${emojis.tickNo} I couldn't find that user`);
 
