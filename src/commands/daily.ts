@@ -1,9 +1,10 @@
-import { Message } from 'discord.js';
+import { Client, Message } from 'discord.js';
 import prettyMs from 'pretty-ms';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
+import { utils } from '../utils/utils';
 
-export const run = async (message: Message): Promise<Message | void> => {
+export const run = async (message: Message, client: Client): Promise<Message | void> => {
     const { cooldown } = help;
     const streakResetTime = 1.728e8;
 
@@ -36,6 +37,7 @@ export const run = async (message: Message): Promise<Message | void> => {
             await database.addProp('economy', message.author.id, 1, 'streak');
 
             dailyEmbed.setDescription(`You collected your daily bonus of **$${money}** (Streak: **${streak + 1}**)`);
+            utils.updateLevel(message.author.id, message, client);
         }
         await database.setProp('cooldown', message.author.id, Date.now(), 'daily');
     }

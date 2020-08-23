@@ -3,6 +3,7 @@ import prettyMs from 'pretty-ms';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
+import { utils } from '../utils/utils';
 
 export const run = async (message: Message, client: Client): Promise<Message | void> => {
     const { cooldown } = help;
@@ -99,6 +100,7 @@ export const run = async (message: Message, client: Client): Promise<Message | v
         workerEmbed.setDescription(`Your workers made you **$${totalMoney.toLocaleString()}**\n\n${totalText}`);
         workerEmbed.setFooter('Yue');
         workerEmbed.setTimestamp();
+        utils.updateLevel(message.author.id, message, client);
     }
     message.channel.send(workerEmbed);
 };

@@ -1,9 +1,10 @@
-import { Message } from 'discord.js';
+import { Client, Message } from 'discord.js';
 import prettyMs from 'pretty-ms';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
+import { utils } from '../utils/utils';
 
-export const run = async (message: Message): Promise<Message | void> => {
+export const run = async (message: Message, client: Client): Promise<Message | void> => {
     const { cooldown } = help;
 
     const lastWeekly = (await database.getProp('cooldown', message.author.id, 'weekly')) || 0;
@@ -25,6 +26,7 @@ export const run = async (message: Message): Promise<Message | void> => {
         await database.addProp('economy', message.author.id, 4000, 'balance');
 
         weeklyEmbed.setDescription(`You collected your weekly bonus of **$4,000**`);
+        utils.updateLevel(message.author.id, message, client);
     }
 
     message.channel.send(weeklyEmbed);

@@ -2,8 +2,9 @@ import { Client, Message } from 'discord.js';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
+import { utils } from '../utils/utils';
 
-export const run = async (message: Message, _client: Client, args: string[]): Promise<Message | void> => {
+export const run = async (message: Message, client: Client, args: string[]): Promise<Message | void> => {
     const essenceSellEmbed = embed({
         author: {
             image: message.author.displayAvatarURL(),
@@ -36,6 +37,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
     await database.addProp('economy', message.author.id, balanceToAdd, 'balance');
 
     message.channel.send(essenceSellEmbed.setDescription(`You sold **${amountOfEssence.toLocaleString()} ${emojis.essence} Essence** for **$${balanceToAdd.toLocaleString()}**`));
+    utils.updateLevel(message.author.id, message, client);
 };
 
 export const help = {
