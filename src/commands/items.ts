@@ -17,6 +17,9 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 
     if (user.bot) return message.channel.send(itemsEmbed.setDescription(`${emojis.tickNo} Bots don't have inventory!`));
 
+    const userLevelData = (await database.getProp('economy', user.id, 'level')) || {};
+    const userLevel = userLevelData.level || 0;
+
     const inventory = (await database.getProp('economy', user.id, 'inventory')) || {};
 
     const essences = inventory.essence || 0;
@@ -44,6 +47,9 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         .map(([houseName, houseAmount]) => `${houseName}: ${houseAmount.toLocaleString()}`)
         .join('\n');
 
+    const totalHouses = Object.values(house).reduce((a, b) => (a || 0) + (b || 0), 0);
+    const totalHouseSlots = userLevel * 2;
+
     const navigator = {
         [`${emojis.navigators.iron} Iron Navigator`]: navigators.iron,
         [`${emojis.navigators.bronze} Bronze Navigator`]: navigators.bronze,
@@ -57,6 +63,9 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         .filter(([, amount]) => amount)
         .map(([houseName, houseAmount]) => `${houseName}: ${houseAmount.toLocaleString()}`)
         .join('\n');
+
+    const totalNavigators = Object.values(navigator).reduce((a, b) => (a || 0) + (b || 0), 0);
+    const totalNavigatorSlots = userLevel * 2;
 
     const shop = {
         '🌸 Flower': shops.flower,
@@ -84,6 +93,9 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         .map(([shopName, shopAmount]) => `${shopName}: ${shopAmount.toLocaleString()}`)
         .join('\n');
 
+    const totalShops = Object.values(shop).reduce((a, b) => (a || 0) + (b || 0), 0);
+    const totalShopSlots = userLevel * 2;
+
     const worker = {
         '🌸 Flower': workers.flower,
         '🌮 Taco': workers.taco,
@@ -110,12 +122,15 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         .map(([workerName, workerAmount]) => `${workerName}: ${workerAmount.toLocaleString()}`)
         .join('\n');
 
+    const totalWorkers = Object.values(worker).reduce((a, b) => (a || 0) + (b || 0), 0);
+    const totalWorkerSlots = userLevel * 4;
+
     if (essences < 1 && navigatorInv.length < 1 && houseInv.length < 1 && shopInv.length < 1 && workerInv.length < 1) return message.channel.send(itemsEmbed.setDescription(`${user.id === message.author.id ? `${emojis.tickNo} You don't` : `**${user.tag}** doesn't`} have any items`));
 
-    if (houseInv) itemsEmbed.addField('Houses', houseInv, true);
-    if (navigatorInv) itemsEmbed.addField('Navigators', navigatorInv, true);
-    if (shopInv) itemsEmbed.addField('Shops', shopInv, true);
-    if (workerInv) itemsEmbed.addField('Workers', workerInv, true);
+    if (houseInv) itemsEmbed.addField(`Houses (${totalHouses}/${totalHouseSlots})`, houseInv, true);
+    if (navigatorInv) itemsEmbed.addField(`Navigators (${totalNavigators}/${totalNavigatorSlots})`, navigatorInv, true);
+    if (shopInv) itemsEmbed.addField(`Shops (${totalShops}/${totalShopSlots})`, shopInv, true);
+    if (workerInv) itemsEmbed.addField(`Workers (${totalWorkers}/${totalWorkerSlots})`, workerInv, true);
     if (essences > 0) itemsEmbed.addField('Essence', essenceInv, true);
 
     message.channel.send(itemsEmbed);
