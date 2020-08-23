@@ -48,7 +48,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         .join('\n');
 
     const totalHouses = Object.values(house).reduce((a, b) => (a || 0) + (b || 0), 0);
-    const totalHouseSlots = userLevel * 2;
+    const totalHouseSlots = userLevel === 0 ? 1 : userLevel * 2;
 
     const navigator = {
         [`${emojis.navigators.iron} Iron Navigator`]: navigators.iron,
@@ -65,7 +65,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         .join('\n');
 
     const totalNavigators = Object.values(navigator).reduce((a, b) => (a || 0) + (b || 0), 0);
-    const totalNavigatorSlots = userLevel * 2;
+    const totalNavigatorSlots = userLevel === 0 ? 1 : userLevel * 2;
 
     const shop = {
         '🌸 Flower': shops.flower,
@@ -94,7 +94,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         .join('\n');
 
     const totalShops = Object.values(shop).reduce((a, b) => (a || 0) + (b || 0), 0);
-    const totalShopSlots = userLevel * 2;
+    const totalShopSlots = userLevel === 0 ? 1 : userLevel * 2;
 
     const worker = {
         '🌸 Flower': workers.flower,
@@ -123,7 +123,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         .join('\n');
 
     const totalWorkers = Object.values(worker).reduce((a, b) => (a || 0) + (b || 0), 0);
-    const totalWorkerSlots = userLevel * 4;
+    const totalWorkerSlots = userLevel === 0 ? 1 : userLevel * 2;
 
     if (essences < 1 && navigatorInv.length < 1 && houseInv.length < 1 && shopInv.length < 1 && workerInv.length < 1) return message.channel.send(itemsEmbed.setDescription(`${user.id === message.author.id ? `${emojis.tickNo} You don't` : `**${user.tag}** doesn't`} have any items`));
 

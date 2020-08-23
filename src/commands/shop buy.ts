@@ -102,7 +102,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
 
             // @ts-expect-error
             const amountOfITemInInventory = await database.getProp('economy', message.author.id, `inventory.${inventoryItemType.toLowerCase()}s.${inventoryItemName.toLowerCase()}`);
-            const itemSlot = inventoryItemType === 'Worker' ? userLevel * 4 : userLevel * 2;
+            const itemSlot = inventoryItemType === 'Worker' ? (userLevel === 0 ? 2 : userLevel * 4) : userLevel === 0 ? 1 : userLevel * 2;
 
             if (amountOfITemInInventory + numberOfItemsToBuy > itemSlot) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough slots to buy that item!`));
 

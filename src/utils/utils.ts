@@ -159,7 +159,7 @@ export const utils = {
                     name: 'Level Up!',
                 },
                 color: message.guild?.me?.displayHexColor,
-                desc: `You advanced to level **${newLevel}**!\n**Unlocked**: \`${newLevel * 2} house slots\`, \`${newLevel * 2} navigator slots\`, \`${newLevel * 2} shop slots\`, \`${newLevel * 4} worker slots\`!`,
+                desc: `You advanced to level **${newLevel}**!\n**Unlocked**: \`${newLevel === 1 ? 2 : newLevel * 4} worker slots\`, \`${newLevel === 1 ? 1 : newLevel * 2} house slots\`, \`${newLevel === 1 ? 1 : newLevel * 2} navigator slots\`, \`${newLevel === 1 ? 1 : newLevel * 2} shop slots\`!`,
             });
 
             message.channel.send(levelUpEmbed);
