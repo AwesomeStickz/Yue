@@ -1,9 +1,17 @@
 import { Client, Message } from 'discord.js';
+import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
 
 export const run = async (message: Message, client: Client) => {
-    const pingMessage = await message.channel.send(`${emojis.typing} Pinging...`);
-    pingMessage.edit(`Pong! Latency is ${pingMessage.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(client.ws.ping)}ms`);
+    const pingEmbed = embed({
+        author: {
+            image: client.user?.displayAvatarURL(),
+            name: 'Ping',
+        },
+        color: message.guild?.me?.displayHexColor,
+    });
+    const pingMessage = await message.channel.send(pingEmbed.setDescription(`${emojis.typing} Pinging...`));
+    pingMessage.edit(pingEmbed.setDescription(`Pong! Latency is ${pingMessage.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(client.ws.ping)}ms`));
 };
 
 export const help = {
