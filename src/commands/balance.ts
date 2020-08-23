@@ -26,7 +26,7 @@ export const help = {
     aliases: ['bal', 'balance'],
     name: 'Balance',
     description: 'Sends your balance',
-    usage: 'balance <user>',
+    usage: 'balance [user]',
     example: 'balance\nbalance @Conor#0751',
 };
 

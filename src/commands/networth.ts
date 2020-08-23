@@ -26,7 +26,7 @@ export const help = {
     aliases: ['networth'],
     name: 'Networth',
     description: 'Sends your networth',
-    usage: 'networth <user>',
+    usage: 'networth [user]',
     example: 'networth\nnetworth @Conor#0751',
 };
 

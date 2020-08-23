@@ -26,7 +26,7 @@ export const help = {
     aliases: ['winnings'],
     name: 'winnings',
     description: 'Sends your winnings',
-    usage: 'winnings <user>',
+    usage: 'winnings [user]',
     example: 'winnings\nwinnings @Conor#0751',
 };
 
