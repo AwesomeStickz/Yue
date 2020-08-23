@@ -1,7 +1,8 @@
 import { Client, Message } from 'discord.js';
+import { emojis } from '../utils/emojis';
 
 export const run = async (message: Message, client: Client) => {
-    const pingMessage = await message.channel.send('<a:typing:393848431413559296> Pinging...');
+    const pingMessage = await message.channel.send(`${emojis.typing} Pinging...`);
     pingMessage.edit(`Pong! Latency is ${pingMessage.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(client.ws.ping)}ms`);
 };
 
