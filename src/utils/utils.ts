@@ -152,13 +152,14 @@ export const utils = {
             // @ts-expect-error
             await database.addProp('economy', userid, 1, 'level.level');
 
+            const newLevel = userLevel + 1;
             const levelUpEmbed = embed({
                 author: {
                     image: client.user?.displayAvatarURL(),
                     name: 'Level Up!',
                 },
                 color: message.guild?.me?.displayHexColor,
-                desc: `You advanced to level **${userLevel + 1}**. You unlocked your mom!`,
+                desc: `You advanced to level **${newLevel}**!\n**Unlocked**: \`${newLevel * 2} house slots\`, \`${newLevel * 2} navigator slots\`, \`${newLevel * 2} shop slots\`, \`${newLevel * 4} worker slots\`!`,
             });
 
             message.channel.send(levelUpEmbed);
