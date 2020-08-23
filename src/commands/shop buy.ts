@@ -2,7 +2,6 @@ import { Client, Message } from 'discord.js';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
-import { utils } from '../utils/utils';
 
 export const run = async (message: Message, client: Client, args: string[]): Promise<Message | void> => {
     const shopItems = {
@@ -108,8 +107,6 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 
             validItem = true;
             message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickYes} You've successfully bought **${numberOfItemsToBuy.toLocaleString()} ${inventoryItemName} ${inventoryItemType !== 'House' ? inventoryItemType : ''}${numberOfItemsToBuy > 1 && inventoryItemType !== 'House' ? 's' : ''}** for **$${totalMoney.toLocaleString()}**`));
-            utils.updateLevel(message.author.id, message, client);
-
             break;
         }
     }
