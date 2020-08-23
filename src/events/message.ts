@@ -1,6 +1,8 @@
-import { Client, Message } from 'discord.js';
+import { Client, Message, PermissionResolvable } from 'discord.js';
 import { aliases, commands } from '../utils/commandsAndAliases';
 import { database } from '../utils/databaseFunctions';
+import { embed } from '../utils/embed';
+import { emojis } from '../utils/emojis';
 import { utils } from '../utils/utils';
 
 export const run = async (client: Client, message: Message): Promise<Message | void> => {
@@ -24,6 +26,28 @@ export const run = async (client: Client, message: Message): Promise<Message | v
 
         if (commandObj.config.owner === true && !owners.includes(message.author.id)) return;
         if (commandObj.config.args > args.length) return message.channel.send(`Invalid arguments. Correct usage: \`${prefix}${(commands.get(command) as any).help.usage}\``);
+        if (commandObj.config.botPermissions || commandObj.config.userPermissions) {
+            const noPermissionEmbed = embed({
+                color: message.guild.me?.displayHexColor,
+            });
+
+            if (commandObj.config.userPermissions) {
+                const userPermissions: string[] = commandObj.config.userPermissions;
+                const userPermissionsInPermissionResolvable: PermissionResolvable[] = [];
+
+                userPermissions.forEach((permission) => userPermissionsInPermissionResolvable.push(permission.replace(/ /g, '_').toUpperCase() as any));
+
+                if (!message.member.permissions?.has(userPermissionsInPermissionResolvable)) return message.channel.send(noPermissionEmbed.setDescription(`${emojis.tickNo} You need **${userPermissions.join(', ')}** permission${userPermissions.length > 1 ? 's' : ''} to use this command!`));
+            }
+            if (commandObj.config.botPermissions) {
+                const botPermissions: string[] = commandObj.config.botPermissions;
+                const botPermissionsInPermissionResolvable: PermissionResolvable[] = [];
+
+                botPermissions.forEach((permission) => botPermissionsInPermissionResolvable.push(permission.replace(/ /g, '_').toUpperCase() as any));
+
+                if (!message.channel.permissionsFor(client.user!.id)?.has(botPermissionsInPermissionResolvable)) return message.channel.send(noPermissionEmbed.setDescription(`${emojis.tickNo} I need **${botPermissions.join(', ')}** permission${botPermissions.length > 1 ? 's' : ''} to execute this command!`));
+            }
+        }
 
         const commandFile = require(`../commands/${commandObj.fileName}`);
         await commandFile.run(message, client, args);
