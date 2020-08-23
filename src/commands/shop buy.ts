@@ -97,6 +97,14 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
             if (amountUserInvests < shopItemPrice) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough money to buy 1 **${inventoryItemName} ${inventoryItemType !== 'House' ? inventoryItemType : ''}**!`));
 
             const numberOfItemsToBuy = itemAmount > 0 ? Math.round(itemAmount) : Math.floor(amountUserInvests / shopItemPrice);
+            const userLevelData = (await database.getProp('economy', message.author.id, 'level')) || {};
+            const userLevel = userLevelData.level || 0;
+
+            // @ts-expect-error
+            const amountOfITemInInventory = await database.getProp('economy', message.author.id, `inventory.${inventoryItemType.toLowerCase()}s.${inventoryItemName.toLowerCase()}`);
+            const itemSlot = inventoryItemType === 'Worker' ? userLevel * 4 : userLevel * 2;
+
+            if (amountOfITemInInventory + numberOfItemsToBuy > itemSlot) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough slots to buy that item!`));
 
             const totalMoney = numberOfItemsToBuy * shopItemPrice;
             if (totalMoney > balance) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough money to buy **${numberOfItemsToBuy.toLocaleString()} ${inventoryItemName} ${inventoryItemType !== 'House' ? inventoryItemType : ''}${numberOfItemsToBuy > 1 && inventoryItemType !== 'House' ? 's' : ''}**`));
