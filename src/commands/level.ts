@@ -27,7 +27,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     levelEmbed.setFooter(`${(nextLevelXP - userXP).toLocaleString()} more xp needed for next level up`);
     levelEmbed.addFields([
         { name: 'Level', value: userLevel.toLocaleString(), inline: true },
-        { name: 'XP', value: `${userXP.toLocaleString()}/${userTotalXP.toLocaleString()}`, inline: true },
+        { name: 'XP', value: `${userXP.toLocaleString()}/${nextLevelXP.toLocaleString()}`, inline: true },
         { name: 'Total XP', value: userTotalXP.toLocaleString(), inline: true },
     ]);
 
