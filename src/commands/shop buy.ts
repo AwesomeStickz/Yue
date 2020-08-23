@@ -3,7 +3,7 @@ import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
 
-export const run = async (message: Message, client: Client, args: string[]): Promise<Message | void> => {
+export const run = async (message: Message, _client: Client, args: string[]): Promise<Message | void> => {
     const shopItems = {
         'Flower s': 500,
         'Taco s': 3500,
