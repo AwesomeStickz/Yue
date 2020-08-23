@@ -12,6 +12,8 @@ export const run = async (client: Client) => {
 
     console.log(`[Ready]\n${Ready}`);
 
+    client.user!.setStatus('dnd');
+
     const changeStatus = () => {
         const status = [`${client.guilds.cache.reduce((a, b) => a + b.memberCount, 0).toLocaleString()} users`, ` ${client.guilds.cache.size.toLocaleString()} servers`];
         const random = status[Math.floor(Math.random() * status.length)];
