@@ -1,5 +1,6 @@
-import { Client, Guild } from 'discord.js';
+import { Client, Guild, Message } from 'discord.js';
 import { database } from './databaseFunctions';
+import { embed } from './embed';
 
 export const utils = {
     getMember(arg: string, guild: Guild) {
@@ -136,5 +137,37 @@ export const utils = {
         }
         if (user) return user;
         else return undefined;
+    },
+    async updateLevel(userid: string, message: Message, client: Client) {
+        const userLevelData = (await database.getProp('economy', userid, 'level')) || {};
+        const randomXP = Math.round(Math.random() * 10 + 10);
+
+        const userLevel = userLevelData.level || 0;
+        const currentXP = userLevelData.xp ? userLevelData.xp + randomXP : 0;
+        const nextLevelXP = userLevel == 0 ? 100 : Math.round(Math.pow(1.33, userLevel + 1) * 100);
+
+        if (currentXP >= nextLevelXP) {
+            // @ts-expect-error
+            await database.setProp('economy', userid, currentXP - nextLevelXP, 'level.xp');
+            // @ts-expect-error
+            await database.addProp('economy', userid, 1, 'level.level');
+
+            const levelUpEmbed = embed({
+                author: {
+                    image: client.user?.displayAvatarURL(),
+                    name: 'Level Up!',
+                },
+                color: message.guild?.me?.displayHexColor,
+                desc: `You advanced to level **${userLevel + 1}**. You unlocked your mom!`,
+            });
+
+            message.channel.send(levelUpEmbed);
+        } else {
+            // @ts-expect-error
+            await database.addProp('economy', userid, randomXP, 'level.xp');
+        }
+
+        // @ts-expect-error
+        await database.addProp('economy', message.author.id, randomXP, 'level.totalXp');
     },
 };
