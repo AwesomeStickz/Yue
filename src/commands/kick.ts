@@ -33,6 +33,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
                         image: message.author.displayAvatarURL(),
                         name: `You have been kicked from ${message.guild?.name}`,
                     },
+                    color: '#fef4b5',
                     fields: [
                         { name: 'Moderator', value: message.author.tag },
                         { name: 'Reason', value: reason === `${message.author.tag} used kick command` ? 'None Given' : reason },

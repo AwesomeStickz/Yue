@@ -39,6 +39,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
                         image: message.author.displayAvatarURL(),
                         name: `You have been banned from ${message.guild?.name}`,
                     },
+                    color: '#fef4b5',
                     fields: [
                         { name: 'Moderator', value: message.author.tag },
                         { name: 'Reason', value: reason === `${message.author.tag} used ban command` ? 'None Given' : reason },
