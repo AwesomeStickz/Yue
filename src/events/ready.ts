@@ -20,5 +20,10 @@ export const run = async (client: Client) => {
         client.user!.setActivity(random, { type: 'WATCHING' });
     };
 
+    const sweepChannels = () => {
+        client.channels.cache.sweep((channel) => channel.type !== 'text');
+    };
+
     setInterval(changeStatus, 20000);
+    setInterval(sweepChannels, 300000);
 };
