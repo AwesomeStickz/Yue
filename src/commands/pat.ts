@@ -13,15 +13,16 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
             name: message.author.username,
         },
         color: message.guild?.me?.displayHexColor,
-        footer: 'Yue',
-        timestamp: true,
     });
 
     const user = await utils.getUser(args.join(' '), client, message.guild!);
-    if (!user) return message.channel.send(`${emojis.tickNo} I couldn't find that user`);
+    if (!user) return message.channel.send(patEmbed.setDescription(`${emojis.tickNo} I couldn't find that user`));
 
     const { body } = await superagent.get(`https://nekos.life/api/v2/img/pat`);
     const { url } = body;
+
+    patEmbed.setFooter('Yue');
+    patEmbed.setTimestamp();
 
     if (user.id === message.author.id) {
         patEmbed.setImage('https://media.giphy.com/media/Y4z9olnoVl5QI/giphy.gif');
