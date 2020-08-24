@@ -22,7 +22,7 @@ export const embed = (options: EmbedOptions) => {
     const embed = new MessageEmbed();
 
     if (options?.author) embed.setAuthor(options.author.name, options.author?.image);
-    if (options?.color) embed.setColor(options.color);
+    if (options?.color) embed.setColor(options.color !== '#000000' ? options.color : '#fef4b5');
     if (options?.desc) embed.setDescription(options.desc);
     if (options?.fields) {
         for (const field of options.fields) {
