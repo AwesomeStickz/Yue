@@ -123,7 +123,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         .join('\n');
 
     const totalWorkers = Object.values(worker).reduce((a, b) => (a || 0) + (b || 0), 0);
-    const totalWorkerSlots = userLevel === 0 ? 1 : userLevel * 2;
+    const totalWorkerSlots = userLevel === 0 ? 2 : userLevel * 4;
 
     if (essences < 1 && navigatorInv.length < 1 && houseInv.length < 1 && shopInv.length < 1 && workerInv.length < 1) return message.channel.send(itemsEmbed.setDescription(`${user.id === message.author.id ? `${emojis.tickNo} You don't` : `**${user.tag}** doesn't`} have any items`));
 
