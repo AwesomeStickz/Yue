@@ -20,7 +20,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     const bankBalance = userEconomyData.bank || 0;
     const userLevelData = userEconomyData.level || {};
     const userLevel = userLevelData.level || 0;
-    const bankCapacity = Math.round(Math.pow(1.5, userLevel));
+    const bankCapacity = Math.round(Math.pow(1.5, userLevel) * 100);
 
     bankEmbed.setAuthor(user.username, user.displayAvatarURL());
     message.channel.send(bankEmbed.setDescription(`${user.id === message.author.id ? 'Your' : 'Their'} balance in bank: **$${bankBalance.toLocaleString()}**\nBank capacity: **$${bankCapacity.toLocaleString()}**`));
