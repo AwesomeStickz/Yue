@@ -8,6 +8,7 @@ import { utils } from '../utils/utils';
 export const run = async (client: Client, message: Message): Promise<Message | void> => {
     if (message.author.bot) return;
     if (message.channel.type !== 'text' || !message.member || !message.guild) return;
+    if (!message.channel.permissionsFor(message.guild!.me!)?.has('SEND_MESSAGES')) return;
 
     const prefix = (await database.getProp('guildsettings', message.guild!.id, 'prefix')) || '>';
 
