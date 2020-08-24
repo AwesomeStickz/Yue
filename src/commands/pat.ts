@@ -17,7 +17,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         timestamp: true,
     });
 
-    const user = await utils.getUser(args[0], client, message.guild!);
+    const user = await utils.getUser(args.join(' '), client, message.guild!);
     if (!user) return message.channel.send(`${emojis.tickNo} I couldn't find that user`);
 
     const { body } = await superagent.get(`https://nekos.life/api/v2/img/pat`);
