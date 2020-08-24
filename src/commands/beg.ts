@@ -22,12 +22,12 @@ export const run = async (message: Message, client: Client): Promise<Message | v
     if (remainingCooldown > 0) {
         begEmbed.setDescription(`You begged me a lot of times already! I'm not giving you money for the next ${time}`);
     } else {
-        let begMoney = Math.ceil(Math.random() * 150 + 100);
+        let begMoney = Math.ceil(Math.random() * 25 + 25);
 
         await database.setProp('cooldown', message.author.id, Date.now(), 'beg');
         await database.addProp('economy', message.author.id, begMoney, 'balance');
 
-        begEmbed.setDescription(`Take **$${begMoney}** and come back in 30 minutes`);
+        begEmbed.setDescription(`Take **$${begMoney}** and come back in 1 minute`);
         utils.updateLevel(message.author.id, message, client);
     }
     message.channel.send(begEmbed);
@@ -37,7 +37,7 @@ export const help = {
     aliases: ['beg'],
     name: 'Beg',
     description: 'Beg me for some money',
-    cooldown: 1800000,
+    cooldown: 60000,
     usage: 'beg',
     example: 'beg',
 };
