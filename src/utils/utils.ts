@@ -18,6 +18,7 @@ export const utils = {
         let networth = 0;
 
         if (economyData.balance) networth += economyData.balance;
+        if (economyData.bank) networth += economyData.bank;
         if (economyData.inventory) {
             const { inventory } = economyData;
 
