@@ -1,4 +1,4 @@
-import { BOOLEAN, STRING } from 'sequelize';
+import { STRING } from 'sequelize';
 import { define } from '../sequelize';
 
 export const blacklist = define('blacklist', {
@@ -6,6 +6,6 @@ export const blacklist = define('blacklist', {
         type: STRING,
     },
     data: {
-        type: BOOLEAN,
+        type: STRING,
     },
 });
