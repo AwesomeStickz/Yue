@@ -14,11 +14,13 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     if (user.bot) return message.channel.send(balanceEmbed.setDescription(`${emojis.tickNo} You can't set balance of bots!`));
     if (isNaN(Number(args[1]))) return message.channel.send(balanceEmbed.setDescription(`${emojis.tickNo} Balance amount must be a number!`));
 
-    const balance = Number(args[1]);
-    await database.setProp('economy', user.id, balance, 'balance');
+    const balance = (await database.getProp('economy', user.id, 'balance')) || 0;
+    const newBalance = args[1][0] === '+' || args[1][0] === '-' ? balance + Number(args[1]) : Number(args[1]);
+
+    await database.setProp('economy', user.id, newBalance, 'balance');
 
     balanceEmbed.setAuthor(user.username, user.displayAvatarURL());
-    message.channel.send(balanceEmbed.setDescription(`${emojis.tickYes} ${user.toString()}'s balance has been set to **$${balance.toLocaleString()}**`));
+    message.channel.send(balanceEmbed.setDescription(`${emojis.tickYes} ${user.toString()}'s balance has been set to **$${newBalance.toLocaleString()}**`));
 };
 
 export const help = {
