@@ -34,7 +34,8 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
     if (depAmount < 1) return message.channel.send(depositEmbed.setDescription(`${emojis.tickNo} You can't deposit less than $1`));
     if (balance < depAmount) return message.channel.send(depositEmbed.setDescription(`${emojis.tickNo} You don't have enough money to deposit!`));
 
-    if (depAmount + bankBalance > bankCapacity) return message.channel.send(depositEmbed.setDescription(`${emojis.tickNo} You can't deposit **$${depAmount.toLocaleString()}** as it crosses your bank capacity of **$${bankCapacity.toLocaleString()}**`));
+    if (depAmount + bankBalance > bankCapacity) depAmount = bankCapacity - bankBalance;
+    if (depAmount === 0) return message.channel.send(depositEmbed.setDescription(`${emojis.tickNo} Your bank is already full!`));
 
     await database.subtractProp('economy', message.author.id, depAmount, 'balance');
     await database.addProp('economy', message.author.id, depAmount, 'bank');
