@@ -5,7 +5,7 @@ import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
 import { utils } from '../utils/utils';
 
-export const run = async (message: Message, _client: Client, args: string[]): Promise<Message | void> => {
+export const run = async (message: Message, client: Client, args: string[]): Promise<Message | void> => {
     const { cooldown } = help;
 
     const lastRob = (await database.getProp('cooldown', message.author.id, 'rob')) || 0;
@@ -44,6 +44,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
         await database.subtractProp('economy', member.id, moneyThatCanBeRobbed, 'balance');
 
         robEmbed.setDescription(`${emojis.tickYes} You successfully robbed ${member.toString()} and got **$${moneyThatCanBeRobbed.toLocaleString()}**`);
+        utils.updateLevel(message.author.id, message, client);
     }
     message.channel.send(robEmbed);
 };
