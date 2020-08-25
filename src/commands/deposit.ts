@@ -27,7 +27,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
     else if (depAmountString === 'quarter') depAmount = balance / 4;
     else if (depAmountString.endsWith('%')) depAmount = (Number(depAmountString.slice(0, -1)) * balance) / 100;
 
-    if (isNaN(depAmount)) return message.channel.send(depositEmbed.setDescription(`${emojis.tickNo} ${args[1]} is not a number!`));
+    if (isNaN(depAmount)) return message.channel.send(depositEmbed.setDescription(`${emojis.tickNo} ${args[0]} is not a number!`));
 
     depAmount = Math.round(depAmount);
 
