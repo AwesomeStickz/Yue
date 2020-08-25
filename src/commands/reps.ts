@@ -19,7 +19,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     const reps = (await database.getProp('economy', user.id, 'rep')) || 0;
 
     repsEmbed.setAuthor(user.username, user.displayAvatarURL());
-    message.channel.send(repsEmbed.setDescription(`${user.id === message.author.id ? 'Your' : 'Their'} reps: **$${reps.toLocaleString()}**`));
+    message.channel.send(repsEmbed.setDescription(`${user.id === message.author.id ? 'Your' : 'Their'} reps: **${reps.toLocaleString()}**`));
 };
 
 export const help = {
