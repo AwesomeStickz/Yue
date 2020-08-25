@@ -42,13 +42,14 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         [`${emojis.houses.mansion} Mansion`]: houses.mansion,
     };
 
+    const totalHouses = Object.values(house).reduce((a, b) => (a || 0) + (b || 0), 0);
+    const eachHouseSlots = userLevel === 0 ? 1 : userLevel * 2;
+    const totalHouseSlots = Object.keys(house).length * eachHouseSlots;
+
     const houseInv = Object.entries(house)
         .filter(([, amount]) => amount)
-        .map(([houseName, houseAmount]) => `${houseName}: ${houseAmount.toLocaleString()}`)
+        .map(([houseName, houseAmount]) => `${houseName}: (${houseAmount.toLocaleString()}/${eachHouseSlots.toLocaleString()})`)
         .join('\n');
-
-    const totalHouses = Object.values(house).reduce((a, b) => (a || 0) + (b || 0), 0);
-    const totalHouseSlots = userLevel === 0 ? 1 : userLevel * 2;
 
     const navigator = {
         [`${emojis.navigators.iron} Iron Navigator`]: navigators.iron,
@@ -59,13 +60,14 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         [`${emojis.navigators.diamond} Diamond Navigator`]: navigators.diamond,
     };
 
+    const totalNavigators = Object.values(navigator).reduce((a, b) => (a || 0) + (b || 0), 0);
+    const eachNavigatorSlots = userLevel === 0 ? 1 : userLevel * 2;
+    const totalNavigatorSlots = Object.keys(navigator).length * eachNavigatorSlots;
+
     const navigatorInv = Object.entries(navigator)
         .filter(([, amount]) => amount)
-        .map(([houseName, houseAmount]) => `${houseName}: ${houseAmount.toLocaleString()}`)
+        .map(([navigatorName, navigatorAmount]) => `${navigatorName}: (${navigatorAmount.toLocaleString()}/${eachNavigatorSlots.toLocaleString()})`)
         .join('\n');
-
-    const totalNavigators = Object.values(navigator).reduce((a, b) => (a || 0) + (b || 0), 0);
-    const totalNavigatorSlots = userLevel === 0 ? 1 : userLevel * 2;
 
     const shop = {
         '🌸 Flower': shops.flower,
@@ -88,13 +90,14 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         '✈️ Plane': shops.plane,
     };
 
+    const totalShops = Object.values(shop).reduce((a, b) => (a || 0) + (b || 0), 0);
+    const eachShopSlots = userLevel === 0 ? 1 : userLevel * 2;
+    const totalShopSlots = Object.keys(shop).length * eachShopSlots;
+
     const shopInv = Object.entries(shop)
         .filter(([, amount]) => amount)
-        .map(([shopName, shopAmount]) => `${shopName}: ${shopAmount.toLocaleString()}`)
+        .map(([shopName, shopAmount]) => `${shopName}: (${shopAmount.toLocaleString()}/${eachShopSlots.toLocaleString()})`)
         .join('\n');
-
-    const totalShops = Object.values(shop).reduce((a, b) => (a || 0) + (b || 0), 0);
-    const totalShopSlots = userLevel === 0 ? 1 : userLevel * 2;
 
     const worker = {
         '🌸 Flower': workers.flower,
@@ -117,13 +120,14 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         '✈️ Plane': workers.plane,
     };
 
+    const totalWorkers = Object.values(worker).reduce((a, b) => (a || 0) + (b || 0), 0);
+    const eachWokerSlots = userLevel === 0 ? 1 : userLevel * 4;
+    const totalWorkerSlots = Object.keys(worker).length * eachWokerSlots;
+
     const workerInv = Object.entries(worker)
         .filter(([, amount]) => amount)
-        .map(([workerName, workerAmount]) => `${workerName}: ${workerAmount.toLocaleString()}`)
+        .map(([workerName, workerAmount]) => `${workerName}: (${workerAmount.toLocaleString()}/${totalWorkerSlots.toLocaleString()})`)
         .join('\n');
-
-    const totalWorkers = Object.values(worker).reduce((a, b) => (a || 0) + (b || 0), 0);
-    const totalWorkerSlots = userLevel === 0 ? 2 : userLevel * 4;
 
     if (essences < 1 && navigatorInv.length < 1 && houseInv.length < 1 && shopInv.length < 1 && workerInv.length < 1) return message.channel.send(itemsEmbed.setDescription(`${user.id === message.author.id ? `${emojis.tickNo} You don't` : `**${user.tag}** doesn't`} have any items`));
 
