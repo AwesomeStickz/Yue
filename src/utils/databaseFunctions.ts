@@ -1,7 +1,7 @@
 import lodash from 'lodash';
 import sequelize from '../database/sequelize';
 
-type DatbaseModelNames = 'cooldown' | 'economy' | 'guildsettings' | 'yue';
+type DatbaseModelNames = 'blacklist' | 'cooldown' | 'economy' | 'guildsettings' | 'yue';
 type PropertyNames = 'balance' | 'bank' | 'beg' | 'essence' | 'daily' | 'don' | 'inventory' | 'level' | 'luck' | 'navigate' | 'networth' | 'owners' | 'pat' | 'prefix' | 'rentcollect' | 'rep' | 'rob' | 'robbed' | 'shopcollect' | 'streak' | 'tipcollect' | 'weekly' | 'winnings';
 
 export const database = {
