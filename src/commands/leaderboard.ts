@@ -51,6 +51,8 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         sendLeaderboard('balance', 'Bank', '$');
     } else if (args[0] === 'networth') {
         sendLeaderboard('networth', 'Networth', '$');
+    } else if (args[0] === 'rep' || args[0] === 'reps') {
+        sendLeaderboard('rep', 'Rep', '', ' reps');
     } else if (args[0] === 'streak') {
         sendLeaderboard('streak', 'Streak', '', ' days streak');
     } else if (args[0] === 'winnings' || args[0] === 'winning') {
