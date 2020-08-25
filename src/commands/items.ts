@@ -121,12 +121,12 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     };
 
     const totalWorkers = Object.values(worker).reduce((a, b) => (a || 0) + (b || 0), 0);
-    const eachWokerSlots = userLevel === 0 ? 1 : userLevel * 4;
+    const eachWokerSlots = userLevel === 0 ? 2 : userLevel * 4;
     const totalWorkerSlots = Object.keys(worker).length * eachWokerSlots;
 
     const workerInv = Object.entries(worker)
         .filter(([, amount]) => amount)
-        .map(([workerName, workerAmount]) => `${workerName}: (${workerAmount.toLocaleString()}/${totalWorkerSlots.toLocaleString()})`)
+        .map(([workerName, workerAmount]) => `${workerName}: (${workerAmount.toLocaleString()}/${eachWokerSlots.toLocaleString()})`)
         .join('\n');
 
     if (essences < 1 && navigatorInv.length < 1 && houseInv.length < 1 && shopInv.length < 1 && workerInv.length < 1) return message.channel.send(itemsEmbed.setDescription(`${user.id === message.author.id ? `${emojis.tickNo} You don't` : `**${user.tag}** doesn't`} have any items`));
