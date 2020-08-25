@@ -37,7 +37,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         }
 
         let position = sortedData.findIndex((lbData: any) => lbData.userid === message.author.id) + 1;
-        if (!sortedData.filter((lbData: any) => lbData.userid === message.author.id)?.data?.[dataname]) position = sortedData.filter((lbData: any) => lbData.data?.[dataname]).length + 1;
+        if (!sortedData.find((lbData: any) => lbData.userid === message.author.id)?.data?.[dataname]) position = sortedData.filter((lbData: any) => lbData.data?.[dataname]).length + 1;
         if (leaderboardData.length < 1) return message.channel.send(leaderboardEmbed.setDescription(`${emojis.tickNo} There's no data for that leaderboard!`));
 
         leaderboardEmbed.setAuthor(`${lbname} Leaderboard`, client.user?.displayAvatarURL());
