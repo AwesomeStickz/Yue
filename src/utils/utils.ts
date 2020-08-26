@@ -6,6 +6,7 @@ export const utils = {
     getMember(arg: string, guild: Guild) {
         if (arg?.length < 1 || arg == undefined) return undefined;
         let member = guild.members.cache.get(arg);
+        if (!member) member = guild.members.cache.find((m) => m.user.username.toLowerCase() === arg.toLowerCase());
         if (!member) member = guild.members.cache.filter((m) => m.user.username.toLowerCase().includes(arg.toLowerCase())).first();
         if (!member) member = guild.members.cache.filter((m) => m.user.tag.toLowerCase() === arg.toLowerCase()).first();
         if (!member) member = guild.members.cache.get(arg.slice(3, -1));
@@ -129,6 +130,7 @@ export const utils = {
     async getUser(arg: string, client: Client, guild?: Guild) {
         if (arg?.length < 1 || arg == undefined) return undefined;
         let user = guild ? this.getMember(arg, guild)?.user : undefined;
+        if (!user) user = client.users.cache.find((u) => u.username.toLowerCase() === arg.toLowerCase());
         if (!user) user = client.users.cache.filter((u) => u.username.toLowerCase().includes(arg.toLowerCase())).first();
         if (!user) user = client.users.cache.filter((u) => u.tag.toLowerCase() === arg.toLowerCase()).first();
         if (!user && /[0-9]{17,20}/.test(arg)) {
