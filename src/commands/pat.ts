@@ -61,7 +61,7 @@ export const help = {
     aliases: ['pat'],
     name: 'Pat',
     cooldown: 60000,
-    description: 'Pat a user. You can also pat Yue every 1 min to get some money',
+    description: 'Yue will send a gif of you patting a user. You can also pat Yue every 1 minute to get some money',
     usage: 'pat <user>',
     example: 'pat @Conor#0751\npat Yue#7352',
 };
