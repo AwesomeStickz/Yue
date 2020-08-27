@@ -107,12 +107,12 @@ export const run = async (message: Message): Promise<Message | void> => {
 };
 
 export const help = {
-    aliases: ['doubleornothing', 'don', 'dn'],
+    aliases: ['double or nothing', 'doubleornothing', 'don', 'dn'],
     name: 'Double Or Nothing',
     description: 'Bet all of your money for a 50% chance of doubling your money or losing all',
     cooldown: 3000,
-    usage: 'doubleornothing',
-    example: 'doubleornothing',
+    usage: 'double or nothing',
+    example: 'double or nothing\ndon',
 };
 
 export const config = {
