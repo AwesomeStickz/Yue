@@ -19,15 +19,15 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     const userLevelData = (await database.getProp('economy', user.id, 'level')) || {};
 
     const userLevel = userLevelData.level || 0;
-    const userXP = userLevelData.xp || 0;
+    const userCurrentXP = userLevelData.xp || 0;
     const userTotalXP = userLevelData.totalXp || 0;
-    const nextLevelXP = userLevel == 0 ? 100 : Math.round(Math.pow(1.33, userLevel + 1) * 100);
+    const nextLevelXP = Math.round((5 / 6) * (userLevel + 1) * (2 * (userLevel + 1) * (userLevel + 1) + 27 * (userLevel + 1) + 91));
 
     levelEmbed.setAuthor(user.username, user.displayAvatarURL());
-    levelEmbed.setFooter(`${(nextLevelXP - userXP).toLocaleString()} more xp needed for next level up`);
+    levelEmbed.setFooter(`${(nextLevelXP - userCurrentXP).toLocaleString()} more xp needed for next level up`);
     levelEmbed.addFields([
         { name: 'Level', value: userLevel.toLocaleString(), inline: true },
-        { name: 'XP', value: `${userXP.toLocaleString()}/${nextLevelXP.toLocaleString()}`, inline: true },
+        { name: 'XP', value: `${userCurrentXP.toLocaleString()}/${nextLevelXP.toLocaleString()}`, inline: true },
         { name: 'Total XP', value: userTotalXP.toLocaleString(), inline: true },
     ]);
 

@@ -147,7 +147,7 @@ export const utils = {
 
         const userLevel = userLevelData.level || 0;
         const currentXP = userLevelData.xp ? userLevelData.xp + randomXP : 0;
-        const nextLevelXP = userLevel == 0 ? 100 : Math.round(Math.pow(1.33, userLevel + 1) * 100);
+        const nextLevelXP = Math.round((5 / 6) * (userLevel + 1) * (2 * (userLevel + 1) * (userLevel + 1) + 27 * (userLevel + 1) + 91));
 
         if (currentXP >= nextLevelXP) {
             // @ts-expect-error
