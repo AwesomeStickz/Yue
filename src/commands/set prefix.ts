@@ -11,7 +11,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
 };
 
 export const help = {
-    aliases: ['setprefix'],
+    aliases: ['set prefix', 'prefix set'],
     name: 'Set Prefix',
     description: 'Change the prefix of the bot in the server',
     usage: 'setprefix <prefix>',
