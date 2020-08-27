@@ -50,6 +50,8 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 
     if (args[0] === 'bank') {
         sendLeaderboard('balance', 'Bank', '$');
+    } else if (args[0] === 'level' || args[0] === 'levels' || args[0] === 'rank') {
+        sendLeaderboard('level.level', 'Level', '', ' level');
     } else if (args[0] === 'networth') {
         sendLeaderboard('networth', 'Networth', '$');
     } else if (args[0] === 'rep' || args[0] === 'reps') {
