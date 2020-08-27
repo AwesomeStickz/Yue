@@ -3,6 +3,9 @@ import { database } from './databaseFunctions';
 import { embed } from './embed';
 
 export const utils = {
+    capitalize(arg: string) {
+        return arg.charAt(0).toUpperCase() + arg.slice(1);
+    },
     getMember(arg: string, guild: Guild) {
         if (arg?.length < 1 || arg == undefined) return undefined;
         let member = guild.members.cache.get(arg);
