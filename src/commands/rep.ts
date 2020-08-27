@@ -47,5 +47,5 @@ export const help = {
 
 export const config = {
     args: 1,
-    module: 'economy',
+    category: 'economy',
 };

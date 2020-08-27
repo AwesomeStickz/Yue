@@ -67,5 +67,5 @@ export const config = {
     args: 1,
     botPermissions: ['Ban Members'],
     userPermissions: ['Ban Members'],
-    module: 'moderation',
+    category: 'moderation',
 };

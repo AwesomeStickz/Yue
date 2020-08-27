@@ -22,12 +22,12 @@ export const run = async (message: Message, client: Client, args: string[]) => {
 export const help = {
     aliases: ['avatar', 'av'],
     name: 'Avatar',
-    description: 'Displays the avatar of someone',
+    description: 'View the avatar of a user',
     usage: 'avatar @user',
     example: 'avatar @Conor#0751',
 };
 
 export const config = {
     args: 0,
-    module: 'image',
+    category: 'image',
 };

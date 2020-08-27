@@ -145,4 +145,5 @@ export const help = {
 
 export const config = {
     args: 1,
+    category: 'economy',
 };

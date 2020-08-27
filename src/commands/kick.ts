@@ -64,5 +64,5 @@ export const config = {
     args: 1,
     botPermissions: ['Kick Members'],
     userPermissions: ['Kick Members'],
-    module: 'moderation',
+    category: 'moderation',
 };

@@ -29,4 +29,5 @@ export const help = {
 export const config = {
     args: 1,
     owner: true,
+    category: 'bot',
 };

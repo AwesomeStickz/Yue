@@ -66,4 +66,5 @@ export const help = {
 
 export const config = {
     args: 2,
+    category: 'economy',
 };
