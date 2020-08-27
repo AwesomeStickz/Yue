@@ -49,16 +49,16 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 
         if (isACategory) {
             const categoryName = args[0].toLowerCase();
-            const allCommands = commands.filter((commandInfo: any) => (commandInfo.config.owner !== true && typeof commandInfo.config.category === 'string' ? commandInfo.config.category === categoryName : commandInfo.config.category.includes(categoryName))).map((commandInfo: any) => `\`${commandInfo.help.name.toLowerCase()}\` - ${commandInfo.help.description}`);
+            const allCommands = commands.filter((commandInfo: any) => commandInfo.config.owner !== true && (typeof commandInfo.config.category === 'string' ? commandInfo.config.category === categoryName : commandInfo.config.category.includes(categoryName))).map((commandInfo: any) => `\`${commandInfo.help.name.toLowerCase()}\` - ${commandInfo.help.description}`);
 
-            let currentPage = Number(args[0]) < 1 ? 1 : Number(args[0]);
+            let currentPage = Number(args[1]) < 1 ? 1 : Number(args[1]);
             let totalPages = 1;
             let title = `${utils.capitalize(categoryName)} Commands`;
             let helpMenuText: string;
 
             if (allCommands.length > 15) {
                 totalPages = Math.ceil(allCommands.length / 15);
-                if (currentPage > totalPages) currentPage = 1;
+                if (currentPage > totalPages || isNaN(currentPage)) currentPage = 1;
 
                 title += ` (Page ${currentPage}/${totalPages})`;
                 helpMenuText = allCommands.slice((currentPage - 1) * 15, currentPage * 15).join('\n');
