@@ -1,4 +1,5 @@
 import { Client, Message } from 'discord.js';
+import lodash from 'lodash';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
@@ -16,8 +17,8 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     const sendLeaderboard = async (dataname: string, lbname: string, prefix = '', suffix = ''): Promise<Message> => {
         const allData = await database.all('economy');
         const sortedData: any = allData.sort((a: any, b: any) => {
-            if (a.data[dataname] > b.data[dataname] || (a.data[dataname] && !b.data[dataname])) return -1;
-            if (a.data[dataname] < b.data[dataname] || (b.data[dataname] && !a.data[dataname])) return 1;
+            if (lodash.get(a.data, dataname) > lodash.get(b.data, dataname) || (lodash.get(a.data, dataname) && !lodash.get(b.data, dataname))) return -1;
+            if (lodash.get(a.data, dataname) < lodash.get(b.data, dataname) || (lodash.get(b.data, dataname) && !lodash.get(a.data, dataname))) return 1;
             return 0;
         });
         const leaderboardData = [];
@@ -28,16 +29,16 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         const length = page * (sortedData.length > 10 ? 10 : sortedData.length);
 
         for (let i = (page - 1) * 10; i < length; i++) {
-            if (!sortedData[i]?.data[dataname]) break;
+            if (!lodash.get(sortedData[i]?.data, dataname)) break;
 
             const user = await utils.getUser(sortedData[i].userid, client);
-            const userData = sortedData[i].data[dataname];
+            const userData = lodash.get(sortedData[i].data, dataname);
 
             leaderboardData.push(`**${i + 1}**. ${user?.tag || 'unknown#0000'} - \`${prefix}${Number(userData).toLocaleString()}${suffix}\`\n`);
         }
 
         let position = sortedData.findIndex((lbData: any) => lbData.userid === message.author.id) + 1;
-        if (!sortedData.find((lbData: any) => lbData.userid === message.author.id)?.data?.[dataname]) position = sortedData.filter((lbData: any) => lbData.data?.[dataname]).length + 1;
+        if (!lodash.get(sortedData.find((lbData: any) => lbData.userid === message.author.id)?.data, dataname)) position = sortedData.filter((lbData: any) => lodash.get(lbData.data, dataname)).length + 1;
         if (leaderboardData.length < 1) return message.channel.send(leaderboardEmbed.setDescription(`${emojis.tickNo} There's no data for that leaderboard!`));
 
         leaderboardEmbed.setAuthor(`${lbname} Leaderboard`, client.user?.displayAvatarURL());
