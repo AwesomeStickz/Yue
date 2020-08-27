@@ -26,7 +26,7 @@ export const run = async (message: Message, client: Client): Promise<Message | v
 
 export const help = {
     aliases: ['shop navigator', 'shop navigators'],
-    name: 'Shop Bavigator',
+    name: 'Shop Navigator',
     description: 'View the list of navigators you can buy from shop',
     usage: 'shop navigators',
     example: 'shop navigators',
