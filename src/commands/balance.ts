@@ -25,7 +25,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 export const help = {
     aliases: ['bal', 'balance'],
     name: 'Balance',
-    description: 'Sends your balance',
+    description: 'View your balance',
     usage: 'balance [user]',
     example: 'balance\nbalance @Conor#0751',
 };
