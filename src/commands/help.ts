@@ -1,6 +1,5 @@
 import { Client, Message } from 'discord.js';
 import { aliases, commands } from '../utils/commandsAndAliases';
-import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
 import { utils } from '../utils/utils';
@@ -72,10 +71,8 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
             message.channel.send(helpEmbed);
         } else if (isACommand) {
             const commandInfo: any = commands.get(aliases.get(commandName));
-            const owners = await database.getProp('yue', client.user!.id!, 'owners');
-            const isAOwner = owners.includes(message.author.id);
 
-            if (commandInfo.config.owner === true && !isAOwner) return message.channel.send(helpEmbed.setDescription(`${emojis.tickNo} That command doesn't exist!`));
+            if (commandInfo.config.owner === true) return message.channel.send(helpEmbed.setDescription(`${emojis.tickNo} That command doesn't exist!`));
 
             helpEmbed.setAuthor(commandInfo.help.name, client.user?.displayAvatarURL());
             helpEmbed.addFields([
