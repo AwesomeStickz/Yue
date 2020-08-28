@@ -1,8 +1,10 @@
 import { Client, Message, PermissionResolvable } from 'discord.js';
+import prettyMs from 'pretty-ms';
 import { aliases, commands } from '../utils/commandsAndAliases';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
+import { tempCache } from '../utils/tempCache';
 import { utils } from '../utils/utils';
 
 export const run = async (client: Client, message: Message): Promise<Message | void> => {
@@ -52,6 +54,16 @@ export const run = async (client: Client, message: Message): Promise<Message | v
 
                 if (!message.channel.permissionsFor(client.user!.id)?.has(botPermissionsInPermissionResolvable)) return message.channel.send(noPermissionEmbed.setDescription(`${emojis.tickNo} I need **${botPermissions.join(', ')}** permission${botPermissions.length > 1 ? 's' : ''} to execute this command!`));
             }
+        }
+
+        if (!commandObj.help.cooldown) {
+            const cooldown = 3000;
+            const lastCommandUsage = tempCache.get(`${commandObj.help.name.replace(/ /g, '').toLowerCase()}_${message.author.id}`) || 0;
+            const remainingCooldown = cooldown - (Date.now() - lastCommandUsage);
+            const time = remainingCooldown > 1000 ? prettyMs(remainingCooldown, { verbose: true }) : `${(remainingCooldown / 1000).toFixed(1)} seconds`;
+
+            if (remainingCooldown > 0) return message.channel.send(`${emojis.tickNo} This commands is in cooldown! Come back in ${time}!`);
+            tempCache.set(`${commandObj.help.name.replace(/ /g, '').toLowerCase()}_${message.author.id}`, Date.now());
         }
 
         const commandFile = require(`../commands/${commandObj.fileName}`);
