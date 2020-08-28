@@ -20,7 +20,7 @@ export const run = async (client: Client, message: Message): Promise<Message | v
     if (blacklistedReason && message.content !== `${prefix}support`) return message.channel.send(`${emojis.tickNo} You are blacklisted from using the bot! Reason: ${blacklistedReason}. You can join support server using \`${prefix}support\` if you want to appeal!`);
 
     try {
-        const args = message.content.slice(prefix.length).trim().split(/ +/g);
+        const args = message.content.slice(prefix.length).split(/ +/g);
         let command = args.shift()?.toUpperCase() || '';
 
         if (aliases.has(`${command} ${args[0]?.toUpperCase()} ${args[1]?.toUpperCase()}`)) command = aliases.get(`${command} ${args.shift()?.toUpperCase()} ${args.shift()?.toUpperCase()}`) as string;
