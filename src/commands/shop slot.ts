@@ -10,10 +10,10 @@ export const run = async (message: Message, client: Client): Promise<Message | v
         color: message.guild?.me?.displayHexColor,
         desc: 'Buy slots for your houses, navigators, shop, workers from the shop using money',
         fields: [
-            { name: 'House Slot', value: '$75', inline: true },
+            { name: 'Worker Slot', value: '$75', inline: true },
+            { name: 'House Slot', value: '$150', inline: true },
             { name: 'Navigator Slot', value: '$150', inline: true },
             { name: 'Shop Slot', value: '$150', inline: true },
-            { name: 'Worker Slot', value: '$150', inline: true },
         ],
         footer: 'Use >slots buy to buy slots',
     });
