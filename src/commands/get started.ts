@@ -28,10 +28,11 @@ export const run = async (message: Message, client: Client, args: string[], pref
         await database.setProp('economy', message.author.id, true, 'getstarted');
 
         if (args[0] === 'skip') {
-            const finishedGetStarted = await database.getProp('economy', message.author.id, 'getstarted');
+            const finishedGetStarted = await database.getProp('economy', message.author.id, 'getstartedhouse');
             if (!finishedGetStarted) {
                 // @ts-expect-error
                 await database.addProp('economy', message.author.id, 1, 'inventory.houses.mud');
+                await database.setProp('economy', message.author.id, true, 'getstartedhouse');
             }
 
             getStartedEmbed.setFooter('');
@@ -99,7 +100,7 @@ export const run = async (message: Message, client: Client, args: string[], pref
                         const response = collected.first()?.content.toLowerCase();
                         if (Array.isArray(allCommands[commandIndex]) ? allCommands[commandIndex].includes(response?.slice(prefix.length)!) : response === `${prefix}${allCommands[commandIndex]}` && collected.first()?.author.id === message.author.id) {
                             if (commandIndex === allCommands.length - 1) {
-                                const finishedGetStarted = await database.getProp('economy', message.author.id, 'getstarted');
+                                const finishedGetStarted = await database.getProp('economy', message.author.id, 'getstartedhouse');
 
                                 getStartedEmbed.setFooter('');
                                 getStartedEmbed.setDescription(`Congratulations 🎉 on finishing get started! ${finishedGetStarted === true ? `You already completed get started once so you didn't get a mud house for completing this!` : `You got a mud house as a reward, you can do \`${prefix}house collect\` to get some money!`}`);
@@ -107,6 +108,7 @@ export const run = async (message: Message, client: Client, args: string[], pref
                                 if (!finishedGetStarted) {
                                     // @ts-expect-error
                                     await database.addProp('economy', message.author.id, 1, 'inventory.houses.mud');
+                                    await database.setProp('economy', message.author.id, true, 'getstartedhouse');
                                 }
                                 return message.channel.send(getStartedEmbed);
                             } else {
