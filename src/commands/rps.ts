@@ -24,7 +24,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
     if (remainingCooldown > 0) {
         message.channel.send(rpsEmbed.setDescription(`${emojis.tickNo} This command is in cooldown! Come back in ${time}`));
     } else {
-        const member = utils.getMember(args.join(' '), message.guild!);
+        const member = utils.getMember(args[0], message.guild!);
 
         if (!member) return message.channel.send(rpsEmbed.setDescription(`${emojis.tickNo} I couldn't find that user!`));
         if (member.user.bot) return message.channel.send(rpsEmbed.setDescription(`${emojis.tickNo} You can't play rps with bots!`));
