@@ -108,7 +108,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
             const itemSlot = userSlots[`${inventoryItemType.toLowerCase()}s`] ? userSlots[`${inventoryItemType.toLowerCase()}s`] : inventoryItemType === 'Worker' ? (!userLevel ? 2 : userLevel * 4) : !userLevel ? 1 : userLevel * 2;
             const remainingSlots = itemSlot - amountOfItemsInInventory;
 
-            if (remainingSlots === 0) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough any ${inventoryItemType.toLowerCase()} slots!`));
+            if (remainingSlots === 0) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough ${inventoryItemType.toLowerCase()} slots!`));
             if (amountOfItemsInInventory + numberOfItemsToBuy > itemSlot) numberOfItemsToBuy = itemSlot - amountOfItemsInInventory;
 
             const totalMoney = numberOfItemsToBuy * shopItemPrice;
