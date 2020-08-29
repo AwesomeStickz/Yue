@@ -2,6 +2,7 @@ import { Client, Message } from 'discord.js';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
+import { utils } from '../utils/utils';
 
 export const run = async (message: Message, _client: Client, args: string[]): Promise<Message | void> => {
     const capacityBuyEmbed = embed({
@@ -14,7 +15,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
 
     const balance = (await database.getProp('economy', message.author.id, 'balance')) || 0;
 
-    const bankCapacityString = args[1].toLowerCase();
+    const bankCapacityString = args[0].toLowerCase();
     let bankCapacity = Number(bankCapacityString);
 
     if (bankCapacityString === 'all') bankCapacity = balance;
@@ -24,18 +25,19 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
 
     if (isNaN(bankCapacity)) return message.channel.send(capacityBuyEmbed.setDescription(`${emojis.tickNo} ${args[0]} is not a number`));
 
-    const amountUserInvests = Math.round(bankCapacity);
-    bankCapacity = Math.round(bankCapacity / 10);
+    bankCapacity = bankCapacity === Number(bankCapacityString) ? bankCapacity : Math.floor(bankCapacity / 10);
+    const amountUserInvests = Math.floor(bankCapacity * 10);
+
+    const oldBankCapacity = await utils.getBankCapacity(message.author.id);
+    const newBankCapacity = oldBankCapacity + bankCapacity;
 
     if (bankCapacity < 1) return message.channel.send(capacityBuyEmbed.setDescription(`${emojis.tickNo} You can't buy less than $1 bank capacity!`));
     if (balance < amountUserInvests) return message.channel.send(capacityBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough money to buy **$${bankCapacity.toLocaleString()}** bank capacity!`));
 
     await database.subtractProp('economy', message.author.id, amountUserInvests, 'balance');
-    await database.addProp('economy', message.author.id, bankCapacity, 'bankcapacity');
+    await database.setProp('economy', message.author.id, newBankCapacity, 'bankcapacity');
 
-    const newBankCapacity = (await database.getProp('economy', message.author.id, 'bankcapacity')) || 0;
-
-    capacityBuyEmbed.setDescription(`${emojis.tickYes} You successfully bought **$${bankCapacity.toLocaleString()}** bank capacity for **${amountUserInvests.toLocaleString()}**! You got **$${newBankCapacity.toLocaleString()}** bank capacity now`);
+    capacityBuyEmbed.setDescription(`${emojis.tickYes} You successfully bought **$${bankCapacity.toLocaleString()}** bank capacity for **$${amountUserInvests.toLocaleString()}**! You got **$${newBankCapacity.toLocaleString()}** bank capacity now!`);
 
     message.channel.send(capacityBuyEmbed);
 };
