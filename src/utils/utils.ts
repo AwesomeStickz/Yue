@@ -159,6 +159,7 @@ export const utils = {
     },
     async help(commandName: string, client: Client, message: Message) {
         const commandInfo: any = commands.get(aliases.get(commandName));
+        if (!commandInfo) return;
 
         const helpEmbed = embed({
             author: {
