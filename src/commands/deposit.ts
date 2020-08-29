@@ -2,6 +2,7 @@ import { Client, Message } from 'discord.js';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
+import { utils } from '../utils/utils';
 
 export const run = async (message: Message, _client: Client, args: string[]): Promise<Message | void> => {
     const depositEmbed = embed({
@@ -15,9 +16,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
     const userEconomyData = (await database.get('economy', message.author.id)) || {};
     const balance = userEconomyData.balance || 0;
     const bankBalance = userEconomyData.bank || 0;
-    const userLevelData = userEconomyData.level || {};
-    const userLevel = userLevelData.level || 0;
-    const bankCapacity = Math.round(Math.pow(1.5, userLevel) * 100);
+    const bankCapacity = await utils.getBankCapacity(message.author.id);
 
     const depAmountString = args[0]?.toLowerCase();
     let depAmount = Number(depAmountString);
