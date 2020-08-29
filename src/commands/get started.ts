@@ -25,13 +25,13 @@ export const run = async (message: Message, client: Client, args: string[], pref
         message.channel.send(getStartedEmbed.setDescription(`${emojis.tickNo} This command is in cooldown! Come back in ${time}!`));
     } else {
         tempCache.set(`getstarted_${message.author.id}`, Date.now());
+        await database.setProp('economy', message.author.id, true, 'getstarted');
 
         if (args[0] === 'skip') {
             const finishedGetStarted = await database.getProp('economy', message.author.id, 'getstarted');
             if (!finishedGetStarted) {
                 // @ts-expect-error
                 await database.addProp('economy', message.author.id, 1, 'inventory.houses.mud');
-                await database.setProp('economy', message.author.id, true, 'getstarted');
             }
 
             getStartedEmbed.setFooter('');
@@ -107,7 +107,6 @@ export const run = async (message: Message, client: Client, args: string[], pref
                                 if (!finishedGetStarted) {
                                     // @ts-expect-error
                                     await database.addProp('economy', message.author.id, 1, 'inventory.houses.mud');
-                                    await database.setProp('economy', message.author.id, true, 'getstarted');
                                 }
                                 return message.channel.send(getStartedEmbed);
                             } else {
