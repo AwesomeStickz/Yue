@@ -67,7 +67,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
 };
 
 export const help = {
-    aliases: ['slots buy'],
+    aliases: ['slots buy', 'slot buy'],
     name: 'Slots Buy',
     description: 'Buy slots from the shop for your houses, navigators, shops and workers',
     usage: 'slot buy <slot type> [amount]',
