@@ -67,7 +67,7 @@ export const run = async (client: Client, message: Message): Promise<Message | v
         }
 
         const commandFile = require(`../commands/${commandObj.fileName}`);
-        await commandFile.run(message, client, args);
+        await commandFile.run(message, client, args, prefix);
 
         const networth = await utils.getNetworth(message.author.id);
         await database.setProp('economy', message.author.id, networth, 'networth');
