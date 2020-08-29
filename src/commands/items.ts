@@ -128,10 +128,10 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 
     if (essences < 1 && navigatorInv.length < 1 && houseInv.length < 1 && shopInv.length < 1 && workerInv.length < 1) return message.channel.send(itemsEmbed.setDescription(`${user.id === message.author.id ? `${emojis.tickNo} You don't` : `**${user.tag}** doesn't`} have any items`));
 
-    if (houseInv) itemsEmbed.addField(`Houses (${totalHouses}/${totalHouseSlots})`, houseInv, true);
-    if (navigatorInv) itemsEmbed.addField(`Navigators (${totalNavigators}/${totalNavigatorSlots})`, navigatorInv, true);
-    if (shopInv) itemsEmbed.addField(`Shops (${totalShops}/${totalShopSlots})`, shopInv, true);
-    if (workerInv) itemsEmbed.addField(`Workers (${totalWorkers}/${totalWorkerSlots})`, workerInv, true);
+    if (houseInv) itemsEmbed.addField(`Houses (${totalHouses.toLocaleString()}/${totalHouseSlots.toLocaleString()})`, houseInv, true);
+    if (navigatorInv) itemsEmbed.addField(`Navigators (${totalNavigators.toLocaleString()}/${totalNavigatorSlots.toLocaleString()})`, navigatorInv, true);
+    if (shopInv) itemsEmbed.addField(`Shops (${totalShops.toLocaleString()}/${totalShopSlots.toLocaleString()})`, shopInv, true);
+    if (workerInv) itemsEmbed.addField(`Workers (${totalWorkers.toLocaleString()}/${totalWorkerSlots.toLocaleString()})`, workerInv, true);
     if (essences > 0) itemsEmbed.addField('Essence', essenceInv, true);
 
     message.channel.send(itemsEmbed);
