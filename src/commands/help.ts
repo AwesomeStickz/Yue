@@ -70,20 +70,10 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 
             message.channel.send(helpEmbed);
         } else if (isACommand) {
-            const commandInfo: any = commands.get(aliases.get(commandName));
+            const commandHelpEmbed = utils.help(commandName, client, message);
+            if (!commandHelpEmbed) return message.channel.send(helpEmbed.setDescription(`${emojis.tickNo} That command doesn't exist!`));
 
-            if (commandInfo.config.owner === true) return message.channel.send(helpEmbed.setDescription(`${emojis.tickNo} That command doesn't exist!`));
-
-            helpEmbed.setAuthor(commandInfo.help.name, client.user?.displayAvatarURL());
-            helpEmbed.addFields([
-                { name: 'Description', value: commandInfo.help.description },
-                { name: 'Usage', value: commandInfo.help.usage },
-                { name: 'Example', value: commandInfo.help.example },
-            ]);
-
-            if (commandInfo.help.aliases.length > 1) helpEmbed.addField('Aliases', `\`${commandInfo.help.aliases.filter((alias: string) => alias !== commandName.toLowerCase()).join('`, `')}\``);
-
-            message.channel.send(helpEmbed);
+            message.channel.send(commandHelpEmbed);
         } else return message.channel.send(helpEmbed.setDescription(`${emojis.tickNo} That command doesn't exist!`));
     }
 };
