@@ -27,6 +27,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     const navigators = inventory.navigators || {};
     const shops = inventory.shops || {};
     const workers = inventory.workers || {};
+    const slots = inventory.slots || {};
 
     const essenceInv = `${emojis.essence} Essence: ${essences.toLocaleString()}`;
 
@@ -43,7 +44,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     };
 
     const totalHouses = Object.values(house).reduce((a, b) => (a || 0) + (b || 0), 0);
-    const totalHouseSlots = userLevel === 0 ? 1 : userLevel * 2;
+    const totalHouseSlots = !isNaN(slots.houses) ? Number(slots.houses) : userLevel === 0 ? 1 : userLevel * 2;
 
     const houseInv = Object.entries(house)
         .filter(([, amount]) => amount)
@@ -60,7 +61,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     };
 
     const totalNavigators = Object.values(navigator).reduce((a, b) => (a || 0) + (b || 0), 0);
-    const totalNavigatorSlots = userLevel === 0 ? 1 : userLevel * 2;
+    const totalNavigatorSlots = !isNaN(slots.navigators) ? Number(slots.navigators) : userLevel === 0 ? 1 : userLevel * 2;
 
     const navigatorInv = Object.entries(navigator)
         .filter(([, amount]) => amount)
@@ -89,7 +90,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     };
 
     const totalShops = Object.values(shop).reduce((a, b) => (a || 0) + (b || 0), 0);
-    const totalShopSlots = userLevel === 0 ? 1 : userLevel * 2;
+    const totalShopSlots = !isNaN(slots.shops) ? Number(slots.shops) : userLevel === 0 ? 1 : userLevel * 2;
 
     const shopInv = Object.entries(shop)
         .filter(([, amount]) => amount)
@@ -118,7 +119,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     };
 
     const totalWorkers = Object.values(worker).reduce((a, b) => (a || 0) + (b || 0), 0);
-    const totalWorkerSlots = userLevel === 0 ? 2 : userLevel * 4;
+    const totalWorkerSlots = !isNaN(slots.workers) ? Number(slots.workers) : userLevel === 0 ? 2 : userLevel * 4;
 
     const workerInv = Object.entries(worker)
         .filter(([, amount]) => amount)
