@@ -20,7 +20,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     const bankCapacity = await utils.getBankCapacity(message.author.id);
 
     bankEmbed.setAuthor(user.username, user.displayAvatarURL());
-    message.channel.send(bankEmbed.setDescription(`${user.id === message.author.id ? 'Your' : 'Their'} balance in bank: **$${bankBalance.toLocaleString()}**\nBank capacity: **$${bankCapacity.toLocaleString()}**`));
+    message.channel.send(bankEmbed.setDescription(`Bank: **$${bankBalance.toLocaleString()}**\nBank capacity: **$${bankCapacity.toLocaleString()}**`));
 };
 
 export const help = {
