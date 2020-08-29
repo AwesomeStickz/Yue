@@ -33,18 +33,37 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 
         if (remainingCooldownToStealUSer > 0) return message.channel.send(robEmbed.setDescription(`${emojis.tickNo} That user was robbed recently! Come back in ${userRobbableTime} to rob that user or rob someone else!`));
 
-        const userBalance = (await database.getProp('economy', member.id, 'balance')) || 0;
-        const moneyThatCanBeRobbed = Math.ceil(userBalance * 0.01) < 500000 ? Math.ceil(userBalance * 0.01) : 500000;
+        const authorBalance = (await database.getProp('economy', message.author.id, 'balance')) || 0;
+        if (authorBalance < 1000) return message.channel.send(robEmbed.setDescription(`${emojis.tickNo} You need at least **$1,000** in your wallet to rob from someone!`));
 
-        if (moneyThatCanBeRobbed < 1) return message.channel.send(robEmbed.setDescription(`${emojis.tickNo} That user is very poor! Try robbing someone else!`));
+        const randomNumber = Math.random() * 70 + 30;
+        let successfulRob = false;
 
-        await database.setProp('economy', member.id, Date.now(), 'robbed');
-        await database.setProp('cooldown', message.author.id, Date.now(), 'rob');
-        await database.addProp('economy', message.author.id, moneyThatCanBeRobbed, 'balance');
-        await database.subtractProp('economy', member.id, moneyThatCanBeRobbed, 'balance');
+        if (randomNumber > 30) successfulRob = true;
+        if (successfulRob) {
+            const userBalance = (await database.getProp('economy', member.id, 'balance')) || 0;
+            const moneyThatCanBeRobbed = Math.ceil(userBalance * 0.01) < 500000 ? Math.ceil(userBalance * 0.01) : 500000;
 
-        robEmbed.setDescription(`${emojis.tickYes} You successfully robbed ${member.toString()} and got **$${moneyThatCanBeRobbed.toLocaleString()}**`);
-        utils.updateLevel(message.author.id, message, client);
+            if (moneyThatCanBeRobbed < 1) return message.channel.send(robEmbed.setDescription(`${emojis.tickNo} That user is very poor! Try robbing someone else!`));
+
+            await database.setProp('economy', member.id, Date.now(), 'robbed');
+            await database.setProp('cooldown', message.author.id, Date.now(), 'rob');
+            await database.addProp('economy', message.author.id, moneyThatCanBeRobbed, 'balance');
+            await database.subtractProp('economy', member.id, moneyThatCanBeRobbed, 'balance');
+
+            robEmbed.setDescription(`${emojis.tickYes} You successfully robbed ${member.toString()} and got **$${moneyThatCanBeRobbed.toLocaleString()}**`);
+            utils.updateLevel(message.author.id, message, client);
+        } else {
+            const fineToPay = Math.ceil(authorBalance * 0.02) < 500000 ? Math.ceil(authorBalance * 0.01) : 500000;
+
+            if (fineToPay < 1) return message.channel.send(robEmbed.setDescription(`${emojis.tickNo} That user is very poor! Try robbing someone else!`));
+
+            await database.setProp('cooldown', message.author.id, Date.now(), 'rob');
+            await database.subtractProp('economy', message.author.id, fineToPay, 'balance');
+
+            robEmbed.setDescription(`${emojis.tickYes} You were caught by police 🚓 when trying to rob ${member.toString()} and paid **$${fineToPay.toLocaleString()}** as fine!`);
+            utils.updateLevel(message.author.id, message, client);
+        }
     }
     message.channel.send(robEmbed);
 };
