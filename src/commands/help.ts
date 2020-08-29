@@ -70,7 +70,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 
             message.channel.send(helpEmbed);
         } else if (isACommand) {
-            const commandHelpEmbed = utils.help(commandName, client, message);
+            const commandHelpEmbed = await utils.help(commandName, client, message);
             if (!commandHelpEmbed) return message.channel.send(helpEmbed.setDescription(`${emojis.tickNo} That command doesn't exist!`));
 
             message.channel.send(commandHelpEmbed);

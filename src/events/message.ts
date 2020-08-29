@@ -33,7 +33,7 @@ export const run = async (client: Client, message: Message): Promise<Message | v
         const finishedGetStarted = await database.getProp('economy', message.author.id, 'getstarted');
 
         if (commandObj.config.owner === true && !owners.includes(message.author.id)) return;
-        if (commandObj.config.args > args.length) return message.channel.send(utils.help(commandObj.help.name, client, message));
+        if (commandObj.config.args > args.length) return message.channel.send(await utils.help(commandObj.help.name, client, message));
         if (commandObj.config.botPermissions || commandObj.config.userPermissions) {
             const noPermissionEmbed = embed({
                 color: message.guild.me?.displayHexColor,
