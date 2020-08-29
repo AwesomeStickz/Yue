@@ -13,6 +13,7 @@ export const run = async (message: Message, client: Client): Promise<Message | v
             { name: 'Shop Navigators', value: '**Description:** It contains a list of navigators you can buy from shop\n**Usage**: `shop navigators`', inline: true },
             { name: 'Shop Shops', value: '**Description:** It contains a list of shops you can buy from shop\n**Usage**: `shop shops`', inline: true },
             { name: 'Shop Workers', value: '**Description:** It contains a list of workers you can buy from shop\n**Usage**: `shop workers`', inline: true },
+            { name: 'Shop Slots', value: '**Description:** It contains a list of slots you can buy from shop\n**Usage**: `shop slots`', inline: true },
         ],
         footer: 'Yue',
         timestamp: true,
