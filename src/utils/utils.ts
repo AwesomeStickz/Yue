@@ -158,7 +158,7 @@ export const utils = {
         else return undefined;
     },
     async help(commandName: string, client: Client, message: Message) {
-        const commandInfo: any = commands.get(aliases.get(commandName));
+        const commandInfo: any = commands.get(aliases.get(commandName.toUpperCase()));
         if (!commandInfo) return;
 
         const helpEmbed = embed({
