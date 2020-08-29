@@ -96,15 +96,20 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
 
             if (amountUserInvests < shopItemPrice) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough money to buy 1 **${inventoryItemName} ${inventoryItemType !== 'House' ? inventoryItemType : ''}**!`));
 
-            const numberOfItemsToBuy = itemAmount > 0 ? Math.round(itemAmount) : Math.floor(amountUserInvests / shopItemPrice);
+            let numberOfItemsToBuy = itemAmount > 0 ? Math.round(itemAmount) : Math.floor(amountUserInvests / shopItemPrice);
             const userLevelData = (await database.getProp('economy', message.author.id, 'level')) || {};
             const userLevel = userLevelData.level || 0;
 
             // @ts-expect-error
-            const amountOfITemInInventory = (await database.getProp('economy', message.author.id, `inventory.${inventoryItemType.toLowerCase()}s.${inventoryItemName.toLowerCase()}`)) || 0;
-            const itemSlot = inventoryItemType === 'Worker' ? (userLevel === 0 ? 2 : userLevel * 4) : userLevel === 0 ? 1 : userLevel * 2;
+            const itemsInInventory = (await database.getProp('economy', message.author.id, `inventory.${inventoryItemType.toLowerCase()}s`)) || {};
+            const amountOfItemsInInventory = Number(Object.values(itemsInInventory).reduce((a: any, b: any) => a + b, 0));
+            // @ts-expect-error
+            const userSlots = (await database.getProp('economy', message.author.id, `inventory.slots`)) || {};
+            const itemSlot = userSlots[`${inventoryItemType.toLowerCase()}s`] ? userSlots[`${inventoryItemType.toLowerCase()}s`] : inventoryItemType === 'Worker' ? (userLevel === 0 ? 2 : userLevel * 4) : userLevel === 0 ? 1 : userLevel * 2;
+            const remainingSlots = itemSlot - amountOfItemsInInventory;
 
-            if (amountOfITemInInventory + numberOfItemsToBuy > itemSlot) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough slots to buy that item!`));
+            if (remainingSlots === 0) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough any ${inventoryItemType.toLowerCase()} slots!`));
+            if (amountOfItemsInInventory + numberOfItemsToBuy > itemSlot) numberOfItemsToBuy = itemSlot - amountOfItemsInInventory;
 
             const totalMoney = numberOfItemsToBuy * shopItemPrice;
             if (totalMoney > balance) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough money to buy **${numberOfItemsToBuy.toLocaleString()} ${inventoryItemName} ${inventoryItemType !== 'House' ? inventoryItemType : ''}${numberOfItemsToBuy > 1 && inventoryItemType !== 'House' ? 's' : ''}**`));
