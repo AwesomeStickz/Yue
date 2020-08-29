@@ -102,6 +102,8 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
             if (isNaN(numberOfItemsToGive)) return message.channel.send(giftEmbed.setDescription(`${emojis.tickNo} The amount of item must be a number!`));
             numberOfItemsToGive = Math.round(numberOfItemsToGive);
 
+            if (numberOfItemsToGive > authorItemsInInventory) return message.channel.send(giftEmbed.setDescription(`${emojis.tickNo} You don't have enough ${inventoryItemName.toLowerCase()} ${inventoryItemType.toLowerCase()} to give to ${user.toString()}!`));
+
             const userEconomyData = (await database.get('economy', user.id)) || {};
 
             const userLevelData = lodash.get(userEconomyData, 'level') || {};
