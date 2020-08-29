@@ -224,6 +224,7 @@ export const utils = {
             lodash.set(userSlots, 'workers', isNaN(userSlots.workers) ? workerSlots + 2 : Number(userSlots.workers) + workerSlots);
 
             await database.setProp('economy', userid, userSlots, 'inventory.slots');
+            await database.setProp('economy', userid, newBankCapacity, 'bankcapacity');
         } else {
             // @ts-expect-error
             await database.addProp('economy', userid, randomXP, 'level.xp');
