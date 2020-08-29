@@ -32,7 +32,7 @@ export const run = async (client: Client, message: Message): Promise<Message | v
         const commandObj = commands.get(command) as any;
 
         if (commandObj.config.owner === true && !owners.includes(message.author.id)) return;
-        if (commandObj.config.args > args.length) return message.channel.send(`Invalid arguments. Correct usage: \`${prefix}${(commands.get(command) as any).help.usage}\``);
+        if (commandObj.config.args > args.length) return message.channel.send(utils.help(commandObj.help.name, client, message));
         if (commandObj.config.botPermissions || commandObj.config.userPermissions) {
             const noPermissionEmbed = embed({
                 color: message.guild.me?.displayHexColor,
