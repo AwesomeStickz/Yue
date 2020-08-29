@@ -113,13 +113,18 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 
             if (userAmountOfItemsInInventory + numberOfItemsToGive > userItemSlots) return message.channel.send(giftEmbed.setDescription(`${emojis.tickNo} That user doesn't have enough slots left to accept this gift!`));
 
+            const userNewItemAmount = (lodash.get(userItemsInInventory, inventoryItemName.toLowerCase()) ?? 0) + numberOfItemsToGive;
+            const authorNewItemAmount = authorItemsInInventory - numberOfItemsToGive;
+            const fullItemName = `${inventoryItemName} ${inventoryItemType !== 'House' ? inventoryItemType : ''}${numberOfItemsToGive > 1 && inventoryItemType !== 'House' ? 's' : ''}`;
+
             // @ts-expect-error
             await database.subtractProp('economy', message.author.id, numberOfItemsToGive, `inventory.${inventoryItemType.toLowerCase()}s.${inventoryItemName.toLowerCase()}`);
             // @ts-expect-error
             await database.addProp('economy', user.id, numberOfItemsToGive, `inventory.${inventoryItemType.toLowerCase()}s.${inventoryItemName.toLowerCase()}`);
 
             validItem = true;
-            message.channel.send(giftEmbed.setDescription(`${emojis.tickYes} You gifted **${numberOfItemsToGive.toLocaleString()} ${inventoryItemName} ${inventoryItemType !== 'House' ? inventoryItemType : ''}${numberOfItemsToGive > 1 && inventoryItemType !== 'House' ? 's' : ''}** to ${user.toString()}`));
+            giftEmbed.setDescription(`${emojis.tickYes} You gifted **${numberOfItemsToGive.toLocaleString()} ${fullItemName}** to **${user.username}**\n\n**${message.author.username}**'s new ${fullItemName} amount is **${authorNewItemAmount.toLocaleString()}**\n**${user.username}**'s new ${fullItemName} amount is **${userNewItemAmount.toLocaleString()}**`);
+            message.channel.send(giftEmbed);
             break;
         }
     }
