@@ -8,7 +8,7 @@ export const utils = {
         return arg.charAt(0).toUpperCase() + arg.slice(1);
     },
     async getBankCapacity(userid: string) {
-        const bankCapacities = [100, 250, 500, 750, 1000, 1500, 2000, 3500, 5000, 7500, 10000, 15000, 20000, 25000, 32000, 40000, 50000, 65000, 80000, 100000, 125000, 150000, 200000, 250000, 350000, 500000, 650000, 825000, 1000000];
+        const bankCapacities = [100, 150, 250, 500, 750, 1000, 1500, 2000, 3500, 5000, 7500, 10000, 15000, 20000, 25000, 32000, 40000, 50000, 65000, 80000, 100000, 125000, 150000, 200000, 250000, 350000, 500000, 650000, 825000, 1000000];
         const userBankCapacity = await database.getProp('economy', userid, 'bankcapacity');
 
         if (userBankCapacity) return userBankCapacity;
