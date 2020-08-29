@@ -2,7 +2,7 @@ import lodash from 'lodash';
 import sequelize from '../database/sequelize';
 
 type DatbaseModelNames = 'blacklist' | 'cooldown' | 'economy' | 'guildsettings' | 'yue';
-type PropertyNames = 'balance' | 'bank' | 'beg' | 'essence' | 'daily' | 'don' | 'inventory'  | 'inventory.slots'| 'level' | 'luck' | 'navigate' | 'networth' | 'owners' | 'pat' | 'prefix' | 'rentcollect' | 'rep' | 'rob' | 'robbed' | 'shopcollect' | 'streak' | 'tipcollect' | 'weekly' | 'winnings';
+type PropertyNames = 'balance' | 'bank' | 'bankcapacity' | 'beg' | 'essence' | 'daily' | 'don' | 'inventory' | 'inventory.slots' | 'level' | 'luck' | 'navigate' | 'networth' | 'owners' | 'pat' | 'prefix' | 'rentcollect' | 'rep' | 'rob' | 'robbed' | 'shopcollect' | 'streak' | 'tipcollect' | 'weekly' | 'winnings';
 
 export const database = {
     async all(model: DatbaseModelNames): Promise<object[]> {
