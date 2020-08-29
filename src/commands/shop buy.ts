@@ -103,7 +103,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
             // @ts-expect-error
             const itemsInInventory = (await database.getProp('economy', message.author.id, `inventory.${inventoryItemType.toLowerCase()}s`)) || {};
             const amountOfItemsInInventory = Number(Object.values(itemsInInventory).reduce((a: any, b: any) => a + b, 0));
-            // @ts-expect-error
+
             const userSlots = (await database.getProp('economy', message.author.id, `inventory.slots`)) || {};
             const itemSlot = userSlots[`${inventoryItemType.toLowerCase()}s`] ? userSlots[`${inventoryItemType.toLowerCase()}s`] : inventoryItemType === 'Worker' ? (userLevel === 0 ? 2 : userLevel * 4) : userLevel === 0 ? 1 : userLevel * 2;
             const remainingSlots = itemSlot - amountOfItemsInInventory;
