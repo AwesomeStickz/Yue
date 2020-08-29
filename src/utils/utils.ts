@@ -158,7 +158,7 @@ export const utils = {
     },
     async updateLevel(userid: string, message: Message, client: Client) {
         const userLevelData = (await database.getProp('economy', userid, 'level')) || {};
-        const randomXP = Math.round(Math.random() * 10 + 10);
+        const randomXP = Math.round(Math.random() * 20 + 20);
 
         const userLevel = userLevelData.level || 0;
         const currentXP = userLevelData.xp ? userLevelData.xp + randomXP : 0;
