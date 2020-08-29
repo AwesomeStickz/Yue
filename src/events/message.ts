@@ -30,6 +30,7 @@ export const run = async (client: Client, message: Message): Promise<Message | v
 
         const owners = await database.getProp('yue', client.user!.id, 'owners');
         const commandObj = commands.get(command) as any;
+        const finishedGetStarted = await database.getProp('economy', message.author.id, 'getstarted');
 
         if (commandObj.config.owner === true && !owners.includes(message.author.id)) return;
         if (commandObj.config.args > args.length) return message.channel.send(utils.help(commandObj.help.name, client, message));
@@ -55,6 +56,7 @@ export const run = async (client: Client, message: Message): Promise<Message | v
                 if (!message.channel.permissionsFor(client.user!.id)?.has(botPermissionsInPermissionResolvable)) return message.channel.send(noPermissionEmbed.setDescription(`${emojis.tickNo} I need **${botPermissions.join(', ')}** permission${botPermissions.length > 1 ? 's' : ''} to execute this command!`));
             }
         }
+        if (!finishedGetStarted && commandObj.config.category === 'economy' && commandObj.help.name !== 'Get Started') return message.channel.send(embed({ color: message.guild.me?.displayHexColor, desc: `${emojis.tickNo} You have to use \`get started\` command first to use economy commands!` }));
 
         if (!commandObj.help.cooldown) {
             const cooldown = 3000;
