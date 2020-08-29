@@ -1,5 +1,4 @@
 import { Client, Guild, Message } from 'discord.js';
-import lodash from 'lodash';
 import { database } from './databaseFunctions';
 import { embed } from './embed';
 
@@ -160,26 +159,16 @@ export const utils = {
             await database.addProp('economy', userid, 1, 'level.level');
 
             const newLevel = userLevel + 1;
-            const workerSlots = newLevel === 1 ? 2 : newLevel * 4;
-            const otherSlots = newLevel === 1 ? 1 : newLevel * 2;
             const levelUpEmbed = embed({
                 author: {
                     image: client.user?.displayAvatarURL(),
                     name: 'Level Up!',
                 },
                 color: message.guild?.me?.displayHexColor,
-                desc: `You advanced to level **${newLevel}**!\n**Unlocked**: \`${workerSlots.toLocaleString()} worker slots\`, \`${otherSlots.toLocaleString()} house slots\`, \`${otherSlots.toLocaleString()} navigator slots\`, \`${otherSlots.toLocaleString()} shop slots\`!`,
+                desc: `You advanced to level **${newLevel}**!\n**Unlocked**: \`${newLevel === 1 ? 2 : newLevel * 4} worker slots\`, \`${newLevel === 1 ? 1 : newLevel * 2} house slots\`, \`${newLevel === 1 ? 1 : newLevel * 2} navigator slots\`, \`${newLevel === 1 ? 1 : newLevel * 2} shop slots\`!`,
             });
 
             message.channel.send(levelUpEmbed);
-            const userSlots = (await database.getProp('economy', userid, 'inventory.slots')) || {};
-
-            lodash.set(userSlots, 'houses', isNaN(userSlots.houses) ? otherSlots + 1 : Number(userSlots.houses) + otherSlots);
-            lodash.set(userSlots, 'navigators', isNaN(userSlots.navigators) ? otherSlots + 1 : Number(userSlots.navigators) + otherSlots);
-            lodash.set(userSlots, 'shops', isNaN(userSlots.shops) ? otherSlots + 1 : Number(userSlots.shops) + otherSlots);
-            lodash.set(userSlots, 'workers', isNaN(userSlots.workers) ? workerSlots + 2 : Number(userSlots.workers) + workerSlots);
-
-            await database.setProp('economy', userid, userSlots, 'inventory.slots');
         } else {
             // @ts-expect-error
             await database.addProp('economy', userid, randomXP, 'level.xp');
