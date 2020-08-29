@@ -1,5 +1,6 @@
 import { Client, Guild, Message } from 'discord.js';
 import lodash from 'lodash';
+import { aliases, commands } from './commandsAndAliases';
 import { database } from './databaseFunctions';
 import { embed } from './embed';
 
@@ -155,6 +156,30 @@ export const utils = {
         }
         if (user) return user;
         else return undefined;
+    },
+    async help(commandName: string, client: Client, message: Message) {
+        const commandInfo: any = commands.get(aliases.get(commandName));
+
+        const helpEmbed = embed({
+            author: {
+                image: client.user?.displayAvatarURL(),
+                name: commandInfo.help.name,
+            },
+            color: message.guild?.me?.displayHexColor,
+            fields: [
+                { name: 'Description', value: commandInfo.help.description },
+                { name: 'Usage', value: commandInfo.help.usage },
+                { name: 'Example', value: commandInfo.help.example },
+            ],
+            footer: 'Yue',
+            timestamp: true,
+            thumbnail: client.user!.displayAvatarURL(),
+        });
+
+        if (commandInfo.config.owner === true) return;
+        if (commandInfo.help.aliases.length > 1) helpEmbed.addField('Aliases', `\`${commandInfo.help.aliases.filter((alias: string) => alias !== commandName.toLowerCase()).join('`, `')}\``);
+
+        return helpEmbed;
     },
     async updateLevel(userid: string, message: Message, client: Client) {
         const userLevelData = (await database.getProp('economy', userid, 'level')) || {};
