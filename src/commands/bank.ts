@@ -16,8 +16,8 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 
     if (user.bot) return message.channel.send(bankEmbed.setDescription(`${emojis.tickNo} Bots don't have bank accounts!`));
 
-    const bankBalance = (await database.getProp('economy', message.author.id, 'bank')) || 0;
-    const bankCapacity = await utils.getBankCapacity(message.author.id);
+    const bankBalance = (await database.getProp('economy', user.id, 'bank')) || 0;
+    const bankCapacity = await utils.getBankCapacity(user.id);
 
     bankEmbed.setAuthor(user.username, user.displayAvatarURL());
     message.channel.send(bankEmbed.setDescription(`Bank: **$${bankBalance.toLocaleString()}**\nBank capacity: **$${bankCapacity.toLocaleString()}**`));
