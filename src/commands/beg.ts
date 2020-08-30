@@ -28,9 +28,9 @@ export const run = async (message: Message, client: Client): Promise<Message | v
         await database.addProp('economy', message.author.id, begMoney, 'balance');
 
         begEmbed.setDescription(`Take **$${begMoney}** and come back in 1 minute`);
-        await utils.updateLevel(message, client);
     }
     message.channel.send(begEmbed);
+    await utils.updateLevel(message, client);
 };
 
 export const help = {
