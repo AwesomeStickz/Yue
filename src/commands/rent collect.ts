@@ -74,9 +74,9 @@ export const run = async (message: Message, client: Client): Promise<Message | v
         rentEmbed.setDescription(`Your houses made you **$${totalMoney.toLocaleString()}**\n\n${totalText}`);
         rentEmbed.setFooter('Yue');
         rentEmbed.setTimestamp();
+        await utils.updateLevel(message, client);
     }
     message.channel.send(rentEmbed);
-    await utils.updateLevel(message, client);
 };
 
 export const help = {

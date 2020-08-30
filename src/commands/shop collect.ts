@@ -92,9 +92,9 @@ export const run = async (message: Message, client: Client): Promise<Message | v
         shopEmbed.setDescription(`Your shops made you **$${totalMoney.toLocaleString()}**\n\n${totalText}`);
         shopEmbed.setFooter('Yue');
         shopEmbed.setTimestamp();
+        await utils.updateLevel(message, client);
     }
     message.channel.send(shopEmbed);
-    await utils.updateLevel(message, client);
 };
 
 export const help = {

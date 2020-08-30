@@ -61,10 +61,10 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
             await database.subtractProp('economy', message.author.id, fineToPay, 'balance');
 
             robEmbed.setDescription(`${emojis.tickYes} You were caught by police 🚓 when trying to rob ${member.toString()} and paid **$${fineToPay.toLocaleString()}** as fine!`);
+            await utils.updateLevel(message, client);
         }
     }
     message.channel.send(robEmbed);
-    await utils.updateLevel(message, client);
 };
 
 export const help = {

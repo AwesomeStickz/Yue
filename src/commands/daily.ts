@@ -38,10 +38,10 @@ export const run = async (message: Message, client: Client): Promise<Message | v
 
             dailyEmbed.setDescription(`You collected your daily bonus of **$${money}** (Streak: **${streak + 1}**)`);
         }
+        await utils.updateLevel(message, client);
         await database.setProp('cooldown', message.author.id, Date.now(), 'daily');
     }
     message.channel.send(dailyEmbed);
-    await utils.updateLevel(message, client);
 };
 
 export const help = {
