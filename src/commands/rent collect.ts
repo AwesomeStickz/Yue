@@ -76,7 +76,7 @@ export const run = async (message: Message, client: Client): Promise<Message | v
         rentEmbed.setTimestamp();
     }
     message.channel.send(rentEmbed);
-    utils.updateLevel(message, client);
+    await utils.updateLevel(message, client);
 };
 
 export const help = {

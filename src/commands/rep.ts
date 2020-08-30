@@ -32,7 +32,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         await database.addProp('economy', user.id, 1, 'rep');
 
         message.channel.send(repEmbed.setDescription(`You gave a reputation to ${user.toString()}!`));
-        utils.updateLevel(message, client);
+        await utils.updateLevel(message, client);
     }
 };
 

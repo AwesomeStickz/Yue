@@ -52,7 +52,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
             await database.subtractProp('economy', member.id, moneyThatCanBeRobbed, 'balance');
 
             robEmbed.setDescription(`${emojis.tickYes} You successfully robbed ${member.toString()} and got **$${moneyThatCanBeRobbed.toLocaleString()}**`);
-            utils.updateLevel(message, client);
+            await utils.updateLevel(message, client);
         } else {
             const fineToPay = Math.ceil(authorBalance * 0.02) < 500000 ? Math.ceil(authorBalance * 0.01) : 500000;
 
@@ -62,7 +62,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
             await database.subtractProp('economy', message.author.id, fineToPay, 'balance');
 
             robEmbed.setDescription(`${emojis.tickYes} You were caught by police 🚓 when trying to rob ${member.toString()} and paid **$${fineToPay.toLocaleString()}** as fine!`);
-            utils.updateLevel(message, client);
+            await utils.updateLevel(message, client);
         }
     }
     message.channel.send(robEmbed);

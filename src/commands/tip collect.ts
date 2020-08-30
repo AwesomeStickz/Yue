@@ -100,7 +100,7 @@ export const run = async (message: Message, client: Client): Promise<Message | v
         workerEmbed.setDescription(`Your workers made you **$${totalMoney.toLocaleString()}**\n\n${totalText}`);
         workerEmbed.setFooter('Yue');
         workerEmbed.setTimestamp();
-        utils.updateLevel(message, client);
+        await utils.updateLevel(message, client);
     }
     message.channel.send(workerEmbed);
 };

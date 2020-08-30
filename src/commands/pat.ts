@@ -48,7 +48,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
             patEmbed.setImage(url);
 
             message.channel.send(patEmbed);
-            utils.updateLevel(message, client);
+            await utils.updateLevel(message, client);
         }
     } else {
         patEmbed.setAuthor(`${message.author.username} Patted ${user.username}`, message.author.displayAvatarURL());

@@ -70,7 +70,7 @@ export const run = async (message: Message, client: Client): Promise<Message | v
         navigateEmbed.setDescription(`Your navigators made you **${totalEssence.toLocaleString()}** Essence\n\n${totalText}`);
         navigateEmbed.setFooter('Yue');
         navigateEmbed.setTimestamp();
-        utils.updateLevel(message, client);
+        await utils.updateLevel(message, client);
     }
     message.channel.send(navigateEmbed);
 };

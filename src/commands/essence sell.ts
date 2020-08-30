@@ -37,7 +37,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     await database.addProp('economy', message.author.id, balanceToAdd, 'balance');
 
     message.channel.send(essenceSellEmbed.setDescription(`You sold **${amountOfEssence.toLocaleString()} ${emojis.essence} Essence** for **$${balanceToAdd.toLocaleString()}**`));
-    utils.updateLevel(message, client);
+    await utils.updateLevel(message, client);
 };
 
 export const help = {
