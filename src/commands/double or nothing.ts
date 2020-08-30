@@ -61,7 +61,7 @@ export const run = async (message: Message): Promise<Message | void> => {
                     await donMessage.edit(donEmbed.setDescription('You bet all of your money and...'));
 
                     const rand = ['w', 'l'];
-                    let result = rand[Math.floor(Math.random() * rand.length)];
+                    let result = rand[Math.round(Math.random() * rand.length)];
 
                     const userLuck = await database.getProp('economy', message.author.id, 'luck');
                     if (userLuck == 0) result = 'l';
