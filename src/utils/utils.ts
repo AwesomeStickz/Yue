@@ -182,8 +182,8 @@ export const utils = {
 
         return helpEmbed;
     },
-    async updateLevel(userid: string, message: Message, client: Client) {
-        const userLevelData = (await database.getProp('economy', userid, 'level')) || {};
+    async updateLevel(message: Message, client: Client) {
+        const userLevelData = (await database.getProp('economy', message.author.id, 'level')) || {};
         const randomXP = Math.round(Math.random() * 20 + 20);
 
         const userLevel = userLevelData.level || 0;
@@ -192,9 +192,9 @@ export const utils = {
 
         if (currentXP >= nextLevelXP) {
             // @ts-expect-error
-            await database.setProp('economy', userid, currentXP - nextLevelXP, 'level.xp');
+            await database.setProp('economy', message.author.id, currentXP - nextLevelXP, 'level.xp');
             // @ts-expect-error
-            await database.addProp('economy', userid, 1, 'level.level');
+            await database.addProp('economy', message.author.id, 1, 'level.level');
 
             const newLevel = userLevel + 1;
             const workerSlots = newLevel === 1 ? 2 : newLevel * 4;
@@ -223,11 +223,10 @@ export const utils = {
             lodash.set(userSlots, 'shops', isNaN(userSlots.shops) ? otherSlots + 1 : Number(userSlots.shops) + otherSlots);
             lodash.set(userSlots, 'workers', isNaN(userSlots.workers) ? workerSlots + 2 : Number(userSlots.workers) + workerSlots);
 
-            await database.setProp('economy', userid, userSlots, 'inventory.slots');
-            await database.setProp('economy', userid, newBankCapacity, 'bankcapacity');
+            await database.setProp('economy', message.author.id, userSlots, 'inventory.slots');
         } else {
             // @ts-expect-error
-            await database.addProp('economy', userid, randomXP, 'level.xp');
+            await database.addProp('economy', message.author.id, randomXP, 'level.xp');
         }
 
         // @ts-expect-error
