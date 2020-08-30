@@ -26,7 +26,7 @@ export const run = async (message: Message, client: Client): Promise<Message | v
         await database.addProp('economy', message.author.id, 4000, 'balance');
 
         weeklyEmbed.setDescription(`You collected your weekly bonus of **$4,000**`);
-        utils.updateLevel(message.author.id, message, client);
+        utils.updateLevel(message, client);
     }
 
     message.channel.send(weeklyEmbed);

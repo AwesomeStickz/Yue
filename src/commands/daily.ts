@@ -37,7 +37,7 @@ export const run = async (message: Message, client: Client): Promise<Message | v
             await database.addProp('economy', message.author.id, 1, 'streak');
 
             dailyEmbed.setDescription(`You collected your daily bonus of **$${money}** (Streak: **${streak + 1}**)`);
-            utils.updateLevel(message.author.id, message, client);
+            utils.updateLevel(message, client);
         }
         await database.setProp('cooldown', message.author.id, Date.now(), 'daily');
     }
