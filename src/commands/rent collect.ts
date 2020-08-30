@@ -3,6 +3,7 @@ import prettyMs from 'pretty-ms';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
+import { utils } from '../utils/utils';
 
 export const run = async (message: Message, client: Client): Promise<Message | void> => {
     const { cooldown } = help;
@@ -75,6 +76,7 @@ export const run = async (message: Message, client: Client): Promise<Message | v
         rentEmbed.setTimestamp();
     }
     message.channel.send(rentEmbed);
+    utils.updateLevel(message, client);
 };
 
 export const help = {
