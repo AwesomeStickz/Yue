@@ -200,12 +200,8 @@ export const utils = {
             const newLevel = userLevel + 1;
             const workerSlots = newLevel === 1 ? 2 : newLevel * 4;
             const otherSlots = newLevel === 1 ? 1 : newLevel * 2;
-            const bankCapacity = (await database.getProp('economy', userid, 'bankcapacity')) || 0;
-            const bankCapacities = [100, 150, 250, 500, 750, 1000, 1500, 2000, 3500, 5000, 7500, 10000, 15000, 20000, 25000, 32000, 40000, 50000, 65000, 80000, 100000, 125000, 150000, 200000, 250000, 350000, 500000, 650000, 825000, 1000000];
-            let newBankCapacity = 0;
-
-            if (!bankCapacity) newBankCapacity = bankCapacities[newLevel];
-            else newBankCapacity = bankCapacity + bankCapacities[newLevel];
+            const previousBankCapacity = await this.getBankCapacity(userLevel);
+            const newBankCapacity = await this.getBankCapacity(userLevel + 1);
 
             const levelUpEmbed = embed({
                 author: {
@@ -213,11 +209,11 @@ export const utils = {
                     name: 'Level Up!',
                 },
                 color: message.guild?.me?.displayHexColor,
-                desc: `You advanced to level **${newLevel}**!\n**Unlocked**: \`${bankCapacity.toLocaleString()} bank capacity\`, \`${workerSlots.toLocaleString()} worker slots\`, \`${otherSlots.toLocaleString()} house slots\`, \`${otherSlots.toLocaleString()} navigator slots\`, \`${otherSlots.toLocaleString()} shop slots\`!`,
+                desc: `You advanced to level **${newLevel}**!\n**Unlocked**: \`${(previousBankCapacity - newBankCapacity).toLocaleString()} bank capacity\`, \`${workerSlots.toLocaleString()} worker slots\`, \`${otherSlots.toLocaleString()} house slots\`, \`${otherSlots.toLocaleString()} navigator slots\`, \`${otherSlots.toLocaleString()} shop slots\`!`,
             });
 
             message.channel.send(levelUpEmbed);
-            const userSlots = (await database.getProp('economy', userid, 'inventory.slots')) || {};
+            const userSlots = (await database.getProp('economy', message.author.id, 'inventory.slots')) || {};
 
             lodash.set(userSlots, 'houses', isNaN(userSlots.houses) ? otherSlots + 1 : Number(userSlots.houses) + otherSlots);
             lodash.set(userSlots, 'navigators', isNaN(userSlots.navigators) ? otherSlots + 1 : Number(userSlots.navigators) + otherSlots);
