@@ -192,16 +192,17 @@ export const utils = {
         const nextLevelXP = Math.round((5 / 6) * (userLevel + 1) * (2 * (userLevel + 1) * (userLevel + 1) + 27 * (userLevel + 1) + 91));
 
         if (currentXP >= nextLevelXP) {
-            // @ts-expect-error
-            await database.setProp('economy', message.author.id, currentXP - nextLevelXP, 'level.xp');
-            // @ts-expect-error
-            await database.addProp('economy', message.author.id, 1, 'level.level');
+            lodash.set(userLevelData, 'xp', currentXP - nextLevelXP);
+            lodash.set(userLevelData, 'totalXp', userLevelData.totalXp + randomXP);
+            lodash.set(userLevelData, 'level', userLevel + 1);
+
+            await database.setProp('economy', message.author.id, userLevelData, 'level');
 
             const newLevel = userLevel + 1;
             const workerSlots = newLevel === 1 ? 2 : newLevel * 4;
             const otherSlots = newLevel === 1 ? 1 : newLevel * 2;
-            const previousBankCapacity = await this.getBankCapacity(userLevel);
-            const newBankCapacity = await this.getBankCapacity(userLevel + 1);
+            const previousBankCapacity = await this.getBankCapacityOfLevel(userLevel);
+            const newBankCapacity = await this.getBankCapacityOfLevel(userLevel + 1);
 
             const levelUpEmbed = embed({
                 author: {
@@ -209,7 +210,7 @@ export const utils = {
                     name: 'Level Up!',
                 },
                 color: message.guild?.me?.displayHexColor,
-                desc: `You advanced to level **${newLevel}**!\n**Unlocked**: \`${(previousBankCapacity - newBankCapacity).toLocaleString()} bank capacity\`, \`${workerSlots.toLocaleString()} worker slots\`, \`${otherSlots.toLocaleString()} house slots\`, \`${otherSlots.toLocaleString()} navigator slots\`, \`${otherSlots.toLocaleString()} shop slots\`!`,
+                desc: `You advanced to level **${newLevel}**!\n**Unlocked**: \`${(newBankCapacity - previousBankCapacity).toLocaleString()} bank capacity\`, \`${workerSlots.toLocaleString()} worker slots\`, \`${otherSlots.toLocaleString()} house slots\`, \`${otherSlots.toLocaleString()} navigator slots\`, \`${otherSlots.toLocaleString()} shop slots\`!`,
             });
 
             message.channel.send(levelUpEmbed);
@@ -222,11 +223,10 @@ export const utils = {
 
             await database.setProp('economy', message.author.id, userSlots, 'inventory.slots');
         } else {
-            // @ts-expect-error
-            await database.addProp('economy', message.author.id, randomXP, 'level.xp');
-        }
+            lodash.set(userLevelData, 'xp', currentXP);
+            lodash.set(userLevelData, 'totalXp', (userLevelData.totalXp ?? 0) + randomXP);
 
-        // @ts-expect-error
-        await database.addProp('economy', message.author.id, randomXP, 'level.totalXp');
+            await database.setProp('economy', message.author.id, userLevelData, 'level');
+        }
     },
 };
