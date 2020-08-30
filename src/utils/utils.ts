@@ -188,7 +188,7 @@ export const utils = {
         const randomXP = Math.round(Math.random() * 20 + 20);
 
         const userLevel = userLevelData.level || 0;
-        const currentXP = userLevelData.xp ? userLevelData.xp + randomXP : 0;
+        const currentXP = userLevelData.xp ? userLevelData.xp + randomXP : randomXP;
         const nextLevelXP = Math.round((5 / 6) * (userLevel + 1) * (2 * (userLevel + 1) * (userLevel + 1) + 27 * (userLevel + 1) + 91));
 
         if (currentXP >= nextLevelXP) {
