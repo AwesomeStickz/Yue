@@ -14,7 +14,7 @@ export const run = async (client: Client, oldMessage: Message, newMessage: Messa
 
     const prefix = (await database.getProp('guildsettings', newMessage.guild!.id, 'prefix')) || '>';
 
-    if (oldMessage.content.indexOf(prefix) !== 0) return;
+    if (newMessage.content.indexOf(prefix) !== 0) return;
     if (oldMessage.content === newMessage.content) return;
 
     const blacklistedReason = await database.get('blacklist', oldMessage.author.id);
