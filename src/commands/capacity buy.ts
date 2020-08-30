@@ -28,14 +28,14 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
     bankCapacity = bankCapacity === Number(bankCapacityString) ? bankCapacity : Math.floor(bankCapacity / 10);
     const amountUserInvests = Math.floor(bankCapacity * 10);
 
-    const oldBankCapacity = await utils.getBankCapacity(message.author.id);
-    const newBankCapacity = oldBankCapacity + bankCapacity;
-
     if (bankCapacity < 1) return message.channel.send(capacityBuyEmbed.setDescription(`${emojis.tickNo} You can't buy less than $1 bank capacity!`));
     if (balance < amountUserInvests) return message.channel.send(capacityBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough money to buy **$${bankCapacity.toLocaleString()}** bank capacity!`));
 
+    const oldBankCapacity = await utils.getBankCapacity(message.author.id);
+    const newBankCapacity = oldBankCapacity + bankCapacity;
+
     await database.subtractProp('economy', message.author.id, amountUserInvests, 'balance');
-    await database.setProp('economy', message.author.id, newBankCapacity, 'bankcapacity');
+    await database.addProp('economy', message.author.id, bankCapacity, 'bankcapacity');
 
     capacityBuyEmbed.setDescription(`${emojis.tickYes} You successfully bought **$${bankCapacity.toLocaleString()}** bank capacity for **$${amountUserInvests.toLocaleString()}**! You got **$${newBankCapacity.toLocaleString()}** bank capacity now!`);
 
