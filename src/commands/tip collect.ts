@@ -77,15 +77,7 @@ export const run = async (message: Message, client: Client): Promise<Message | v
         for (const [workerName, workerPrice] of Object.entries(allWorkers)) {
             if (workers[workerName]) {
                 const workerAmount = workers[workerName];
-                let percentOfIncome = 0;
-
-                if ((workerAmount as number) <= 10) percentOfIncome = 6;
-                else if ((workerAmount as number) <= 20) percentOfIncome = 5;
-                else if ((workerAmount as number) <= 30) percentOfIncome = 4;
-                else if ((workerAmount as number) <= 40) percentOfIncome = 3;
-                else if ((workerAmount as number) <= 50) percentOfIncome = 2;
-                else percentOfIncome = 1;
-
+                const percentOfIncome = 1;
                 const moneyToAdd = Math.round((percentOfIncome / 100) * (workerPrice as number) * workerAmount);
 
                 totalMoney += moneyToAdd;
