@@ -8,7 +8,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     const user = await utils.getUser(args[0], client, message.guild!);
     const blacklistEmbed = embed({
         author: {
-            image: message.author.displayAvatarURL(),
+            image: message.author.displayAvatarURL({ dynamic: true }),
             name: message.author.username,
         },
         color: message.guild?.me?.displayHexColor,
@@ -19,7 +19,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 
     await database.set('blacklist', user.id, args.slice(1).join(' '));
 
-    blacklistEmbed.setAuthor(user.username, user.displayAvatarURL());
+    blacklistEmbed.setAuthor(user.username, user.displayAvatarURL({ dynamic: true }));
     message.channel.send(blacklistEmbed.setDescription(`${emojis.tickYes} **${user.tag}** is blacklisted!`));
 };
 

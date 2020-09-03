@@ -7,7 +7,7 @@ import { utils } from '../utils/utils';
 export const run = async (message: Message, client: Client, args: string[]): Promise<Message | void> => {
     const essenceSellEmbed = embed({
         author: {
-            image: message.author.displayAvatarURL(),
+            image: message.author.displayAvatarURL({ dynamic: true }),
             name: message.author.username,
         },
         color: message.guild?.me?.displayHexColor,

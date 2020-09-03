@@ -8,7 +8,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     const user = await utils.getUser(args.join(' '), client, message.guild!);
     const resetEmbed = embed({
         author: {
-            image: message.author.displayAvatarURL(),
+            image: message.author.displayAvatarURL({ dynamic: true }),
             name: message.author.username,
         },
         color: message.guild?.me?.displayHexColor,
@@ -19,7 +19,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 
     await database.delete('cooldown', user.id);
 
-    resetEmbed.setAuthor(user.username, user.displayAvatarURL());
+    resetEmbed.setAuthor(user.username, user.displayAvatarURL({ dynamic: true }));
     message.channel.send(resetEmbed.setDescription(`${emojis.tickYes} **${user.tag}**'s cooldowns has been reset successfully!`));
 };
 

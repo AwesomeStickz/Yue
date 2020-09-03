@@ -8,7 +8,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     const user = (await utils.getUser(args.join(' '), client, message.guild!)) || message.author;
     const winningsEmbed = embed({
         author: {
-            image: message.author.displayAvatarURL(),
+            image: message.author.displayAvatarURL({ dynamic: true }),
             name: message.author.username,
         },
         color: message.guild?.me?.displayHexColor,
@@ -18,7 +18,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 
     const winnings = (await database.getProp('economy', user.id, 'winnings')) || 0;
 
-    winningsEmbed.setAuthor(user.username, user.displayAvatarURL());
+    winningsEmbed.setAuthor(user.username, user.displayAvatarURL({ dynamic: true }));
     message.channel.send(winningsEmbed.setDescription(`${user.id === message.author.id ? 'Your' : 'Their'} winnings: **$${winnings.toLocaleString()}**`));
 };
 

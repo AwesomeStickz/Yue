@@ -14,14 +14,14 @@ export const run = async (message: Message, client: Client): Promise<Message | v
 
     const shopEmbed = embed({
         author: {
-            image: client.user!.displayAvatarURL(),
+            image: client.user!.displayAvatarURL({ dynamic: true }),
             name: 'Shop Collect',
         },
         color: message.guild?.me?.displayHexColor,
     });
 
     if (remainingCooldown > 0) {
-        shopEmbed.setAuthor(message.author.username, message.author.displayAvatarURL());
+        shopEmbed.setAuthor(message.author.username, message.author.displayAvatarURL({ dynamic: true }));
         shopEmbed.setDescription(`You already collected money from your shops! Come back in ${time}!`);
     } else {
         // @ts-expect-error

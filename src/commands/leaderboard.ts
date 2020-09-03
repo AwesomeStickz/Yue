@@ -9,7 +9,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     args = args.join(' ').toLowerCase().split(' ');
     const leaderboardEmbed = embed({
         author: {
-            image: client.user!.displayAvatarURL(),
+            image: client.user!.displayAvatarURL({ dynamic: true }),
             name: 'Leaderboard',
         },
         color: message.guild?.me?.displayHexColor,
@@ -42,9 +42,9 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         if (!lodash.get(sortedData.find((lbData: any) => lbData.userid === message.author.id)?.data, dataname)) position = sortedData.filter((lbData: any) => lodash.get(lbData.data, dataname)).length + 1;
         if (leaderboardData.length < 1) return message.channel.send(leaderboardEmbed.setDescription(`${emojis.tickNo} There's no data for that leaderboard!`));
 
-        leaderboardEmbed.setAuthor(`${lbname} Leaderboard`, client.user?.displayAvatarURL());
+        leaderboardEmbed.setAuthor(`${lbname} Leaderboard`, client.user?.displayAvatarURL({ dynamic: true }));
         leaderboardEmbed.setDescription(leaderboardData.join(''));
-        leaderboardEmbed.setFooter(`${message.author.username}'s Position: #${position}`, message.author.displayAvatarURL());
+        leaderboardEmbed.setFooter(`${message.author.username}'s Position: #${position}`, message.author.displayAvatarURL({ dynamic: true }));
 
         return message.channel.send(leaderboardEmbed);
     };

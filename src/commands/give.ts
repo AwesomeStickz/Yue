@@ -7,7 +7,7 @@ import { utils } from '../utils/utils';
 export const run = async (message: Message, client: Client, args: string[]): Promise<Message | void> => {
     const giveEmbed = embed({
         author: {
-            image: message.author.displayAvatarURL(),
+            image: message.author.displayAvatarURL({ dynamic: true }),
             name: message.author.username,
         },
         color: message.guild?.me?.displayHexColor,
@@ -44,7 +44,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     const receiverNetworth = await utils.getNetworth(user.id);
     await database.setProp('economy', user.id, receiverNetworth, 'networth');
 
-    giveEmbed.setAuthor('Money Transfer', message.author.displayAvatarURL());
+    giveEmbed.setAuthor('Money Transfer', message.author.displayAvatarURL({ dynamic: true }));
     giveEmbed.setDescription(`You gave **$${amount.toLocaleString()}** to **${user.username}**\n\n**${message.author.username}**'s new balance is **$${senderBalance.toLocaleString()}**\n**${user.username}**'s new balance is **$${receiverBalance.toLocaleString()}**`);
 
     message.channel.send(giveEmbed);

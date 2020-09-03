@@ -9,7 +9,7 @@ import { utils } from '../utils/utils';
 export const run = async (message: Message, client: Client, args: string[]): Promise<Message | void> => {
     const patEmbed = embed({
         author: {
-            image: message.author.displayAvatarURL(),
+            image: message.author.displayAvatarURL({ dynamic: true }),
             name: message.author.username,
         },
         color: message.guild?.me?.displayHexColor,
@@ -26,7 +26,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 
     if (user.id === message.author.id) {
         patEmbed.setImage('https://media.giphy.com/media/Y4z9olnoVl5QI/giphy.gif');
-        patEmbed.setAuthor(`${message.author.username} Patted ${message.author.username}.. Oh wait! You can't pat yourself!`, message.author.displayAvatarURL());
+        patEmbed.setAuthor(`${message.author.username} Patted ${message.author.username}.. Oh wait! You can't pat yourself!`, message.author.displayAvatarURL({ dynamic: true }));
         message.channel.send(patEmbed);
     } else if (user.id === client.user!.id) {
         const { cooldown } = help;
@@ -43,7 +43,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
             await database.setProp('cooldown', message.author.id, Date.now(), 'pat');
             await database.addProp('economy', message.author.id, patMoney, 'balance');
 
-            patEmbed.setAuthor(`${message.author.username} Patted ${user.username}`, message.author.displayAvatarURL());
+            patEmbed.setAuthor(`${message.author.username} Patted ${user.username}`, message.author.displayAvatarURL({ dynamic: true }));
             patEmbed.setDescription(`You gave me a head pat, here's **$${patMoney}**`);
             patEmbed.setImage(url);
 
@@ -51,7 +51,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
             await utils.updateLevel(message, client);
         }
     } else {
-        patEmbed.setAuthor(`${message.author.username} Patted ${user.username}`, message.author.displayAvatarURL());
+        patEmbed.setAuthor(`${message.author.username} Patted ${user.username}`, message.author.displayAvatarURL({ dynamic: true }));
         patEmbed.setImage(url);
         message.channel.send(patEmbed);
     }

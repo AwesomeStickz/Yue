@@ -4,7 +4,7 @@ import { embed } from '../utils/embed';
 export const run = async (message: Message, client: Client): Promise<Message | void> => {
     const shopEmbed = embed({
         author: {
-            image: client.user!.displayAvatarURL(),
+            image: client.user!.displayAvatarURL({ dynamic: true }),
             name: 'Slots',
         },
         color: message.guild?.me?.displayHexColor,

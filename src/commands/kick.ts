@@ -6,7 +6,7 @@ import { utils } from '../utils/utils';
 export const run = async (message: Message, _client: Client, args: string[]): Promise<Message | void> => {
     const kickEmbed = embed({
         author: {
-            image: message.author.displayAvatarURL(),
+            image: message.author.displayAvatarURL({ dynamic: true }),
             name: message.author.username,
         },
         color: message.guild?.me?.displayHexColor,
@@ -30,7 +30,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
             if (member) {
                 const kickDMEmbed = embed({
                     author: {
-                        image: message.author.displayAvatarURL(),
+                        image: message.author.displayAvatarURL({ dynamic: true }),
                         name: `You have been kicked from ${message.guild?.name}`,
                     },
                     color: '#fef4b5',
@@ -46,7 +46,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
 
         await member.kick(reason);
 
-        kickEmbed.setAuthor(member.user.username, member.user.displayAvatarURL());
+        kickEmbed.setAuthor(member.user.username, member.user.displayAvatarURL({ dynamic: true }));
         kickEmbed.setDescription(`${emojis.tickYes} **${member.user.tag}** has been kicked!`);
         message.channel.send(kickEmbed);
     }

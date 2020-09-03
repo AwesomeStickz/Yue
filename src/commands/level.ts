@@ -8,7 +8,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     const user = (await utils.getUser(args.join(' '), client, message.guild!)) || message.author;
     const levelEmbed = embed({
         author: {
-            image: message.author.displayAvatarURL(),
+            image: message.author.displayAvatarURL({ dynamic: true }),
             name: message.author.username,
         },
         color: message.guild?.me?.displayHexColor,
@@ -23,7 +23,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     const userTotalXP = userLevelData.totalXp || 0;
     const nextLevelXP = Math.round((5 / 6) * (userLevel + 1) * (2 * (userLevel + 1) * (userLevel + 1) + 27 * (userLevel + 1) + 91));
 
-    levelEmbed.setAuthor(user.username, user.displayAvatarURL());
+    levelEmbed.setAuthor(user.username, user.displayAvatarURL({ dynamic: true }));
     levelEmbed.setFooter(`${(nextLevelXP - userCurrentXP).toLocaleString()} more xp needed for next level up`);
     levelEmbed.addFields([
         { name: 'Level', value: userLevel.toLocaleString(), inline: true },

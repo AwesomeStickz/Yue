@@ -14,14 +14,14 @@ export const run = async (message: Message, client: Client): Promise<Message | v
 
     const navigateEmbed = embed({
         author: {
-            image: client.user!.displayAvatarURL(),
+            image: client.user!.displayAvatarURL({ dynamic: true }),
             name: 'Navigator Collect',
         },
         color: message.guild?.me?.displayHexColor,
     });
 
     if (remainingCooldown > 0) {
-        navigateEmbed.setAuthor(message.author.username, message.author.displayAvatarURL());
+        navigateEmbed.setAuthor(message.author.username, message.author.displayAvatarURL({ dynamic: true }));
         navigateEmbed.setDescription(`You already collected essence from your navigators! Come back in ${time}!`);
     } else {
         // @ts-expect-error

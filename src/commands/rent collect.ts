@@ -14,14 +14,14 @@ export const run = async (message: Message, client: Client): Promise<Message | v
 
     const rentEmbed = embed({
         author: {
-            image: client.user!.displayAvatarURL(),
+            image: client.user!.displayAvatarURL({ dynamic: true }),
             name: 'Rent Collect',
         },
         color: message.guild?.me?.displayHexColor,
     });
 
     if (remainingCooldown > 0) {
-        rentEmbed.setAuthor(message.author.username, message.author.displayAvatarURL());
+        rentEmbed.setAuthor(message.author.username, message.author.displayAvatarURL({ dynamic: true }));
         rentEmbed.setDescription(`You already collected the rent from your houses! Come back in ${time}!`);
     } else {
         // @ts-expect-error

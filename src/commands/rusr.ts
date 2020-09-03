@@ -9,7 +9,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
 
     const rusrEmbed = embed({
         author: {
-            image: message.author.displayAvatarURL(),
+            image: message.author.displayAvatarURL({ dynamic: true }),
             name: message.author.username,
         },
         color: message.guild?.me?.displayHexColor,

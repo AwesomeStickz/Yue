@@ -13,7 +13,7 @@ export const run = async (message: Message, client: Client): Promise<Message | v
 
     const begEmbed = embed({
         author: {
-            image: client.user!.displayAvatarURL(),
+            image: client.user!.displayAvatarURL({ dynamic: true }),
             name: client.user!.username,
         },
         color: message.guild?.me?.displayHexColor,

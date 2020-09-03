@@ -10,13 +10,13 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     const categories = ['bot', 'economy', 'image', 'moderation'];
     const helpEmbed = embed({
         author: {
-            image: client.user?.displayAvatarURL(),
+            image: client.user?.displayAvatarURL({ dynamic: true }),
             name: 'Yue Bot: Help',
         },
         color: message.guild?.me?.displayHexColor,
         footer: 'Yue',
         timestamp: true,
-        thumbnail: client.user!.displayAvatarURL(),
+        thumbnail: client.user!.displayAvatarURL({ dynamic: true }),
     });
 
     if (!args[0] || !isNaN(Number(args[0]))) {
@@ -37,7 +37,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
             helpMenuText = allCommands.join('\n');
         }
 
-        helpEmbed.setAuthor(title, client.user!.displayAvatarURL());
+        helpEmbed.setAuthor(title, client.user!.displayAvatarURL({ dynamic: true }));
         helpEmbed.setDescription(helpMenuText);
 
         message.channel.send(helpEmbed);
@@ -65,7 +65,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
                 helpMenuText = allCommands.join('\n');
             }
 
-            helpEmbed.setAuthor(title, client.user!.displayAvatarURL());
+            helpEmbed.setAuthor(title, client.user!.displayAvatarURL({ dynamic: true }));
             helpEmbed.setDescription(helpMenuText);
 
             message.channel.send(helpEmbed);

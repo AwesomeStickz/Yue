@@ -16,7 +16,7 @@ export const run = async (message: Message): Promise<Message | void> => {
         message.channel.send(
             embed({
                 author: {
-                    image: message.author.displayAvatarURL(),
+                    image: message.author.displayAvatarURL({ dynamic: true }),
                     name: message.author.username,
                 },
                 color: message.guild?.me?.displayHexColor,
@@ -31,7 +31,7 @@ export const run = async (message: Message): Promise<Message | void> => {
             return message.channel.send(
                 embed({
                     author: {
-                        image: message.author.displayAvatarURL(),
+                        image: message.author.displayAvatarURL({ dynamic: true }),
                         name: message.author.username,
                     },
                     color: message.guild?.me?.displayHexColor,
@@ -41,7 +41,7 @@ export const run = async (message: Message): Promise<Message | void> => {
 
         const donEmbed = embed({
             author: {
-                image: message.author.displayAvatarURL(),
+                image: message.author.displayAvatarURL({ dynamic: true }),
                 name: message.author.username,
             },
             color: message.guild?.me?.displayHexColor,

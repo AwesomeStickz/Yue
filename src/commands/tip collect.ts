@@ -14,14 +14,14 @@ export const run = async (message: Message, client: Client): Promise<Message | v
 
     const workerEmbed = embed({
         author: {
-            image: client.user!.displayAvatarURL(),
+            image: client.user!.displayAvatarURL({ dynamic: true }),
             name: 'Tip Collect',
         },
         color: message.guild?.me?.displayHexColor,
     });
 
     if (remainingCooldown > 0) {
-        workerEmbed.setAuthor(message.author.username, message.author.displayAvatarURL());
+        workerEmbed.setAuthor(message.author.username, message.author.displayAvatarURL({ dynamic: true }));
         workerEmbed.setDescription(`You already collected tips from your workers! Come back in ${time}!`);
     } else {
         // @ts-expect-error

@@ -6,7 +6,7 @@ import { utils } from '../utils/utils';
 export const run = async (message: Message, client: Client, args: string[]): Promise<Message | void> => {
     const banEmbed = embed({
         author: {
-            image: message.author.displayAvatarURL(),
+            image: message.author.displayAvatarURL({ dynamic: true }),
             name: message.author.username,
         },
         color: message.guild?.me?.displayHexColor,
@@ -33,7 +33,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
             if (member) {
                 const banDMEmbed = embed({
                     author: {
-                        image: message.author.displayAvatarURL(),
+                        image: message.author.displayAvatarURL({ dynamic: true }),
                         name: `You have been banned from ${message.guild?.name}`,
                     },
                     color: '#fef4b5',
@@ -49,7 +49,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 
         await message.guild!.members.ban(user.id, { reason });
 
-        banEmbed.setAuthor(user.username, user.displayAvatarURL());
+        banEmbed.setAuthor(user.username, user.displayAvatarURL({ dynamic: true }));
         banEmbed.setDescription(`${emojis.tickYes} **${user.tag}** has been banned!`);
         message.channel.send(banEmbed);
     }

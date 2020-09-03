@@ -6,7 +6,7 @@ import { emojis } from '../utils/emojis';
 export const run = async (message: Message, _client: Client, args: string[]): Promise<Message | void> => {
     const depositEmbed = embed({
         author: {
-            image: message.author.displayAvatarURL(),
+            image: message.author.displayAvatarURL({ dynamic: true }),
             name: message.author.username,
         },
         color: message.guild?.me?.displayHexColor,

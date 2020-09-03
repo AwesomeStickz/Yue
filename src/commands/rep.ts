@@ -14,7 +14,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 
     const repEmbed = embed({
         author: {
-            image: client.user!.displayAvatarURL(),
+            image: client.user!.displayAvatarURL({ dynamic: true }),
             name: 'Rep',
         },
         color: message.guild?.me?.displayHexColor,

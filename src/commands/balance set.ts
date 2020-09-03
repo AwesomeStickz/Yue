@@ -19,7 +19,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 
     await database.setProp('economy', user.id, newBalance, 'balance');
 
-    balanceEmbed.setAuthor(user.username, user.displayAvatarURL());
+    balanceEmbed.setAuthor(user.username, user.displayAvatarURL({ dynamic: true }));
     message.channel.send(balanceEmbed.setDescription(`${emojis.tickYes} ${user.toString()}'s balance has been set to **$${newBalance.toLocaleString()}**`));
 };
 

@@ -164,7 +164,7 @@ export const utils = {
 
         const helpEmbed = embed({
             author: {
-                image: client.user?.displayAvatarURL(),
+                image: client.user?.displayAvatarURL({ dynamic: true }),
                 name: commandInfo.help.name,
             },
             color: message.guild?.me?.displayHexColor,
@@ -175,7 +175,7 @@ export const utils = {
             ],
             footer: 'Yue',
             timestamp: true,
-            thumbnail: client.user!.displayAvatarURL(),
+            thumbnail: client.user!.displayAvatarURL({ dynamic: true }),
         });
 
         if (commandInfo.config.owner === true) return;
@@ -206,7 +206,7 @@ export const utils = {
 
             const levelUpEmbed = embed({
                 author: {
-                    image: client.user?.displayAvatarURL(),
+                    image: client.user?.displayAvatarURL({ dynamic: true }),
                     name: 'Level Up!',
                 },
                 color: message.guild?.me?.displayHexColor,

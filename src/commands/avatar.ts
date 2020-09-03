@@ -7,7 +7,7 @@ export const run = async (message: Message, client: Client, args: string[]) => {
 
     const avatarEmbed = embed({
         author: {
-            image: user.displayAvatarURL(),
+            image: user.displayAvatarURL({ dynamic: true }),
             name: `${user.username}'s Avatar`,
         },
         color: message.guild?.me?.displayHexColor,

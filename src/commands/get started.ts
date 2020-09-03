@@ -8,7 +8,7 @@ import { tempCache } from '../utils/tempCache';
 export const run = async (message: Message, client: Client, args: string[], prefix: string): Promise<Message | void> => {
     const getStartedEmbed = embed({
         author: {
-            image: client.user!.displayAvatarURL(),
+            image: client.user!.displayAvatarURL({ dynamic: true }),
             name: 'Get Started',
         },
         color: message.guild?.me?.displayHexColor,

@@ -4,7 +4,7 @@ import { embed } from '../utils/embed';
 export const run = async (message: Message, client: Client) => {
     const inviteEmbed = embed({
         author: {
-            image: client.user!.displayAvatarURL(),
+            image: client.user!.displayAvatarURL({ dynamic: true }),
             name: 'Invite!',
         },
         color: message.guild?.me?.displayHexColor,
