@@ -32,10 +32,10 @@ export const run = async (message: Message, client: Client): Promise<Message | v
         const allNavigatorsEssence: any = {
             iron: 1,
             bronze: 2,
-            silver: 8,
-            gold: 34,
-            platinum: 180,
-            diamond: 410,
+            silver: 3,
+            gold: 14,
+            platinum: 72,
+            diamond: 400,
         };
 
         const allNavigatorsEmoji: any = {
