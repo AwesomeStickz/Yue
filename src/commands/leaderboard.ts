@@ -6,6 +6,7 @@ import { emojis } from '../utils/emojis';
 import { utils } from '../utils/utils';
 
 export const run = async (message: Message, client: Client, args: string[]): Promise<Message | void> => {
+    args = args.join(' ').toLowerCase().split(' ');
     const leaderboardEmbed = embed({
         author: {
             image: client.user!.displayAvatarURL(),
