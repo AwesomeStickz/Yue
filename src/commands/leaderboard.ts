@@ -15,11 +15,11 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         color: message.guild?.me?.displayHexColor,
     });
 
-    const sendLeaderboard = async (dataname: string, lbname: string, prefix = '', suffix = ''): Promise<Message> => {
+    const sendLeaderboard = async (dataname: string, sortname: string, lbname: string, prefix = '', suffix = ''): Promise<Message> => {
         const allData = await database.all('economy');
         const sortedData: any = allData.sort((a: any, b: any) => {
-            if (lodash.get(a.data, dataname) > lodash.get(b.data, dataname) || (lodash.get(a.data, dataname) && !lodash.get(b.data, dataname))) return -1;
-            if (lodash.get(a.data, dataname) < lodash.get(b.data, dataname) || (lodash.get(b.data, dataname) && !lodash.get(a.data, dataname))) return 1;
+            if (lodash.get(a.data, sortname) > lodash.get(b.data, sortname) || (lodash.get(a.data, sortname) && !lodash.get(b.data, sortname))) return -1;
+            if (lodash.get(a.data, sortname) < lodash.get(b.data, sortname) || (lodash.get(b.data, sortname) && !lodash.get(a.data, sortname))) return 1;
             return 0;
         });
         const leaderboardData = [];
@@ -50,17 +50,17 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     };
 
     if (args[0] === 'bank') {
-        sendLeaderboard('balance', 'Bank', '$');
+        sendLeaderboard('balance', 'balance', 'Bank', '$');
     } else if (args[0] === 'level' || args[0] === 'levels' || args[0] === 'rank') {
-        sendLeaderboard('level.level', 'Level', '', ' level');
+        sendLeaderboard('level.level', 'level.totalXp', 'Level', '', ' level');
     } else if (args[0] === 'networth') {
-        sendLeaderboard('networth', 'Networth', '$');
+        sendLeaderboard('networth', 'networth', 'Networth', '$');
     } else if (args[0] === 'rep' || args[0] === 'reps') {
-        sendLeaderboard('rep', 'Rep', '', ' reps');
+        sendLeaderboard('rep', 'rep', 'Rep', '', ' reps');
     } else if (args[0] === 'streak') {
-        sendLeaderboard('streak', 'Streak', '', ' days streak');
+        sendLeaderboard('streak', 'streak', 'Streak', '', ' days streak');
     } else if (args[0] === 'winnings' || args[0] === 'winning') {
-        sendLeaderboard('winnings', 'Winnings', '$');
+        sendLeaderboard('winnings', 'winnings', 'Winnings', '$');
     }
 };
 
