@@ -52,6 +52,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
             await database.subtractProp('economy', member.id, moneyThatCanBeRobbed, 'balance');
 
             robEmbed.setDescription(`${emojis.tickYes} You successfully robbed ${member.toString()} and got **$${moneyThatCanBeRobbed.toLocaleString()}**`);
+            await utils.updateLevel(message, client);
         } else {
             const fineToPay = Math.ceil(authorBalance * 0.02) < 500000 ? Math.ceil(authorBalance * 0.01) : 500000;
 
