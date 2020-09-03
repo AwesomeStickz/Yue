@@ -59,7 +59,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
 export const help = {
     aliases: ['rusr'],
     name: 'Rusr',
-    cooldown: 500,
+    cooldown: 0,
     description: "You bet your money for a gun loaded with the number of bullets you choose and the gun is shot at you. If you didn't get shot, you win more else you lose your bet",
     usage: 'rusr <1/2/3/4/5> <amount>',
     example: 'rusr 3 1000\nrusr 5 all',
