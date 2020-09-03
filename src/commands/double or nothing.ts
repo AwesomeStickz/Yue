@@ -110,7 +110,7 @@ export const help = {
     aliases: ['double or nothing', 'doubleornothing', 'don', 'dn'],
     name: 'Double Or Nothing',
     description: 'Bet all of your money for a 50% chance of doubling your money or losing all',
-    cooldown: 500,
+    cooldown: 3000,
     usage: 'double or nothing',
     example: 'double or nothing\ndon',
 };
