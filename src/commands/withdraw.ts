@@ -23,7 +23,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
     else if (withAmountString === 'quarter') withAmount = bankBalance / 4;
     else if (withAmountString.endsWith('%')) withAmount = (Number(withAmountString.slice(0, -1)) * bankBalance) / 100;
 
-    if (isNaN(withAmount)) return message.channel.send(depositEmbed.setDescription(`${emojis.tickNo} ${args[1]} is not a number!`));
+    if (isNaN(withAmount)) return message.channel.send(depositEmbed.setDescription(`${emojis.tickNo} ${args[0]} is not a number!`));
 
     withAmount = Math.round(withAmount);
 
