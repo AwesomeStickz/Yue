@@ -36,7 +36,7 @@ export const run = async (message: Message, client: Client, args: string[], pref
             }
 
             getStartedEmbed.setFooter('');
-            getStartedEmbed.setDescription(`Congratulations 🎉 on finishing get started! ${finishedGetStarted === true ? `You already completed get started once so you didn't get a mud house for completing this!` : `You got a mud house as a reward, you can do \`${prefix}house collect\` to get some money!`}`);
+            getStartedEmbed.setDescription(`Congratulations 🎉 on finishing get started! ${finishedGetStarted === true ? `You already completed get started once so you didn't get a mud house for completing this!` : `You got a mud house as a reward, you can do \`${prefix}rent collect\` to get some money!`}`);
 
             message.channel.send(getStartedEmbed);
         } else {
@@ -103,7 +103,7 @@ export const run = async (message: Message, client: Client, args: string[], pref
                                 const finishedGetStarted = await database.getProp('economy', message.author.id, 'getstartedhouse');
 
                                 getStartedEmbed.setFooter('');
-                                getStartedEmbed.setDescription(`Congratulations 🎉 on finishing get started! ${finishedGetStarted === true ? `You already completed get started once so you didn't get a mud house for completing this!` : `You got a mud house as a reward, you can do \`${prefix}house collect\` to get some money!`}`);
+                                getStartedEmbed.setDescription(`Congratulations 🎉 on finishing get started! ${finishedGetStarted === true ? `You already completed get started once so you didn't get a mud house for completing this!` : `You got a mud house as a reward, you can do \`${prefix}rent collect\` to get some money!`}`);
 
                                 if (!finishedGetStarted) {
                                     // @ts-expect-error
