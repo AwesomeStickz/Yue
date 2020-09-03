@@ -11,8 +11,8 @@ export const run = async (client: Client, guild: Guild) => {
         fields: [
             { name: 'Owner', value: guild.owner?.user.toString() || 'Unknown#0000' },
             { name: 'ID', value: guild.id },
-            { name: 'Users', value: guild.members.cache.filter((m) => !m.user.bot).size.toString() },
-            { name: 'Bots', value: guild.members.cache.filter((m) => m.user.bot).size.toString() },
+            { name: 'Users', value: guild.members.cache.filter((m) => !m.user.bot).size.toLocaleString() },
+            { name: 'Bots', value: guild.members.cache.filter((m) => m.user.bot).size.toLocaleString() },
             { name: 'Servers now', value: client.guilds.cache.size.toLocaleString() },
         ],
     });
