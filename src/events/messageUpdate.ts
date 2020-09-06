@@ -8,17 +8,17 @@ import { tempCache } from '../utils/tempCache';
 import { utils } from '../utils/utils';
 
 export const run = async (client: Client, oldMessage: Message, newMessage: Message): Promise<Message | void> => {
-    if (newMessage.author.bot) return;
+    if (newMessage.author?.bot) return;
     if (newMessage.channel.type !== 'text' || !newMessage.member || !newMessage.guild) return;
-    if (!newMessage.channel.permissionsFor(oldMessage.guild!.me!)?.has('SEND_MESSAGES')) return;
+    if (!newMessage.channel.permissionsFor(newMessage.guild!.me!)?.has('SEND_MESSAGES')) return;
 
     const prefix = (await database.getProp('guildsettings', newMessage.guild!.id, 'prefix')) || '>';
 
     if (newMessage.content.indexOf(prefix) !== 0) return;
     if (oldMessage.content === newMessage.content) return;
 
-    const blacklistedReason = await database.get('blacklist', oldMessage.author.id);
-    if (blacklistedReason && oldMessage.content !== `${prefix}support`) return oldMessage.channel.send(`${emojis.tickNo} You are blacklisted from using the bot! Reason: ${blacklistedReason}. You can join support server using \`${prefix}support\` if you want to appeal!`);
+    const blacklistedReason = await database.get('blacklist', newMessage.author.id);
+    if (blacklistedReason && newMessage.content !== `${prefix}support`) return newMessage.channel.send(`${emojis.tickNo} You are blacklisted from using the bot! Reason: ${blacklistedReason}. You can join support server using \`${prefix}support\` if you want to appeal!`);
 
     try {
         const args = newMessage.content.slice(prefix.length).split(/ +/g);
