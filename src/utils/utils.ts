@@ -17,7 +17,7 @@ export const utils = {
         return userBankCapacityThatWasBought + userBankCapacityLevel;
     },
     getBankCapacityOfLevel(level: number) {
-        const bankCapacities = [100, 150, 250, 500, 750, 1000, 1500, 2000, 3500, 5000, 7500, 10000, 15000, 20000, 25000, 32000, 40000, 50000, 65000, 80000, 100000, 125000, 150000, 200000, 250000, 350000, 500000, 650000, 825000, 1000000];
+        const bankCapacities = [100, 150, 250, 500, 750, 1000, 1500, 2000, 3500, 5000, 7500, 10000, 15000, 20000, 25000, 32000, 40000, 50000, 65000, 80000, 100000, 125000, 150000, 200000, 250000, 350000, 500000, 650000, 825000, 1000000, 1250000, 1500000, 2000000];
         return bankCapacities[level];
     },
     getMember(arg: string, guild: Guild) {
@@ -143,6 +143,30 @@ export const utils = {
             }
         }
         return networth;
+    },
+    async getSlots(userid: string) {
+        const userSlotsThatWasBought = (await database.getProp('economy', userid, 'inventory.slots')) || {};
+        const userLevelData = (await database.getProp('economy', userid, 'level')) || {};
+        const userLevel = userLevelData.level || 0;
+        const userLevelSlots = await this.getSlotsOfLevel(userLevel);
+
+        return {
+            houses: (userSlotsThatWasBought.houses ?? 0) + (userLevelSlots.houses ?? 0),
+            navigators: (userSlotsThatWasBought.navigators ?? 0) + (userLevelSlots.navigators ?? 0),
+            shops: (userSlotsThatWasBought.shops ?? 0) + (userLevelSlots.shops ?? 0),
+            workers: (userSlotsThatWasBought.workers ?? 0) + (userLevelSlots.workers ?? 0),
+        };
+    },
+    async getSlotsOfLevel(level: number) {
+        const otherSlots = [1, 2, 4, 8, 15, 30, 60, 100, 150, 200, 260, 325, 400, 500, 600, 750, 900, 1100, 1300, 1500, 1750, 2000];
+        const workerSlots = [2, 4, 8, 15, 30, 60, 100, 150, 200, 260, 325, 400, 500, 600, 750, 900, 1100, 1300, 1500, 1750, 2000];
+
+        return {
+            houses: otherSlots[level],
+            navigators: otherSlots[level],
+            shops: otherSlots[level],
+            workers: workerSlots[level],
+        };
     },
     async getUser(arg: string, client: Client, guild?: Guild) {
         if (arg?.length < 1 || arg == undefined) return undefined;
