@@ -47,15 +47,9 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
             const totalMoney = numberOfSlotsToBuy * shopSlotPrice;
             if (totalMoney > balance) return message.channel.send(slotBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough money to buy **${shopSlotName} Slot${numberOfSlotsToBuy > 1 ? 's' : ''}**`));
 
-            const userLevelData = (await database.getProp('economy', message.author.id, 'level')) || {};
-            const userLevel = userLevelData.level || 0;
-
-            // @ts-expect-error
-            const existingSlots = (await database.getProp('economy', message.author.id, `inventory.slots.${shopSlotName.toLowerCase()}s`)) || shopSlotName === 'worker' ? (!userLevel ? 2 : userLevel * 4) : !userLevel ? 1 : userLevel * 2;
-
             await database.subtractProp('economy', message.author.id, totalMoney, 'balance');
             // @ts-expect-error
-            await database.setProp('economy', message.author.id, existingSlots + numberOfSlotsToBuy, `inventory.slots.${shopSlotName.toLowerCase()}s`);
+            await database.addProp('economy', message.author.id, numberOfSlotsToBuy, `inventory.slots.${shopSlotName.toLowerCase()}s`);
 
             validSlot = true;
             message.channel.send(slotBuyEmbed.setDescription(`${emojis.tickYes} You've successfully bought **${numberOfSlotsToBuy.toLocaleString()} ${shopSlotName} Slot${numberOfSlotsToBuy > 1 ? 's' : ''}** for **$${totalMoney.toLocaleString()}**`));
