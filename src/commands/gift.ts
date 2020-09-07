@@ -106,14 +106,15 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 
             const userEconomyData = (await database.get('economy', user.id)) || {};
 
-            const userLevelData = lodash.get(userEconomyData, 'level') || {};
-            const userLevel = userLevelData.level || 0;
-
             const userItemsInInventory = lodash.get(userEconomyData, `inventory.${inventoryItemType.toLowerCase()}s`) || {};
             const userAmountOfItemsInInventory = Number(Object.values(userItemsInInventory).reduce((a: any, b: any) => a + b, 0));
-            const userItemSlots = lodash.get(userEconomyData, `inventory.slots.${inventoryItemType.toLowerCase()}s`) || inventoryItemType === 'Worker' ? (!userLevel ? 2 : userLevel * 4) : !userLevel ? 1 : userLevel * 2;
 
-            if (userAmountOfItemsInInventory + numberOfItemsToGive > userItemSlots) return message.channel.send(giftEmbed.setDescription(`${emojis.tickNo} That user doesn't have enough slots left to accept this gift!`));
+            // @ts-expect-error
+            const userItemSlots = (await utils.getSlots(user.id))[`${inventoryItemType.toLowerCase()}s`];
+            const remainingSlots = userItemSlots - userAmountOfItemsInInventory;
+
+            if (remainingSlots === 0) return message.channel.send(giftEmbed.setDescription(`${emojis.tickNo} That user doesn't have enough slots left to accept this gift!`));
+            if (userAmountOfItemsInInventory + numberOfItemsToGive > userItemSlots) numberOfItemsToGive = userItemSlots - userAmountOfItemsInInventory;
 
             const userNewItemAmount = (lodash.get(userItemsInInventory, inventoryItemName.toLowerCase()) ?? 0) + numberOfItemsToGive;
             const authorNewItemAmount = authorItemsInInventory - numberOfItemsToGive;

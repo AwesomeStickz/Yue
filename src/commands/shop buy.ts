@@ -2,6 +2,7 @@ import { Client, Message } from 'discord.js';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
+import { utils } from '../utils/utils';
 
 export const run = async (message: Message, _client: Client, args: string[]): Promise<Message | void> => {
     const shopItems = {
@@ -97,15 +98,15 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
             if (amountUserInvests < shopItemPrice) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough money to buy 1 **${inventoryItemName} ${inventoryItemType !== 'House' ? inventoryItemType : ''}**!`));
 
             let numberOfItemsToBuy = itemAmount > 0 ? Math.round(itemAmount) : Math.floor(amountUserInvests / shopItemPrice);
-            const userLevelData = (await database.getProp('economy', message.author.id, 'level')) || {};
-            const userLevel = userLevelData.level || 0;
 
             // @ts-expect-error
             const itemsInInventory = (await database.getProp('economy', message.author.id, `inventory.${inventoryItemType.toLowerCase()}s`)) || {};
             const amountOfItemsInInventory = Number(Object.values(itemsInInventory).reduce((a: any, b: any) => a + b, 0));
 
-            const userSlots = (await database.getProp('economy', message.author.id, `inventory.slots`)) || {};
-            const itemSlot = userSlots[`${inventoryItemType.toLowerCase()}s`] ? userSlots[`${inventoryItemType.toLowerCase()}s`] : inventoryItemType === 'Worker' ? (!userLevel ? 2 : userLevel * 4) : !userLevel ? 1 : userLevel * 2;
+            const userSlots = await utils.getSlots(message.author.id);
+
+            // @ts-expect-error
+            const itemSlot = userSlots[`${inventoryItemType.toLowerCase()}s`];
             const remainingSlots = itemSlot - amountOfItemsInInventory;
 
             if (remainingSlots === 0) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough ${inventoryItemType.toLowerCase()} slots!`));
