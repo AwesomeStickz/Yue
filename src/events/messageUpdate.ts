@@ -60,7 +60,7 @@ export const run = async (client: Client, oldMessage: Message, newMessage: Messa
         if (!finishedGetStarted && commandObj.config.category === 'economy' && commandObj.help.name !== 'Get Started') return newMessage.channel.send(embed({ color: newMessage.guild.me?.displayHexColor, desc: `${emojis.tickNo} You have to use \`get started\` command first to use economy commands!` }));
 
         if (!commandObj.help.cooldown) {
-            const cooldown = 3000;
+            const cooldown = 500;
             const lastCommandUsage = tempCache.get(`${commandObj.help.name.replace(/ /g, '').toLowerCase()}_${newMessage.author.id}`) || 0;
             const remainingCooldown = cooldown - (Date.now() - lastCommandUsage);
             const time = remainingCooldown > 1000 ? prettyMs(remainingCooldown, { verbose: true }) : `${(remainingCooldown / 1000).toFixed(1)} seconds`;
