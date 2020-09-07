@@ -223,8 +223,8 @@ export const utils = {
             await database.setProp('economy', message.author.id, userLevelData, 'level');
 
             const newLevel = userLevel + 1;
-            const workerSlots = newLevel === 1 ? 2 : newLevel * 4;
-            const otherSlots = newLevel === 1 ? 1 : newLevel * 2;
+            const previousSlots = await this.getSlotsOfLevel(userLevel);
+            const newSlots = await this.getSlotsOfLevel(userLevel + 1);
             const previousBankCapacity = await this.getBankCapacityOfLevel(userLevel);
             const newBankCapacity = await this.getBankCapacityOfLevel(userLevel + 1);
 
@@ -234,18 +234,12 @@ export const utils = {
                     name: 'Level Up!',
                 },
                 color: message.guild?.me?.displayHexColor,
-                desc: `You advanced to level **${newLevel}**!\n**Unlocked**: \`${(newBankCapacity - previousBankCapacity).toLocaleString()} bank capacity\`, \`${workerSlots.toLocaleString()} worker slots\`, \`${otherSlots.toLocaleString()} house slots\`, \`${otherSlots.toLocaleString()} navigator slots\`, \`${otherSlots.toLocaleString()} shop slots\`!`,
+                desc: `You advanced to level **${newLevel}**!\n**Unlocked**: \`${(newBankCapacity - previousBankCapacity).toLocaleString()} bank capacity\`, \`${(previousSlots.workers - newSlots.workers).toLocaleString()} worker slots\`, \`${(previousSlots.houses - newSlots.houses).toLocaleString()} house slots\`, \`${(
+                    previousSlots.navigators - newSlots.navigators
+                ).toLocaleString()} navigator slots\`, \`${(previousSlots.shops - newSlots.shops).toLocaleString()} shop slots\`!`,
             });
 
             message.channel.send(levelUpEmbed);
-            const userSlots = (await database.getProp('economy', message.author.id, 'inventory.slots')) || {};
-
-            lodash.set(userSlots, 'houses', isNaN(userSlots.houses) ? otherSlots + 1 : Number(userSlots.houses) + otherSlots);
-            lodash.set(userSlots, 'navigators', isNaN(userSlots.navigators) ? otherSlots + 1 : Number(userSlots.navigators) + otherSlots);
-            lodash.set(userSlots, 'shops', isNaN(userSlots.shops) ? otherSlots + 1 : Number(userSlots.shops) + otherSlots);
-            lodash.set(userSlots, 'workers', isNaN(userSlots.workers) ? workerSlots + 2 : Number(userSlots.workers) + workerSlots);
-
-            await database.setProp('economy', message.author.id, userSlots, 'inventory.slots');
         } else {
             lodash.set(userLevelData, 'xp', currentXP);
             lodash.set(userLevelData, 'totalXp', (userLevelData.totalXp ?? 0) + randomXP);
