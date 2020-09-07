@@ -58,6 +58,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         'Gold n',
         'Platinum n',
         'Diamond n',
+        'essence',
     ];
 
     const giftEmbed = embed({
@@ -82,12 +83,12 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         if (giftItemName.startsWith(itemName.toLowerCase())) {
             const authorEconomyData = (await database.get('economy', message.author.id)) || {};
 
-            const itemIsNotHouse = itemName.charAt(itemName.length - 2) === ' ';
-            const inventoryItemType = itemName.slice(-1) === 'n' && itemIsNotHouse ? 'Navigator' : itemName.slice(-1) === 's' && itemIsNotHouse ? 'Shop' : itemName.slice(-1) === 'w' && itemIsNotHouse ? 'Worker' : 'House';
-            const inventoryItemName = itemIsNotHouse ? itemName.slice(0, -2) : itemName;
+            const itemIsNotHouseAndNotEssence = itemName.charAt(itemName.length - 2) === ' ';
+            const inventoryItemType = itemName.slice(-1) === 'n' && itemIsNotHouseAndNotEssence ? 'Navigator' : itemName.slice(-1) === 's' && itemIsNotHouseAndNotEssence ? 'Shop' : itemName.slice(-1) === 'w' && itemIsNotHouseAndNotEssence ? 'Worker' : 'House';
+            const inventoryItemName = itemIsNotHouseAndNotEssence ? itemName.slice(0, -2) : itemName === 'essence' ? 'essence' : itemName;
 
-            const authorItemsInInventory = lodash.get(authorEconomyData, `inventory.${inventoryItemType.toLowerCase()}s.${inventoryItemName.toLowerCase()}`) || 0;
-            if (authorItemsInInventory < 1) return message.channel.send(giftEmbed.setDescription(`${emojis.tickNo} You don't have any ${inventoryItemName.toLowerCase()} ${inventoryItemType.toLowerCase()}!`));
+            const authorItemsInInventory = lodash.get(authorEconomyData, `inventory.${itemName !== 'essence' ? `${inventoryItemType.toLowerCase()}s.` : ''}${inventoryItemName.toLowerCase()}`) || 0;
+            if (authorItemsInInventory < 1) return message.channel.send(giftEmbed.setDescription(`${emojis.tickNo} You don't have any ${itemName !== 'essence' ? inventoryItemName.toLowerCase() : ''} ${inventoryItemType.toLowerCase()}!`));
 
             let numberOfItemsToGive = 0;
 
@@ -106,24 +107,24 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 
             const userEconomyData = (await database.get('economy', user.id)) || {};
 
-            const userItemsInInventory = lodash.get(userEconomyData, `inventory.${inventoryItemType.toLowerCase()}s`) || {};
+            const userItemsInInventory = itemName !== 'essence' ? lodash.get(userEconomyData, `inventory.${inventoryItemType.toLowerCase()}s`) || {} : lodash.get(userEconomyData, 'inventory');
             const userAmountOfItemsInInventory = Number(Object.values(userItemsInInventory).reduce((a: any, b: any) => a + b, 0));
 
             // @ts-expect-error
             const userItemSlots = (await utils.getSlots(user.id))[`${inventoryItemType.toLowerCase()}s`];
             const remainingSlots = userItemSlots - userAmountOfItemsInInventory;
 
-            if (remainingSlots === 0) return message.channel.send(giftEmbed.setDescription(`${emojis.tickNo} That user doesn't have enough slots left to accept this gift!`));
-            if (userAmountOfItemsInInventory + numberOfItemsToGive > userItemSlots) numberOfItemsToGive = userItemSlots - userAmountOfItemsInInventory;
+            if (remainingSlots === 0 && itemName !== 'essence') return message.channel.send(giftEmbed.setDescription(`${emojis.tickNo} That user doesn't have enough slots left to accept this gift!`));
+            if (userAmountOfItemsInInventory + numberOfItemsToGive > userItemSlots && itemName !== 'essence') numberOfItemsToGive = userItemSlots - userAmountOfItemsInInventory;
 
-            const userNewItemAmount = (lodash.get(userItemsInInventory, inventoryItemName.toLowerCase()) ?? 0) + numberOfItemsToGive;
+            const userNewItemAmount = (lodash.get(userItemsInInventory, itemName !== 'essence' ? inventoryItemName.toLowerCase() : 'essence') ?? 0) + numberOfItemsToGive;
             const authorNewItemAmount = authorItemsInInventory - numberOfItemsToGive;
-            const fullItemName = `${inventoryItemName} ${inventoryItemType !== 'House' ? inventoryItemType : ''}${numberOfItemsToGive > 1 && inventoryItemType !== 'House' ? 's' : ''}`;
+            const fullItemName = `${inventoryItemName} ${inventoryItemType !== 'House' || itemName !== 'essence' ? inventoryItemType : ''}${numberOfItemsToGive > 1 && inventoryItemType !== 'House' ? 's' : ''}`;
 
             // @ts-expect-error
-            await database.subtractProp('economy', message.author.id, numberOfItemsToGive, `inventory.${inventoryItemType.toLowerCase()}s.${inventoryItemName.toLowerCase()}`);
+            await database.subtractProp('economy', message.author.id, numberOfItemsToGive, `inventory.${itemName !== 'essence' ? `${inventoryItemType.toLowerCase()}s.` : ''}${inventoryItemName.toLowerCase()}`);
             // @ts-expect-error
-            await database.addProp('economy', user.id, numberOfItemsToGive, `inventory.${inventoryItemType.toLowerCase()}s.${inventoryItemName.toLowerCase()}`);
+            await database.addProp('economy', user.id, numberOfItemsToGive, `inventory.${itemName !== 'essence' ? `${inventoryItemType.toLowerCase()}s.` : ''}${inventoryItemName.toLowerCase()}`);
 
             validItem = true;
             giftEmbed.setDescription(`${emojis.tickYes} You gifted **${numberOfItemsToGive.toLocaleString()} ${fullItemName}** to **${user.username}**\n\n**${message.author.username}**'s new ${fullItemName} amount is **${authorNewItemAmount.toLocaleString()}**\n**${user.username}**'s new ${fullItemName} amount is **${userNewItemAmount.toLocaleString()}**`);
