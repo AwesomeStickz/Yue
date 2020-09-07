@@ -24,8 +24,8 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     else if (amountString === 'half') amountOfEssence = essences / 2;
     else if (amountString === 'quarter') amountOfEssence = essences / 4;
     else if (amountString.endsWith('%')) amountOfEssence = (Number(amountString.slice(0, -1)) * essences) / 100;
-    else if (isNaN(amountOfEssence)) return message.channel.send(essenceSellEmbed.setDescription(`${emojis.tickNo} Amount of essence must be a number!`));
 
+    if (isNaN(amountOfEssence)) return message.channel.send(essenceSellEmbed.setDescription(`${emojis.tickNo} Amount of essence must be a number!`));
     if (amountOfEssence > essences) return message.channel.send(essenceSellEmbed.setDescription(`${emojis.tickNo} You don't have enough essence!`));
 
     amountOfEssence = Math.round(amountOfEssence);

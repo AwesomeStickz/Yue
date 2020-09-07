@@ -22,8 +22,8 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
     else if (betString === 'half') bet = balance / 2;
     else if (betString === 'quarter') bet = balance / 4;
     else if (betString.endsWith('%')) bet = (Number(betString.slice(0, -1)) * balance) / 100;
-    else if (isNaN(bet)) return message.channel.send(rusrEmbed.setDescription(`${emojis.tickNo} The bet must be a number`));
 
+    if (isNaN(bet)) return message.channel.send(rusrEmbed.setDescription(`${emojis.tickNo} The bet must be a number`));
     if (isNaN(Number(bullets))) return message.channel.send(rusrEmbed.setDescription(`${emojis.tickNo} Number of bullets must be a number`));
 
     if (bullets >= 6 || bullets <= 0) return message.channel.send(rusrEmbed.setDescription(`${emojis.tickNo} Invalid number of bullets. 1-5 bullets only are allowed`));
