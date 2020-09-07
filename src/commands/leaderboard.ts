@@ -3,7 +3,6 @@ import lodash from 'lodash';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
-import { utils } from '../utils/utils';
 
 export const run = async (message: Message, client: Client, args: string[]): Promise<Message | void> => {
     args = args.join(' ').toLowerCase().split(' ');
@@ -32,7 +31,9 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         for (let i = (page - 1) * 10; i < length; i++) {
             if (!lodash.get(sortedData[i]?.data, dataname)) break;
 
-            const user = await utils.getUser(sortedData[i].userid, client);
+            let user = client.users.cache.get(sortedData[i].userid);
+            if (!user) user = await client.users.fetch(sortedData[i].userid);
+
             const userData = lodash.get(sortedData[i].data, dataname);
 
             leaderboardData.push(`**${i + 1}**. ${user?.tag || 'unknown#0000'} - \`${prefix}${Number(userData).toLocaleString()}${suffix}\`\n`);
@@ -69,7 +70,7 @@ export const help = {
     name: 'Leaderboard',
     description: 'View the leaderboard',
     usage: 'leaderboard <leaderboard name>',
-    example: 'leaderboard bank\nleaderboard networth\nleaderboard streak\nleaderboard winnings',
+    example: 'leaderboard bank\nleaderboard level\nleaderboard networth\nleaderboard rep\nleaderboard streak\nleaderboard winnings',
 };
 
 export const config = {
