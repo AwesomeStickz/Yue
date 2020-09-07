@@ -8,7 +8,7 @@ export const run = async (message: Message, client: Client) => {
             name: 'Invite!',
         },
         color: message.guild?.me?.displayHexColor,
-        desc: '[Invite](https://discord.com/oauth2/authorize?client_id=744612340510752828&scope=bot&permissions=8)',
+        desc: '[Invite](https://discord.com/oauth2/authorize?client_id=744612340510752828&scope=bot&permissions=8&response_type=code&redirect_uri=https%3A%2F%2Fdiscord.gg%2F4n22udd)',
     });
 
     message.channel.send(inviteEmbed);
