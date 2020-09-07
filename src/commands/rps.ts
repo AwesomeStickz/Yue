@@ -101,12 +101,16 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
                                                 message.channel.send(rpsEmbed.setDescription(`${member.toString()} chose ${memberChoiceEmoji}\n${message.author.toString()} chose ${authorChoiceEmoji}\n\n${message.author.toString()} won ${isNaN(amount) ? 'the Rock Paper Scissors!' : `**$${amount.toLocaleString()}**`}`));
                                                 await database.addProp('economy', message.author.id, amount, 'balance');
                                                 await database.subtractProp('economy', member.id, amount, 'balance');
+                                                await database.addProp('economy', message.author.id, amount, 'winnings');
+                                                await database.subtractProp('economy', member.id, amount, 'winnings');
                                             } else if (isDraw) {
                                                 message.channel.send(rpsEmbed.setDescription(`${member.toString()} chose ${memberChoiceEmoji}\n${message.author.toString()} chose ${authorChoiceEmoji}\n\nThe game has ended in a tie!`));
                                             } else if (!authorWonRPS) {
                                                 message.channel.send(rpsEmbed.setDescription(`${member.toString()} chose ${memberChoiceEmoji}\n${message.author.toString()} chose ${authorChoiceEmoji}\n\n${member.toString()} won ${isNaN(amount) ? 'the Rock Paper Scissors!' : `**$${amount.toLocaleString()}**`}`));
                                                 await database.addProp('economy', member.id, amount, 'balance');
                                                 await database.subtractProp('economy', message.author.id, amount, 'balance');
+                                                await database.addProp('economy', member.id, amount, 'winnings');
+                                                await database.subtractProp('economy', message.author.id, amount, 'winnings');
                                             }
                                         } else {
                                             dmMessageOfAuthor.channel.send(rpsEmbed.setDescription(`${emojis.tickNo} That's not a valid input!`));
