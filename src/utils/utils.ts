@@ -5,8 +5,14 @@ import { database } from './databaseFunctions';
 import { embed } from './embed';
 
 export const utils = {
-    capitalize(arg: string) {
-        return arg.charAt(0).toUpperCase() + arg.slice(1);
+    capitalize(arg: string | string[]) {
+        if (Array.isArray(arg)) {
+            const capitalizedArgs: (string | any[])[] = [];
+
+            arg.forEach((arg) => capitalizedArgs.push(this.capitalize(arg)));
+
+            return capitalizedArgs;
+        } else return arg.charAt(0).toUpperCase() + arg.slice(1);
     },
     async getBankCapacity(userid: string) {
         const userBankCapacityThatWasBought = (await database.getProp('economy', userid, 'bankcapacity')) || 0;
