@@ -32,8 +32,8 @@ export const help = {
     aliases: ['jobs', 'job', 'myjob', 'myjobs'],
     name: 'Jobs',
     description: "View all the jobs you're in",
-    usage: 'jobs',
-    example: 'jobs',
+    usage: 'jobs [user]',
+    example: 'jobs\njobs @Conor#0751',
 };
 
 export const config = {
