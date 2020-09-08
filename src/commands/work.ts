@@ -2,6 +2,7 @@ import { Client, Message } from 'discord.js';
 import prettyMs from 'pretty-ms';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
+import { utils } from '../utils/utils';
 
 export const run = async (message: Message, client: Client): Promise<Message | void> => {
     const { cooldown } = help;
@@ -50,6 +51,8 @@ export const run = async (message: Message, client: Client): Promise<Message | v
 
         jobEmbed.setAuthor('Work', client.user!.displayAvatarURL({ dynamic: true }));
         jobEmbed.setDescription(`You worked and got **$${totalMoney.toLocaleString()}**`);
+
+        await utils.updateLevel(message, client);
     }
     message.channel.send(jobEmbed);
 };
