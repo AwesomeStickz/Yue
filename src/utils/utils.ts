@@ -215,7 +215,11 @@ export const utils = {
     },
     async updateLevel(message: Message, client: Client) {
         const userLevelData = (await database.getProp('economy', message.author.id, 'level')) || {};
-        const randomXP = Math.round(Math.random() * 20 + 20);
+
+        const userBoosters = (await database.getProp('economy', message.author.id, 'boosters')) || [];
+        const userHasXPBooster = userBoosters.find((booster: any) => booster.name === 'xp') ? true : false;
+
+        const randomXP = userHasXPBooster ? Math.round((Math.random() * 20 + 20) * 1.5) : Math.round(Math.random() * 20 + 20);
 
         const userLevel = userLevelData.level || 0;
         const currentXP = userLevelData.xp ? userLevelData.xp + randomXP : randomXP;
