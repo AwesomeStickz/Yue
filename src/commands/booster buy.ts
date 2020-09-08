@@ -19,26 +19,23 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
     const boosterName = args.join(' ').toLowerCase();
 
     const allBoosters = {
-        xp: 1000,
-    };
-    const allBoosterWithCaps = {
-        xp: 'XP',
+        xp: [1000, 'XP', 3600000],
     };
 
     let validItem = false;
 
-    for (const [booster, boosterPrice] of Object.entries(allBoosters)) {
+    for (const [booster, [boosterPrice, boosterNameWithCaps, boosterTime]] of Object.entries(allBoosters)) {
         if (boosterName.startsWith(booster)) {
-            if (userBalance < boosterPrice) return message.channel.send(boosterBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough balance to buy **${(allBoosterWithCaps as any)[booster]} Booster**!`));
-            if (userBoosters.find((boosterInfo) => boosterInfo.name === booster) && userBoosters.filter((boosterInfo) => boosterInfo.endTime > Date.now()).length > 0) return message.channel.send(boosterBuyEmbed.setDescription(`${emojis.tickNo} You already have  **${(allBoosterWithCaps as any)[booster]} Booster**!`));
+            if (userBalance < boosterPrice) return message.channel.send(boosterBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough balance to buy **${boosterNameWithCaps} Booster**!`));
+            if (userBoosters.find((boosterInfo) => boosterInfo.name === booster) && userBoosters.filter((boosterInfo) => boosterInfo.endTime > Date.now()).length > 0) return message.channel.send(boosterBuyEmbed.setDescription(`${emojis.tickNo} You already have  **${boosterNameWithCaps} Booster**!`));
 
-            userBoosters.push({ name: booster, endTime: Date.now() + 3600000 });
+            userBoosters.push({ name: booster, endTime: Date.now() + (boosterTime as number) });
 
             await database.subtractProp('economy', message.author.id, boosterPrice, 'balance');
             await database.setProp('economy', message.author.id, userBoosters, 'boosters');
 
             validItem = true;
-            message.channel.send(boosterBuyEmbed.setDescription(`${emojis.tickYes} You've successfully bought **${(allBoosterWithCaps as any)[booster]} Booster**!`));
+            message.channel.send(boosterBuyEmbed.setDescription(`${emojis.tickYes} You've successfully bought **${boosterNameWithCaps} Booster**!`));
             break;
         }
     }
