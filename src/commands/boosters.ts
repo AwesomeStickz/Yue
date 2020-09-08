@@ -37,7 +37,7 @@ export const run = async (message: Message, client: Client, args: string[], pref
     if (totalBoosterList.length === 0) return message.channel.send(boosterEmbed.setDescription(`${emojis.tickNo} ${user.id === message.author.id ? "You don't" : `${user.username} doesn't`} have any boosters! ${user.id === message.author.id ? `Use \`${prefix}booster shop\` to view all the booster you can buy!` : ''}`));
 
     for (let i = 0; i < userBoosters.length; i++) {
-        boosterEmbed.addField(`${(allBoostersWithCaps as any)[userBoosters[i].name]}`, totalBoosterList[i]);
+        boosterEmbed.addField(`${(allBoostersWithCaps as any)[userBoosters[i].name]} Booster`, totalBoosterList[i]);
     }
 
     message.channel.send(boosterEmbed);
