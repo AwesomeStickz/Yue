@@ -31,7 +31,7 @@ export const run = async (client: Client) => {
         for (const economyData of allEconomyData) {
             const currentBoosters = economyData.data.boosters || [];
             if (currentBoosters.length > 0) {
-                const newBoosters = currentBoosters.filter((booster: { name: string; endTime: number }) => booster.endTime < Date.now());
+                const newBoosters = currentBoosters.filter((booster: { name: string; endTime: number }) => booster.endTime > Date.now());
                 if (currentBoosters.length !== newBoosters.length) {
                     newBoosters.length > 0 ? await database.setProp('economy', economyData.userid, newBoosters, 'boosters') : await database.deleteProp('economy', economyData.userid, 'boosters');
                 }
