@@ -8,6 +8,8 @@ import { tempCache } from '../utils/tempCache';
 import { utils } from '../utils/utils';
 
 export const run = async (client: Client, oldMessage: Message, newMessage: Message): Promise<Message | void> => {
+    if (newMessage.partial) newMessage = await newMessage.fetch();
+
     if (newMessage.author?.bot) return;
     if (newMessage.channel.type !== 'text' || !newMessage.member || !newMessage.guild) return;
     if (!newMessage.channel.permissionsFor(newMessage.guild!.me!)?.has('SEND_MESSAGES')) return;
