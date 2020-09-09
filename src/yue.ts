@@ -4,7 +4,7 @@ import fs from 'fs';
 import './database/sequelize';
 import { aliases, commands } from './utils/commandsAndAliases';
 
-export const client = new Discord.Client({ disableMentions: 'everyone', partials: ['MESSAGE'], messageCacheMaxSize: 0 });
+export const client = new Discord.Client({ disableMentions: 'everyone', partials: ['MESSAGE'], messageCacheMaxSize: 30, messageCacheLifetime: 60, messageSweepInterval: 60 });
 
 //Command handler
 fs.readdir('./commands/', (error, files) => {
