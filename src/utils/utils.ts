@@ -244,9 +244,9 @@ export const utils = {
                     name: 'Level Up!',
                 },
                 color: message.guild?.me?.displayHexColor,
-                desc: `You advanced to level **${newLevel}**!\n**Unlocked**: \`${(newBankCapacity - previousBankCapacity).toLocaleString()} bank capacity\`, \`${(previousSlots.workers - newSlots.workers).toLocaleString()} worker slots\`, \`${(previousSlots.houses - newSlots.houses).toLocaleString()} house slots\`, \`${(
-                    previousSlots.navigators - newSlots.navigators
-                ).toLocaleString()} navigator slots\`, \`${(previousSlots.shops - newSlots.shops).toLocaleString()} shop slots\`!`,
+                desc: `You advanced to level **${newLevel}**!\n**Unlocked**: \`${(newBankCapacity - previousBankCapacity).toLocaleString()} bank capacity\`, \`${(newSlots.workers - previousSlots.workers).toLocaleString()} worker slots\`, \`${(newSlots.houses - previousSlots.houses).toLocaleString()} house slots\`, \`${(
+                    newSlots.navigators - previousSlots.navigators
+                ).toLocaleString()} navigator slots\`, \`${(newSlots.shops - previousSlots.shops).toLocaleString()} shop slots\`!`,
             });
 
             message.channel.send(levelUpEmbed);
