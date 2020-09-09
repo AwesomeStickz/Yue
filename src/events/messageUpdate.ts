@@ -17,19 +17,6 @@ export const run = async (client: Client, oldMessage: Message, newMessage: Messa
     if (newMessage.content.indexOf(prefix) !== 0) return;
     if (oldMessage.content === newMessage.content) return;
 
-    const blacklistedReason = await database.get('blacklist', newMessage.author.id);
-    if (blacklistedReason && newMessage.content !== `${prefix}support`)
-        return newMessage.channel.send(
-            embed({
-                author: {
-                    image: client.user!.displayAvatarURL(),
-                    name: 'Blacklisted!',
-                },
-                color: newMessage.guild.me!.displayHexColor,
-                desc: `${emojis.tickNo} You are blacklisted from using the bot! Reason: ${blacklistedReason}. You can join support server using \`${prefix}support\` if you want to appeal!`,
-            })
-        );
-
     try {
         const args = newMessage.content.slice(prefix.length).split(/ +/g);
         let command = args.shift()?.toUpperCase() || '';
@@ -42,8 +29,20 @@ export const run = async (client: Client, oldMessage: Message, newMessage: Messa
         const owners = await database.getProp('yue', client.user!.id, 'owners');
         const commandObj = commands.get(command) as any;
         const finishedGetStarted = await database.getProp('economy', newMessage.author.id, 'getstarted');
+        const blacklistedReason = await database.get('blacklist', newMessage.author.id);
 
         if (commandObj.config.owner === true && !owners.includes(newMessage.author.id)) return;
+        if (blacklistedReason && newMessage.content !== `${prefix}support`)
+            return newMessage.channel.send(
+                embed({
+                    author: {
+                        image: client.user!.displayAvatarURL(),
+                        name: 'Blacklisted!',
+                    },
+                    color: newMessage.guild.me!.displayHexColor,
+                    desc: `${emojis.tickNo} You are blacklisted from using the bot! Reason: ${blacklistedReason}. You can join support server using \`${prefix}support\` if you want to appeal!`,
+                })
+            );
         if (commandObj.config.args > args.length) return newMessage.channel.send(await utils.help(commandObj.help.name, client, newMessage));
         if (commandObj.config.botPermissions || commandObj.config.userPermissions) {
             const noPermissionEmbed = embed({

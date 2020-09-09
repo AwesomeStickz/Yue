@@ -16,19 +16,6 @@ export const run = async (client: Client, message: Message): Promise<Message | v
 
     if (message.content.indexOf(prefix) !== 0) return;
 
-    const blacklistedReason = await database.get('blacklist', message.author.id);
-    if (blacklistedReason && message.content !== `${prefix}support`)
-        return message.channel.send(
-            embed({
-                author: {
-                    image: client.user!.displayAvatarURL(),
-                    name: 'Blacklisted!',
-                },
-                color: message.guild.me!.displayHexColor,
-                desc: `${emojis.tickNo} You are blacklisted from using the bot! Reason: ${blacklistedReason}. You can join support server using \`${prefix}support\` if you want to appeal!`,
-            })
-        );
-
     try {
         const args = message.content.slice(prefix.length).split(/ +/g);
         let command = args.shift()?.toUpperCase() || '';
@@ -41,8 +28,20 @@ export const run = async (client: Client, message: Message): Promise<Message | v
         const owners = await database.getProp('yue', client.user!.id, 'owners');
         const commandObj = commands.get(command) as any;
         const finishedGetStarted = await database.getProp('economy', message.author.id, 'getstarted');
+        const blacklistedReason = await database.get('blacklist', message.author.id);
 
         if (commandObj.config.owner === true && !owners.includes(message.author.id)) return;
+        if (blacklistedReason && message.content !== `${prefix}support`)
+            return message.channel.send(
+                embed({
+                    author: {
+                        image: client.user!.displayAvatarURL(),
+                        name: 'Blacklisted!',
+                    },
+                    color: message.guild.me!.displayHexColor,
+                    desc: `${emojis.tickNo} You are blacklisted from using the bot! Reason: ${blacklistedReason}. You can join support server using \`${prefix}support\` if you want to appeal!`,
+                })
+            );
         if (commandObj.config.args > args.length) return message.channel.send(await utils.help(commandObj.help.name, client, message));
         if (commandObj.config.botPermissions || commandObj.config.userPermissions) {
             const noPermissionEmbed = embed({
