@@ -18,7 +18,17 @@ export const run = async (client: Client, oldMessage: Message, newMessage: Messa
     if (oldMessage.content === newMessage.content) return;
 
     const blacklistedReason = await database.get('blacklist', newMessage.author.id);
-    if (blacklistedReason && newMessage.content !== `${prefix}support`) return newMessage.channel.send(`${emojis.tickNo} You are blacklisted from using the bot! Reason: ${blacklistedReason}. You can join support server using \`${prefix}support\` if you want to appeal!`);
+    if (blacklistedReason && newMessage.content !== `${prefix}support`)
+        return newMessage.channel.send(
+            embed({
+                author: {
+                    image: client.user!.displayAvatarURL(),
+                    name: 'Blacklisted!',
+                },
+                color: newMessage.guild.me!.displayHexColor,
+                desc: `${emojis.tickNo} You are blacklisted from using the bot! Reason: ${blacklistedReason}. You can join support server using \`${prefix}support\` if you want to appeal!`,
+            })
+        );
 
     try {
         const args = newMessage.content.slice(prefix.length).split(/ +/g);

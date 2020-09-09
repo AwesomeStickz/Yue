@@ -17,7 +17,17 @@ export const run = async (client: Client, message: Message): Promise<Message | v
     if (message.content.indexOf(prefix) !== 0) return;
 
     const blacklistedReason = await database.get('blacklist', message.author.id);
-    if (blacklistedReason && message.content !== `${prefix}support`) return message.channel.send(`${emojis.tickNo} You are blacklisted from using the bot! Reason: ${blacklistedReason}. You can join support server using \`${prefix}support\` if you want to appeal!`);
+    if (blacklistedReason && message.content !== `${prefix}support`)
+        return message.channel.send(
+            embed({
+                author: {
+                    image: client.user!.displayAvatarURL(),
+                    name: 'Blacklisted!',
+                },
+                color: message.guild.me!.displayHexColor,
+                desc: `${emojis.tickNo} You are blacklisted from using the bot! Reason: ${blacklistedReason}. You can join support server using \`${prefix}support\` if you want to appeal!`,
+            })
+        );
 
     try {
         const args = message.content.slice(prefix.length).split(/ +/g);
