@@ -51,6 +51,8 @@ export const run = async (message: Message, client: Client): Promise<Message | v
 
         jobEmbed.setAuthor('Work', client.user!.displayAvatarURL({ dynamic: true }));
         jobEmbed.setDescription(`You worked and got **$${totalMoney.toLocaleString()}**`);
+        jobEmbed.setFooter('Yue');
+        jobEmbed.setTimestamp();
 
         await utils.updateLevel(message, client);
     }
