@@ -52,7 +52,7 @@ export const run = async (message: Message, client: Client, args: string[], pref
     jobEmbed.setFooter('Yue');
     jobEmbed.setTimestamp();
 
-    message.channel.send(jobEmbed.setDescription(`${totalJobList.join('\n')}\n\nAmount you get from working: **$${totalMoney.toLocaleString()}**`));
+    message.channel.send(jobEmbed.setDescription(`${totalJobList.join('\n')}\n\nAmount ${user.id === message.author.id ? 'you' : 'they'} get from working: **$${totalMoney.toLocaleString()}**`));
 };
 
 export const help = {
