@@ -14,40 +14,101 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         color: message.guild?.me?.displayHexColor,
     });
 
-    const sendLeaderboard = async (dataname: string, sortname: string, lbname: string, prefix = '', suffix = ''): Promise<Message> => {
+    const sendLeaderboard = async (dataname: string, sortname: string, lbname: string, prefix = '', suffix = ''): Promise<Message | void> => {
         const allData = await database.all('economy');
         const sortedData: any = allData.sort((a: any, b: any) => {
             if (lodash.get(a.data, sortname) > lodash.get(b.data, sortname) || (lodash.get(a.data, sortname) && !lodash.get(b.data, sortname))) return -1;
             if (lodash.get(a.data, sortname) < lodash.get(b.data, sortname) || (lodash.get(b.data, sortname) && !lodash.get(a.data, sortname))) return 1;
             return 0;
         });
-        const leaderboardData = [];
 
-        const page = !isNaN(Number(args[1])) ? Number(args[1]) : 1;
-        if (sortedData.length < (page - 1) * 10) return message.channel.send(leaderboardEmbed.setDescription(`${emojis.tickNo} That page doesn't exist!`));
+        let lastEdited = 0;
+        const editCooldown = 1000;
+        let currentPageUsed = 0;
 
-        const length = page * (sortedData.length > 10 ? 10 : sortedData.length);
+        const editLeaderboardMessage = async (currentPage: number, messageToDelete?: Message, leaderboardEmbedMessage?: Message): Promise<Message | void> => {
+            if (Date.now() - lastEdited >= editCooldown) {
+                lastEdited = Date.now();
 
-        for (let i = (page - 1) * 10; i < length; i++) {
-            if (!lodash.get(sortedData[i]?.data, dataname)) break;
+                if (!leaderboardEmbedMessage) {
+                    currentPage = !isNaN(Number(args[1])) && args[1] ? Number(args[1]) : 1;
+                }
 
-            let user = client.users.cache.get(sortedData[i].userid);
-            if (!user) user = await client.users.fetch(sortedData[i].userid);
+                let pageNotExist = false;
+                const totalPages = Math.ceil(sortedData.length / 10);
+                if (currentPage > totalPages || isNaN(currentPage)) currentPage = 1;
+                if (currentPage < 1) currentPage = totalPages;
 
-            const userData = lodash.get(sortedData[i].data, dataname);
+                if (sortedData.length < (currentPage - 1) * 10) {
+                    leaderboardEmbed.setDescription(`${emojis.tickNo} That page doesn't exist!`);
 
-            leaderboardData.push(`**${i + 1}**. ${user?.tag || 'unknown#0000'} - \`${prefix}${Number(userData).toLocaleString()}${suffix}\`\n`);
-        }
+                    if (!leaderboardEmbedMessage) return message.channel.send(leaderboardEmbed);
+                    else {
+                        pageNotExist = true;
+                        leaderboardEmbedMessage?.edit(leaderboardEmbed);
+                    }
+                }
 
-        let position = sortedData.findIndex((lbData: any) => lbData.userid === message.author.id) + 1;
-        if (!lodash.get(sortedData.find((lbData: any) => lbData.userid === message.author.id)?.data, dataname)) position = sortedData.filter((lbData: any) => lodash.get(lbData.data, dataname)).length + 1;
-        if (leaderboardData.length < 1) return message.channel.send(leaderboardEmbed.setDescription(`${emojis.tickNo} There's no data for that leaderboard!`));
+                if (!pageNotExist) {
+                    const length = currentPage * (sortedData.length > 10 ? 10 : sortedData.length);
+                    const leaderboardData = [];
 
-        leaderboardEmbed.setAuthor(`${lbname} Leaderboard`, client.user?.displayAvatarURL({ dynamic: true }));
-        leaderboardEmbed.setDescription(leaderboardData.join(''));
-        leaderboardEmbed.setFooter(`${message.author.username}'s Position: #${position}`, message.author.displayAvatarURL({ dynamic: true }));
+                    for (let i = (currentPage - 1) * 10; i < length; i++) {
+                        if (!lodash.get(sortedData[i]?.data, dataname)) break;
 
-        return message.channel.send(leaderboardEmbed);
+                        let user = client.users.cache.get(sortedData[i].userid);
+                        if (!user) user = await client.users.fetch(sortedData[i].userid);
+
+                        const userData = lodash.get(sortedData[i].data, dataname);
+
+                        leaderboardData.push(`**${i + 1}**. ${user?.tag || 'unknown#0000'} - \`${prefix}${Number(userData).toLocaleString()}${suffix}\`\n`);
+                    }
+
+                    let position = sortedData.findIndex((lbData: any) => lbData.userid === message.author.id) + 1;
+                    if (!lodash.get(sortedData.find((lbData: any) => lbData.userid === message.author.id)?.data, dataname)) position = sortedData.filter((lbData: any) => lodash.get(lbData.data, dataname)).length + 1;
+                    if (leaderboardData.length < 1) return message.channel.send(leaderboardEmbed.setDescription(`${emojis.tickNo} There's no data for that leaderboard!`));
+
+                    leaderboardEmbed.setDescription(leaderboardData.join(''));
+                    leaderboardEmbed.setFooter(`${message.author.username}'s Position: #${position}`, message.author.displayAvatarURL({ dynamic: true }));
+                    leaderboardEmbed.setAuthor(`${lbname} Leaderboard (Page ${currentPage}/${totalPages})`, client.user?.displayAvatarURL({ dynamic: true }));
+
+                    if (currentPageUsed !== currentPage) {
+                        currentPageUsed = currentPage;
+                        if (leaderboardEmbedMessage) {
+                            await leaderboardEmbedMessage.edit(leaderboardEmbed);
+                            try {
+                                await messageToDelete?.delete();
+                            } catch (_) {}
+                        } else {
+                            leaderboardEmbedMessage = await message.channel.send(leaderboardEmbed);
+                        }
+                    }
+                }
+            }
+
+            const forwardPageValidResponses = ['next', 'forward'];
+            const backPageValidResponses = ['previous', 'prev', 'back'];
+
+            message.channel
+                .awaitMessages((msg: Message) => !msg.author.bot && msg.author.id === message.author.id && (forwardPageValidResponses.includes(msg.content?.toLowerCase()) || backPageValidResponses.includes(msg.content?.toLowerCase()) || msg.content?.toLowerCase().startsWith('go to') || help.aliases.includes(msg.content?.toLowerCase().slice(prefix.length))), {
+                    max: 1,
+                    time: 15000,
+                    errors: ['time'],
+                })
+                .then(async (collected) => {
+                    const response = collected.first()?.content.toLowerCase();
+                    if (forwardPageValidResponses.includes(response as string)) {
+                        return editLeaderboardMessage(currentPage + 1, collected.first(), leaderboardEmbedMessage);
+                    } else if (backPageValidResponses.includes(response as string)) {
+                        return editLeaderboardMessage(currentPage - 1, collected.first(), leaderboardEmbedMessage);
+                    } else if (response?.startsWith('go to')) {
+                        return editLeaderboardMessage(Number(response.slice(6)), collected.first(), leaderboardEmbedMessage);
+                    } else if (help.aliases.includes(response!.slice(prefix.length))) return;
+                })
+                .catch((_) => _);
+        };
+
+        editLeaderboardMessage(1);
     };
 
     if (args[0] === 'bank') {
