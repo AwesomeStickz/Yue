@@ -25,7 +25,34 @@ export const run = async (message: Message, client: Client, args: string[], pref
     const totalJobList: string[] = [];
     userJobs.forEach((job: string) => totalJobList.push((utils.capitalize(job.split(' ')) as string[]).join(' ')));
 
-    message.channel.send(jobEmbed.setDescription(totalJobList));
+    const jobs = {
+        Waiter: 600,
+        Cashier: 1000,
+        'Construction Labourer': 1850,
+        Administration: 2400,
+        'Marketing Manager': 3000,
+        Nurse: 6200,
+        Fireman: 8000,
+        Carpenter: 10000,
+        Electrician: 13000,
+        Doctor: 32000,
+        Engineer: 50000,
+        'Architectural Engineer': 75000,
+    };
+
+    let totalMoney = 0;
+
+    for (const [jobName, jobAmount] of Object.entries(jobs)) {
+        if (userJobs.includes(jobName.toLowerCase())) {
+            totalMoney += Math.round(jobAmount * 0.01);
+        }
+    }
+
+    jobEmbed.setThumbnail(message.author.displayAvatarURL({ dynamic: true }));
+    jobEmbed.setFooter('Yue');
+    jobEmbed.setTimestamp();
+
+    message.channel.send(jobEmbed.setDescription(`${totalJobList.join('\n')}\n\nAmount you get from working: **$${totalMoney.toLocaleString()}**`));
 };
 
 export const help = {
