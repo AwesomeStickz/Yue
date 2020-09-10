@@ -111,18 +111,25 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         editLeaderboardMessage(1);
     };
 
-    if (args[0] === 'bank') {
-        sendLeaderboard('balance', 'balance', 'Bank', '$');
-    } else if (args[0] === 'level' || args[0] === 'levels' || args[0] === 'rank') {
-        sendLeaderboard('level.level', 'level.totalXp', 'Level', '', ' level');
-    } else if (args[0] === 'networth') {
-        sendLeaderboard('networth', 'networth', 'Networth', '$');
-    } else if (args[0] === 'rep' || args[0] === 'reps') {
-        sendLeaderboard('rep', 'rep', 'Rep', '', ' reps');
-    } else if (args[0] === 'streak') {
-        sendLeaderboard('streak', 'streak', 'Streak', '', ' days streak');
-    } else if (args[0] === 'winnings' || args[0] === 'winning') {
-        sendLeaderboard('winnings', 'winnings', 'Winnings', '$');
+    switch (args[0]) {
+        case 'bank':
+            sendLeaderboard('balance', 'balance', 'Bank', '$');
+            break;
+        case 'level' || 'levels' || 'rank':
+            sendLeaderboard('level.level', 'level.totalXp', 'Level', '', ' level');
+            break;
+        case 'networth':
+            sendLeaderboard('networth', 'networth', 'Networth', '$');
+            break;
+        case 'rep' || 'reps':
+            sendLeaderboard('rep', 'rep', 'Rep', '', ' reps');
+            break;
+        case 'streak':
+            sendLeaderboard('streak', 'streak', 'Streak', '', ' days streak');
+            break;
+        case 'winnings' || 'winning':
+            sendLeaderboard('winnings', 'winnings', 'Winnings', '$');
+            break;
     }
 };
 
