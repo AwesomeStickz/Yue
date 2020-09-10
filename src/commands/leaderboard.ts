@@ -90,11 +90,15 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
             const backPageValidResponses = ['previous', 'prev', 'back'];
 
             message.channel
-                .awaitMessages((msg: Message) => !msg.author.bot && msg.author.id === message.author.id && (forwardPageValidResponses.includes(msg.content?.toLowerCase()) || backPageValidResponses.includes(msg.content?.toLowerCase()) || msg.content?.toLowerCase().startsWith('go to') || help.aliases.includes(msg.content?.toLowerCase().slice(prefix.length))), {
-                    max: 1,
-                    time: 15000,
-                    errors: ['time'],
-                })
+                .awaitMessages(
+                    (msg: Message) =>
+                        !msg.author.bot && msg.author.id === message.author.id && (forwardPageValidResponses.includes(msg.content?.toLowerCase()) || backPageValidResponses.includes(msg.content?.toLowerCase()) || msg.content?.toLowerCase().startsWith('go to') || help.aliases.filter((alias) => msg.content?.toLowerCase().slice(prefix.length).startsWith(alias)).length > 1),
+                    {
+                        max: 1,
+                        time: 15000,
+                        errors: ['time'],
+                    }
+                )
                 .then(async (collected) => {
                     const response = collected.first()?.content.toLowerCase();
                     if (forwardPageValidResponses.includes(response as string)) {
@@ -103,7 +107,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
                         return editLeaderboardMessage(currentPage - 1, collected.first(), leaderboardEmbedMessage);
                     } else if (response?.startsWith('go to')) {
                         return editLeaderboardMessage(Number(response.slice(6)), collected.first(), leaderboardEmbedMessage);
-                    } else if (help.aliases.includes(response!.slice(prefix.length))) return;
+                    } else if (help.aliases.filter((alias) => response!.slice(prefix.length).startsWith(alias)).length > 1) return;
                 })
                 .catch((_) => _);
         };
