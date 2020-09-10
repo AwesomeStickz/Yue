@@ -70,7 +70,7 @@ export const run = async (message: Message, client: Client, args: string[], pref
             message.channel
                 .awaitMessages(
                     (msg: Message) =>
-                        !msg.author.bot && msg.author.id === message.author.id && (forwardPageValidResponses.includes(msg.content?.toLowerCase()) || backPageValidResponses.includes(msg.content?.toLowerCase()) || msg.content?.toLowerCase().startsWith('go to') || help.aliases.filter((alias) => msg.content?.toLowerCase().slice(prefix.length).startsWith(alias)).length > 1),
+                        !msg.author.bot && msg.author.id === message.author.id && (forwardPageValidResponses.includes(msg.content?.toLowerCase()) || backPageValidResponses.includes(msg.content?.toLowerCase()) || msg.content?.toLowerCase().startsWith('go to') || help.aliases.filter((alias) => msg.content?.toLowerCase().slice(prefix.length).startsWith(alias)).length > 0),
                     { max: 1, time: 15000, errors: ['time'] }
                 )
                 .then(async (collected) => {
@@ -81,7 +81,7 @@ export const run = async (message: Message, client: Client, args: string[], pref
                         return editHelpEmbedMessage(currentPage - 1, collected.first(), helpEmbedMessage);
                     } else if (response?.startsWith('go to')) {
                         return editHelpEmbedMessage(Number(response.slice(6)), collected.first(), helpEmbedMessage);
-                    } else if (help.aliases.filter((alias) => response!.slice(prefix.length).startsWith(alias)).length > 1) return;
+                    } else if (help.aliases.filter((alias) => response!.slice(prefix.length).startsWith(alias)).length > 0) return;
                 })
                 .catch((_) => _);
         };
@@ -147,7 +147,7 @@ export const run = async (message: Message, client: Client, args: string[], pref
                         (msg: Message) =>
                             !msg.author.bot &&
                             msg.author.id === message.author.id &&
-                            (forwardPageValidResponses.includes(msg.content?.toLowerCase()) || backPageValidResponses.includes(msg.content?.toLowerCase()) || msg.content?.toLowerCase().startsWith('go to') || help.aliases.filter((alias) => msg.content?.toLowerCase().slice(prefix.length).startsWith(alias)).length > 1),
+                            (forwardPageValidResponses.includes(msg.content?.toLowerCase()) || backPageValidResponses.includes(msg.content?.toLowerCase()) || msg.content?.toLowerCase().startsWith('go to') || help.aliases.filter((alias) => msg.content?.toLowerCase().slice(prefix.length).startsWith(alias)).length > 0),
                         { max: 1, time: 15000, errors: ['time'] }
                     )
                     .then(async (collected) => {
@@ -158,7 +158,7 @@ export const run = async (message: Message, client: Client, args: string[], pref
                             return editHelpEmbedMessage(currentPage - 1, collected.first(), helpEmbedMessage);
                         } else if (response?.startsWith('go to')) {
                             return editHelpEmbedMessage(Number(response.slice(6)), collected.first(), helpEmbedMessage);
-                        } else if (help.aliases.filter((alias) => response!.slice(prefix.length).startsWith(alias)).length > 1) return;
+                        } else if (help.aliases.filter((alias) => response!.slice(prefix.length).startsWith(alias)).length > 0) return;
                     })
                     .catch((_) => _);
             };
