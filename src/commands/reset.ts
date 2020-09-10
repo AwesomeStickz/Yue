@@ -17,10 +17,14 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     if (!user) return message.channel.send(resetEmbed.setDescription(`${emojis.tickNo} I couldn't find that user!`));
     if (user.bot) return message.channel.send(resetEmbed.setDescription(`${emojis.tickNo} You can't reset bots!`));
 
+    const data = (await database.get('economy', user.id)) || {};
+    delete data.reset;
+
     await database.delete('economy', user.id);
+    await database.setProp('economy', user.id, data, 'reset');
 
     resetEmbed.setAuthor(user.username, user.displayAvatarURL({ dynamic: true }));
-    message.channel.send(resetEmbed.setDescription(`${emojis.tickYes} **${user.tag}**'s stats has been reset successfully!`));
+    message.channel.send(resetEmbed.setDescription(`${emojis.tickYes} Successfully reset **${user.tag}**!`));
 };
 
 export const help = {
