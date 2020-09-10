@@ -48,7 +48,7 @@ export const run = async (message: Message, client: Client, args: string[], pref
         }
     }
 
-    jobEmbed.setThumbnail(message.author.displayAvatarURL({ dynamic: true }));
+    jobEmbed.setThumbnail(user.displayAvatarURL({ dynamic: true }));
     jobEmbed.setFooter('Yue');
     jobEmbed.setTimestamp();
 
