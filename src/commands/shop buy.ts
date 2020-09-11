@@ -15,8 +15,8 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
         color: message.guild?.me?.displayHexColor,
     });
 
-    const lastPendingReply = tempCache.get(`pending_reply_${message.author.id}`) || 0;
-    if (10000 - (Date.now() - lastPendingReply) > 0) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} A command is already waiting for your reply so please send a reply if you want to execute this command!`));
+    const pendingReplyEndingTime = tempCache.get(`pending_reply_${message.author.id}`) || 0;
+    if (pendingReplyEndingTime > Date.now()) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} A command is already waiting for your reply so please send a reply to that if you want to execute this command!`));
 
     const shopItems = {
         'Flower Shop': 500,
@@ -118,7 +118,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
     if (totalMoney > balance) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough money to buy **${numberOfItemsToBuy.toLocaleString()} ${itemName}${numberOfItemsToBuy > 1 ? 's' : ''}**`));
 
     await message.channel.send(shopBuyEmbed.setDescription(`Type \`yes\` if you want to buy **${numberOfItemsToBuy.toLocaleString()} ${itemName}${numberOfItemsToBuy > 1 ? 's' : ''}** for **$${totalMoney.toLocaleString()}**`));
-    tempCache.set(`pending_reply_${message.author.id}`, Date.now());
+    tempCache.set(`pending_reply_${message.author.id}`, Date.now() + 10000);
     message.channel
         .awaitMessages((msg) => !msg.author.bot && msg.author.id === message.author.id, { max: 1, time: 10000, errors: ['time'] })
         .then(async (collected) => {

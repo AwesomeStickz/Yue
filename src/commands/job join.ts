@@ -14,8 +14,8 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
         color: message.guild?.me?.displayHexColor,
     });
 
-    const lastPendingReply = tempCache.get(`pending_reply_${message.author.id}`) || 0;
-    if (10000 - (Date.now() - lastPendingReply) > 0) return message.channel.send(jobJoinEmbed.setDescription(`${emojis.tickNo} A command is already waiting for your reply so please send a reply if you want to execute this command!`));
+    const pendingReplyEndingTime = tempCache.get(`pending_reply_${message.author.id}`) || 0;
+    if (pendingReplyEndingTime > Date.now()) return message.channel.send(jobJoinEmbed.setDescription(`${emojis.tickNo} A command is already waiting for your reply so please send a reply to that if you want to execute this command!`));
 
     const jobs = {
         Waiter: 600,
@@ -46,7 +46,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
     if (userJobs.includes(jobName.toLowerCase())) return message.channel.send(jobJoinEmbed.setDescription(`${emojis.tickNo} You're already in that job!`));
 
     await message.channel.send(jobJoinEmbed.setDescription(`Type \`yes\` if you want to join **${jobName}** job`));
-    tempCache.set(`pending_reply_${message.author.id}`, Date.now());
+    tempCache.set(`pending_reply_${message.author.id}`, Date.now() + 10000);
     message.channel
         .awaitMessages((msg) => !msg.author.bot && msg.author.id === message.author.id, { max: 1, time: 10000, errors: ['time'] })
         .then(async (collected) => {
