@@ -1,4 +1,4 @@
-import { Client, Message } from 'discord.js';
+import { Client, Message, TextChannel } from 'discord.js';
 import lodash from 'lodash';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
@@ -129,6 +129,9 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
             validItem = true;
             giftEmbed.setDescription(`${emojis.tickYes} You gifted **${numberOfItemsToGive.toLocaleString()} ${fullItemName}** to **${user.username}**\n\n**${message.author.username}**'s new ${fullItemName} amount is **${authorNewItemAmount.toLocaleString()}**\n**${user.username}**'s new ${fullItemName} amount is **${userNewItemAmount.toLocaleString()}**`);
             message.channel.send(giftEmbed);
+            (client.channels.cache.get('745930857272967249') as TextChannel).send(
+                giftEmbed.setDescription(`**${message.author.tag}** gifted **${numberOfItemsToGive.toLocaleString()} ${fullItemName}** to **${user.tag}**\n\n**${message.author.tag}**'s new ${fullItemName} amount is **${authorNewItemAmount.toLocaleString()}**\n**${user.tag}**'s new ${fullItemName} amount is **${userNewItemAmount.toLocaleString()}**`)
+            );
             break;
         }
     }

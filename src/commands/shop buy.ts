@@ -1,4 +1,4 @@
-import { Client, Message } from 'discord.js';
+import { Client, Message, TextChannel } from 'discord.js';
 import fuzzysort from 'fuzzysort';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
@@ -6,7 +6,7 @@ import { emojis } from '../utils/emojis';
 import { tempCache } from '../utils/tempCache';
 import { utils } from '../utils/utils';
 
-export const run = async (message: Message, _client: Client, args: string[]): Promise<Message | void> => {
+export const run = async (message: Message, client: Client, args: string[]): Promise<Message | void> => {
     const shopBuyEmbed = embed({
         author: {
             image: message.author.displayAvatarURL({ dynamic: true }),
@@ -131,6 +131,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
                 tempCache.delete(`pending_reply_${message.author.id}`);
 
                 message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickYes} You've successfully bought **${numberOfItemsToBuy.toLocaleString()} ${itemName}${numberOfItemsToBuy > 1 ? 's' : ''}** for **$${totalMoney.toLocaleString()}**`));
+                (client.channels.cache.get('745930847433261057') as TextChannel).send(shopBuyEmbed.setDescription(`**${message.author.tag}** bought **${numberOfItemsToBuy.toLocaleString()} ${itemName}${numberOfItemsToBuy > 1 ? 's' : ''}** for **$${totalMoney.toLocaleString()}**`));
             } else {
                 tempCache.delete(`pending_reply_${message.author.id}`);
                 message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You didn't respond with \`yes\`!`));

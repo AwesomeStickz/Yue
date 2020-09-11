@@ -1,10 +1,10 @@
-import { Client, Message } from 'discord.js';
+import { Client, Message, TextChannel } from 'discord.js';
 import fuzzysort from 'fuzzysort';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
 
-export const run = async (message: Message, _client: Client, args: string[]): Promise<Message | void> => {
+export const run = async (message: Message, client: Client, args: string[]): Promise<Message | void> => {
     const slots = {
         'Worker Slot': 75,
         'House Slot': 150,
@@ -54,6 +54,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
     await database.addProp('economy', message.author.id, numberOfSlotsToBuy, `inventory.slots.${slotName.toLowerCase()}s`);
 
     message.channel.send(slotBuyEmbed.setDescription(`${emojis.tickYes} You've successfully bought **${numberOfSlotsToBuy.toLocaleString()} ${slotName} Slot${numberOfSlotsToBuy > 1 ? 's' : ''}** for **$${totalMoney.toLocaleString()}**`));
+    (client.channels.cache.get('745930847433261057') as TextChannel).send(slotBuyEmbed.setDescription(`**${message.author.tag}** bought **${numberOfSlotsToBuy.toLocaleString()} ${slotName} Slot${numberOfSlotsToBuy > 1 ? 's' : ''}** for **$${totalMoney.toLocaleString()}**`));
 };
 
 export const help = {

@@ -1,4 +1,4 @@
-import { Client, Message } from 'discord.js';
+import { Client, Message, TextChannel } from 'discord.js';
 import prettyMs from 'pretty-ms';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
@@ -33,6 +33,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 
         message.channel.send(repEmbed.setDescription(`You gave a reputation to ${user.toString()}!`));
         await utils.updateLevel(message, client);
+        (client.channels.cache.get('749901771476041738') as TextChannel).send(repEmbed.setDescription(`**${message.author.tag}** repped **${user.tag}**`));
     }
 };
 
