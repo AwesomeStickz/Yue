@@ -3,8 +3,20 @@ import fuzzysort from 'fuzzysort';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
+import { tempCache } from '../utils/tempCache';
 
 export const run = async (message: Message, _client: Client, args: string[]): Promise<Message | void> => {
+    const jobJoinEmbed = embed({
+        author: {
+            image: message.author.displayAvatarURL({ dynamic: true }),
+            name: message.author.username,
+        },
+        color: message.guild?.me?.displayHexColor,
+    });
+
+    const lastPendingReply = tempCache.get(`pending_reply_${message.author.id}`) || 0;
+    if (10000 - (Date.now() - lastPendingReply) > 0) return message.channel.send(jobJoinEmbed.setDescription(`${emojis.tickNo} A command is already waiting for your reply so please send a reply if you want to execute this command!`));
+
     const jobs = {
         Waiter: 600,
         Cashier: 1000,
@@ -20,14 +32,6 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
         'Architectural Engineer': 75000,
     };
 
-    const jobJoinEmbed = embed({
-        author: {
-            image: message.author.displayAvatarURL({ dynamic: true }),
-            name: message.author.username,
-        },
-        color: message.guild?.me?.displayHexColor,
-    });
-
     const fuzzySortedJobsNames = fuzzysort.go(args.join(' '), Object.keys(jobs), { allowTypo: false, limit: 1, threshold: -5000 });
 
     const jobName = fuzzySortedJobsNames.total > 0 ? fuzzySortedJobsNames[0].target : null;
@@ -42,6 +46,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
     if (userJobs.includes(jobName.toLowerCase())) return message.channel.send(jobJoinEmbed.setDescription(`${emojis.tickNo} You're already in that job!`));
 
     await message.channel.send(jobJoinEmbed.setDescription(`Type \`yes\` if you want to join **${jobName}** job`));
+    tempCache.set(`pending_reply_${message.author.id}`, Date.now());
     message.channel
         .awaitMessages((msg) => !msg.author.bot && msg.author.id === message.author.id, { max: 1, time: 10000, errors: ['time'] })
         .then(async (collected) => {
@@ -52,12 +57,18 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
                 await database.setProp('economy', message.author.id, userJobs, 'jobs');
                 await database.subtractProp('economy', message.author.id, jobAmount, 'balance');
 
+                tempCache.delete(`pending_reply_${message.author.id}`);
+
                 message.channel.send(jobJoinEmbed.setDescription(`${emojis.tickYes} You've successfully joined **${jobName}** job!`));
             } else {
+                tempCache.delete(`pending_reply_${message.author.id}`);
                 message.channel.send(jobJoinEmbed.setDescription(`${emojis.tickNo} You didn't respond with \`yes\`!`));
             }
         })
-        .catch(() => message.channel.send(jobJoinEmbed.setDescription(`${emojis.tickNo} You didn't respond in time!`)));
+        .catch(() => {
+            tempCache.delete(`pending_reply_${message.author.id}`);
+            message.channel.send(jobJoinEmbed.setDescription(`${emojis.tickNo} You didn't respond in time!`));
+        });
 };
 
 export const help = {
