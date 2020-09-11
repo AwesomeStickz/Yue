@@ -260,7 +260,7 @@ export const utils = {
         const userLevelData = (await database.getProp('economy', message.author.id, 'level')) || {};
 
         const userBoosters = (await database.getProp('economy', message.author.id, 'boosters')) || [];
-        const userHasXPBooster = userBoosters.find((booster: any) => booster.name === 'xp')?.endTime < Date.now() ? true : false;
+        const userHasXPBooster = userBoosters.find((booster: any) => booster.name === 'xp')?.endTime > Date.now() ? true : false;
 
         const randomXP = userHasXPBooster ? Math.round((Math.random() * 20 + 20) * 1.5) : Math.round(Math.random() * 20 + 20);
 
