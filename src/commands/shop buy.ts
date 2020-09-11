@@ -3,9 +3,21 @@ import fuzzysort from 'fuzzysort';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
+import { tempCache } from '../utils/tempCache';
 import { utils } from '../utils/utils';
 
 export const run = async (message: Message, _client: Client, args: string[]): Promise<Message | void> => {
+    const shopBuyEmbed = embed({
+        author: {
+            image: message.author.displayAvatarURL({ dynamic: true }),
+            name: message.author.username,
+        },
+        color: message.guild?.me?.displayHexColor,
+    });
+
+    const lastPendingShopBuy = tempCache.get(`shopbuy_pending_${message.author.id}`) || 0;
+    if (10000 - (Date.now() - lastPendingShopBuy) > 0) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} This command is already waiting for your reply so please send a reply if you want to execute this command again!`));
+
     const shopItems = {
         'Flower Shop': 500,
         'Taco Shop': 3500,
@@ -60,14 +72,6 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
         'Diamond Navigator': 500000,
     };
 
-    const shopBuyEmbed = embed({
-        author: {
-            image: message.author.displayAvatarURL({ dynamic: true }),
-            name: message.author.username,
-        },
-        color: message.guild?.me?.displayHexColor,
-    });
-
     const fuzzySortedItemNames = fuzzysort.go((isNaN(Number(args[args.length - 1])) ? args : args.slice(0, -1)).join(' '), Object.keys(shopItems), { allowTypo: false, limit: 1, threshold: -5000 });
 
     const itemName = fuzzySortedItemNames.total > 0 ? fuzzySortedItemNames[0].target : null;
@@ -114,6 +118,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
     if (totalMoney > balance) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough money to buy **${numberOfItemsToBuy.toLocaleString()} ${itemName}${numberOfItemsToBuy > 1 ? 's' : ''}**`));
 
     await message.channel.send(shopBuyEmbed.setDescription(`Type \`yes\` if you want to buy **${numberOfItemsToBuy.toLocaleString()} ${itemName}${numberOfItemsToBuy > 1 ? 's' : ''}** for **$${totalMoney.toLocaleString()}**`));
+    tempCache.set(`shopbuy_pending_${message.author.id}`, Date.now());
     message.channel
         .awaitMessages((msg) => !msg.author.bot && msg.author.id === message.author.id, { max: 1, time: 10000, errors: ['time'] })
         .then(async (collected) => {
@@ -123,12 +128,18 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
                 await database.addProp('economy', message.author.id, numberOfItemsToBuy, `inventory.${inventoryItemType}s.${inventoryItemName}`);
                 await database.subtractProp('economy', message.author.id, totalMoney, 'balance');
 
+                tempCache.delete(`shopbuy_pending_${message.author.id}`);
+
                 message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickYes} You've successfully bought **${numberOfItemsToBuy.toLocaleString()} ${itemName}${numberOfItemsToBuy > 1 ? 's' : ''}** for **$${totalMoney.toLocaleString()}**`));
             } else {
+                tempCache.delete(`shopbuy_pending_${message.author.id}`);
                 message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You didn't respond with \`yes\`!`));
             }
         })
-        .catch(() => message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You didn't respond in time!`)));
+        .catch(() => {
+            tempCache.delete(`shopbuy_pending_${message.author.id}`);
+            message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You didn't respond in time!`));
+        });
 };
 
 export const help = {
