@@ -1,14 +1,15 @@
 import { Client, Message } from 'discord.js';
+import fuzzysort from 'fuzzysort';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
 
 export const run = async (message: Message, _client: Client, args: string[]): Promise<Message | void> => {
     const slots = {
-        Worker: 75,
-        House: 150,
-        Navigator: 150,
-        Shop: 150,
+        'Worker Slot': 75,
+        'House Slot': 150,
+        'Navigator Slot': 150,
+        'Shop Slot': 150,
     };
 
     const slotBuyEmbed = embed({
@@ -19,45 +20,40 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
         color: message.guild?.me?.displayHexColor,
     });
 
+    const fuzzySortedItemNames = fuzzysort.go((isNaN(Number(args[args.length - 1])) ? args : args.slice(0, -1)).join(' '), Object.keys(slots), { allowTypo: false, limit: 1, threshold: -5000 });
+
+    const slotName = fuzzySortedItemNames.total > 0 ? fuzzySortedItemNames[0].target.split(' ')[0] : null;
+    if (!slotName) return message.channel.send(slotBuyEmbed.setDescription(`${emojis.tickNo} That is not a valid slot!`));
+
+    const slotPrice = (slots as any)[`${slotName} Slot`];
     const slotAmountString = args[args.length - 1].toLowerCase();
-    const slotName = slotAmountString !== 'all' && slotAmountString !== 'half' && slotAmountString !== 'quarter' && !slotAmountString.endsWith('%') && isNaN(Number(slotAmountString)) ? args.join(' ').toLowerCase() : args.slice(0, -1).join(' ').toLowerCase();
 
-    let validSlot = false;
+    const balance = (await database.getProp('economy', message.author.id, 'balance')) || 0;
 
-    for (const [shopSlotName, shopSlotPrice] of Object.entries(slots)) {
-        if (slotName.startsWith(shopSlotName.toLowerCase())) {
-            const balance = (await database.getProp('economy', message.author.id, 'balance')) || 0;
+    let amountUserInvests = 0;
+    let slotAmount = 0;
 
-            let amountUserInvests = 0;
-            let slotAmount = 0;
-
-            if (slotAmountString === 'all') amountUserInvests = balance;
-            else if (slotAmountString === 'half') amountUserInvests = balance / 2;
-            else if (slotAmountString === 'quarter') amountUserInvests = balance / 4;
-            else if (slotAmountString.endsWith('%')) amountUserInvests = (Number(slotAmountString.slice(0, -1)) * balance) / 100;
-            else {
-                slotAmount = Number(slotAmountString);
-                if (isNaN(slotAmount)) slotAmount = 1;
-                amountUserInvests = slotAmount * shopSlotPrice;
-            }
-
-            if (isNaN(amountUserInvests)) return message.channel.send(slotBuyEmbed.setDescription(`${emojis.tickNo} The amount of slots must be a number!`));
-
-            const numberOfSlotsToBuy = slotAmount > 0 ? Math.round(slotAmount) : Math.floor(amountUserInvests / shopSlotPrice);
-            const totalMoney = numberOfSlotsToBuy * shopSlotPrice;
-            if (totalMoney > balance) return message.channel.send(slotBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough money to buy **${shopSlotName} Slot${numberOfSlotsToBuy > 1 ? 's' : ''}**`));
-
-            await database.subtractProp('economy', message.author.id, totalMoney, 'balance');
-            // @ts-expect-error
-            await database.addProp('economy', message.author.id, numberOfSlotsToBuy, `inventory.slots.${shopSlotName.toLowerCase()}s`);
-
-            validSlot = true;
-            message.channel.send(slotBuyEmbed.setDescription(`${emojis.tickYes} You've successfully bought **${numberOfSlotsToBuy.toLocaleString()} ${shopSlotName} Slot${numberOfSlotsToBuy > 1 ? 's' : ''}** for **$${totalMoney.toLocaleString()}**`));
-            break;
-        }
+    if (slotAmountString === 'all') amountUserInvests = balance;
+    else if (slotAmountString === 'half') amountUserInvests = balance / 2;
+    else if (slotAmountString === 'quarter') amountUserInvests = balance / 4;
+    else if (slotAmountString.endsWith('%')) amountUserInvests = (Number(slotAmountString.slice(0, -1)) * balance) / 100;
+    else {
+        slotAmount = Number(slotAmountString);
+        if (isNaN(slotAmount)) slotAmount = 1;
+        amountUserInvests = slotAmount * slotPrice;
     }
 
-    if (!validSlot) return message.channel.send(slotBuyEmbed.setDescription(`${emojis.tickNo} That is not a valid slot!`));
+    if (isNaN(amountUserInvests)) return message.channel.send(slotBuyEmbed.setDescription(`${emojis.tickNo} The amount of slots must be a number!`));
+
+    const numberOfSlotsToBuy = slotAmount > 0 ? Math.round(slotAmount) : Math.floor(amountUserInvests / slotPrice);
+    const totalMoney = numberOfSlotsToBuy * slotPrice;
+    if (totalMoney > balance) return message.channel.send(slotBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough money to buy **${slotName} Slot${numberOfSlotsToBuy > 1 ? 's' : ''}**`));
+
+    await database.subtractProp('economy', message.author.id, totalMoney, 'balance');
+    // @ts-expect-error
+    await database.addProp('economy', message.author.id, numberOfSlotsToBuy, `inventory.slots.${slotName.toLowerCase()}s`);
+
+    message.channel.send(slotBuyEmbed.setDescription(`${emojis.tickYes} You've successfully bought **${numberOfSlotsToBuy.toLocaleString()} ${slotName} Slot${numberOfSlotsToBuy > 1 ? 's' : ''}** for **$${totalMoney.toLocaleString()}**`));
 };
 
 export const help = {
