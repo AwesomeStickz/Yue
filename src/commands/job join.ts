@@ -41,12 +41,23 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
     if (userBalance < jobAmount) return message.channel.send(jobJoinEmbed.setDescription(`${emojis.tickNo} You don't have enough money to join **${jobName}** job!`));
     if (userJobs.includes(jobName.toLowerCase())) return message.channel.send(jobJoinEmbed.setDescription(`${emojis.tickNo} You're already in that job!`));
 
-    userJobs.push(jobName.toLowerCase());
+    await message.channel.send(jobJoinEmbed.setDescription(`Type \`yes\` if you want to join **${jobName}** job`));
+    message.channel
+        .awaitMessages((msg) => !msg.author.bot && msg.author.id === message.author.id, { max: 1, time: 10000, errors: ['time'] })
+        .then(async (collected) => {
+            const response = collected.first()?.content.toLowerCase();
+            if (response === 'yes' || response === 'y') {
+                userJobs.push(jobName.toLowerCase());
 
-    await database.setProp('economy', message.author.id, userJobs, 'jobs');
-    await database.subtractProp('economy', message.author.id, jobAmount, 'balance');
+                await database.setProp('economy', message.author.id, userJobs, 'jobs');
+                await database.subtractProp('economy', message.author.id, jobAmount, 'balance');
 
-    message.channel.send(jobJoinEmbed.setDescription(`${emojis.tickYes} You've successfully joined **${jobName}** job!`));
+                message.channel.send(jobJoinEmbed.setDescription(`${emojis.tickYes} You've successfully joined **${jobName}** job!`));
+            } else {
+                message.channel.send(jobJoinEmbed.setDescription(`${emojis.tickNo} You didn't respond with \`yes\`!`));
+            }
+        })
+        .catch(() => message.channel.send(jobJoinEmbed.setDescription(`${emojis.tickNo} You didn't respond in time!`)));
 };
 
 export const help = {
