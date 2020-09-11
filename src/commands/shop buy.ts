@@ -113,11 +113,34 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
     const totalMoney = numberOfItemsToBuy * itemPrice;
     if (totalMoney > balance) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough money to buy **${numberOfItemsToBuy.toLocaleString()} ${itemName}${numberOfItemsToBuy > 1 ? 's' : ''}**`));
 
-    // @ts-expect-error
-    await database.addProp('economy', message.author.id, numberOfItemsToBuy, `inventory.${inventoryItemType}s.${inventoryItemName}`);
-    await database.subtractProp('economy', message.author.id, totalMoney, 'balance');
+    await message.channel.send(shopBuyEmbed.setDescription(`Type \`yes\` if you want to buy **${numberOfItemsToBuy.toLocaleString()} ${itemName}${numberOfItemsToBuy > 1 ? 's' : ''}** for **$${totalMoney.toLocaleString()}**`));
+    message.channel
+        .awaitMessages((msg) => !msg.author.bot && msg.author.id === message.author.id, { max: 1, time: 10000, errors: ['time'] })
+        .then(async (collected) => {
+            const response = collected.first()?.content.toLowerCase();
+            if (response === 'yes' || response === 'y') {
+                // @ts-expect-error
+                await database.addProp('economy', message.author.id, numberOfItemsToBuy, `inventory.${inventoryItemType}s.${inventoryItemName}`);
+                await database.subtractProp('economy', message.author.id, totalMoney, 'balance');
 
-    message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickYes} You've successfully bought **${numberOfItemsToBuy.toLocaleString()} ${itemName}${numberOfItemsToBuy > 1 ? 's' : ''}** for **$${totalMoney.toLocaleString()}**`));
+                message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickYes} You've successfully bought **${numberOfItemsToBuy.toLocaleString()} ${itemName}${numberOfItemsToBuy > 1 ? 's' : ''}** for **$${totalMoney.toLocaleString()}**`));
+            } else {
+                message.channel.send(
+                    embed({
+                        color: message.guild?.me?.displayHexColor,
+                        desc: `${emojis.tickNo} You didn't respond with \`yes\`!`,
+                    })
+                );
+            }
+        })
+        .catch(() =>
+            message.channel.send(
+                embed({
+                    color: message.guild?.me?.displayHexColor,
+                    desc: `${emojis.tickNo} You didn't respond in time!`,
+                })
+            )
+        );
 };
 
 export const help = {
