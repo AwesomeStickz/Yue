@@ -1,4 +1,5 @@
 import { Client, Message } from 'discord.js';
+import fuzzysort from 'fuzzysort';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
@@ -27,30 +28,25 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
         color: message.guild?.me?.displayHexColor,
     });
 
-    const jobNameThatUserWantsToJoin = args.join(' ').toLowerCase();
-    let validJob = false;
+    const fuzzySortedJobsNames = fuzzysort.go(args.join(' '), Object.keys(jobs), { allowTypo: false, limit: 1, threshold: -5000 });
 
-    for (const [jobName, jobAmount] of Object.entries(jobs)) {
-        if (jobNameThatUserWantsToJoin.startsWith(jobName.toLowerCase())) {
-            const userEconomyData = (await database.get('economy', message.author.id)) || {};
-            const userBalance = userEconomyData.balance || 0;
-            const userJobs = userEconomyData.jobs || [];
+    const jobName = fuzzySortedJobsNames.total > 0 ? fuzzySortedJobsNames[0].target : null;
+    if (!jobName) return message.channel.send(jobJoinEmbed.setDescription(`${emojis.tickNo} That's not a valid job!`));
 
-            if (userBalance < jobAmount) return message.channel.send(jobJoinEmbed.setDescription(`${emojis.tickNo} You don't have enough money to join **${jobName}** job!`));
-            if (userJobs.includes(jobName.toLowerCase())) return message.channel.send(jobJoinEmbed.setDescription(`${emojis.tickNo} You're already in that job!`));
+    const userEconomyData = (await database.get('economy', message.author.id)) || {};
+    const userBalance = userEconomyData.balance || 0;
+    const userJobs = userEconomyData.jobs || [];
+    const jobAmount = (jobs as any)[jobName];
 
-            userJobs.push(jobName.toLowerCase());
+    if (userBalance < jobAmount) return message.channel.send(jobJoinEmbed.setDescription(`${emojis.tickNo} You don't have enough money to join **${jobName}** job!`));
+    if (userJobs.includes(jobName.toLowerCase())) return message.channel.send(jobJoinEmbed.setDescription(`${emojis.tickNo} You're already in that job!`));
 
-            await database.setProp('economy', message.author.id, userJobs, 'jobs');
-            await database.subtractProp('economy', message.author.id, jobAmount, 'balance');
+    userJobs.push(jobName.toLowerCase());
 
-            validJob = true;
-            message.channel.send(jobJoinEmbed.setDescription(`${emojis.tickYes} You've successfully joined **${jobName}** job!`));
-            break;
-        }
-    }
+    await database.setProp('economy', message.author.id, userJobs, 'jobs');
+    await database.subtractProp('economy', message.author.id, jobAmount, 'balance');
 
-    if (!validJob) return message.channel.send(jobJoinEmbed.setDescription(`${emojis.tickNo} That's not a valid job!`));
+    message.channel.send(jobJoinEmbed.setDescription(`${emojis.tickYes} You've successfully joined **${jobName}** job!`));
 };
 
 export const help = {
