@@ -1,4 +1,5 @@
 import { Client, Message } from 'discord.js';
+import fuzzysort from 'fuzzysort';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
@@ -6,43 +7,43 @@ import { utils } from '../utils/utils';
 
 export const run = async (message: Message, _client: Client, args: string[]): Promise<Message | void> => {
     const shopItems = {
-        'Flower s': 500,
-        'Taco s': 3500,
-        'Burger s': 10000,
-        'Pizza s': 17500,
-        'Barber s': 25000,
-        'Optician s': 50000,
-        'Chemist s': 75000,
-        'Butcher s': 100000,
-        'Baker s': 150000,
-        'Shoe s': 300000,
-        'Clothes s': 500000,
-        'Book s': 1000000,
-        'Grocery s': 2500000,
-        'DIY s': 5000000,
-        'Toy s': 10000000,
-        'Music s': 25000000,
-        'Jewelry s': 50000000,
-        'Plane s': 100000000,
-        'Flower w': 165,
-        'Taco w': 1160,
-        'Burger w': 3000,
-        'Pizza w': 5800,
-        'Barber w': 8300,
-        'Optician w': 16500,
-        'Chemist w': 25000,
-        'Butcher w': 30000,
-        'Baker w': 50000,
-        'Shoe w': 100000,
-        'Clothes w': 165000,
-        'Book w': 300000,
-        'Grocery w': 830000,
-        'DIY w': 1650000,
-        'Toy w': 3000000,
-        'Music w': 8300000,
-        'Jewelry w': 16500000,
-        'Plane w': 30000000,
-        Mud: 22500,
+        'Flower Shop': 500,
+        'Taco Shop': 3500,
+        'Burger Shop': 10000,
+        'Pizza Shop': 17500,
+        'Barber Shop': 25000,
+        'Optician Shop': 50000,
+        'Chemist Shop': 75000,
+        'Butcher Shop': 100000,
+        'Baker Shop': 150000,
+        'Shoe Shop': 300000,
+        'Clothes Shop': 500000,
+        'Book Shop': 1000000,
+        'Grocery Shop': 2500000,
+        'DIY Shop': 5000000,
+        'Toy Shop': 10000000,
+        'Music Shop': 25000000,
+        'Jewelry Shop': 50000000,
+        'Plane Shop': 100000000,
+        'Flower Worker': 165,
+        'Taco Worker': 1160,
+        'Burger Worker': 3000,
+        'Pizza Worker': 5800,
+        'Barber Worker': 8300,
+        'Optician Worker': 16500,
+        'Chemist Worker': 25000,
+        'Butcher Worker': 30000,
+        'Baker Worker': 50000,
+        'Shoe Worker': 100000,
+        'Clothes Worker': 165000,
+        'Book Worker': 300000,
+        'Grocery Worker': 830000,
+        'DIY Worker': 1650000,
+        'Toy Worker': 3000000,
+        'Music Worker': 8300000,
+        'Jewelry Worker': 16500000,
+        'Plane Worker': 30000000,
+        'Mud House': 22500,
         Tent: 50000,
         Caravan: 75000,
         Shack: 280000,
@@ -51,12 +52,12 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
         House: 10000000,
         Penthouse: 15000000,
         Mansion: 30000000,
-        'Iron n': 500,
-        'Bronze n': 1250,
-        'Silver n': 4500,
-        'Gold n': 17500,
-        'Platinum n': 90000,
-        'Diamond n': 500000,
+        'Iron Navigator': 500,
+        'Bronze Navigator': 1250,
+        'Silver Navigator': 4500,
+        'Gold Navigator': 17500,
+        'Platinum Navigator': 90000,
+        'Diamond Navigator': 500000,
     };
 
     const shopBuyEmbed = embed({
@@ -67,65 +68,56 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
         color: message.guild?.me?.displayHexColor,
     });
 
+    const fuzzySortedItemNames = fuzzysort.go((isNaN(Number(args[args.length - 1])) ? args : args.slice(0, -1)).join(' '), Object.keys(shopItems), { allowTypo: false, limit: 1, threshold: -5000 });
+
+    const itemName = fuzzySortedItemNames.total > 0 ? fuzzySortedItemNames[0].target : null;
+    if (!itemName) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} That item is not in the shop!`));
+
+    const itemPrice = (shopItems as any)[itemName];
     const itemAmountString = args[args.length - 1].toLowerCase();
-    const itemName = itemAmountString !== 'all' && itemAmountString !== 'half' && itemAmountString !== 'quarter' && !itemAmountString.endsWith('%') && isNaN(Number(itemAmountString)) ? args.join(' ').toLowerCase() : args.slice(0, -1).join(' ').toLowerCase();
+    const userEconomyData = (await database.get('economy', message.author.id)) || {};
+    const balance = userEconomyData.balance || 0;
 
-    let validItem = false;
+    let amountUserInvests = 0;
+    let itemAmount = 0;
 
-    for (const [shopItemName, shopItemPrice] of Object.entries(shopItems)) {
-        if (itemName.startsWith(shopItemName.toLowerCase())) {
-            const balance = (await database.getProp('economy', message.author.id, 'balance')) || 0;
-
-            let amountUserInvests = 0;
-            let itemAmount = 0;
-
-            if (itemAmountString === 'all') amountUserInvests = balance;
-            else if (itemAmountString === 'half') amountUserInvests = balance / 2;
-            else if (itemAmountString === 'quarter') amountUserInvests = balance / 4;
-            else if (itemAmountString.endsWith('%')) amountUserInvests = (Number(itemAmountString.slice(0, -1)) * balance) / 100;
-            else {
-                itemAmount = Number(itemAmountString);
-                if (isNaN(itemAmount)) itemAmount = 1;
-                amountUserInvests = itemAmount * shopItemPrice;
-            }
-
-            if (isNaN(amountUserInvests)) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} The amount of item must be a number!`));
-
-            const itemIsNotHouse = shopItemName.charAt(shopItemName.length - 2) === ' ';
-            const inventoryItemType = shopItemName.slice(-1) === 'n' && itemIsNotHouse ? 'Navigator' : shopItemName.slice(-1) === 's' && itemIsNotHouse ? 'Shop' : shopItemName.slice(-1) === 'w' && itemIsNotHouse ? 'Worker' : 'House';
-            const inventoryItemName = itemIsNotHouse ? shopItemName.slice(0, -2) : shopItemName;
-
-            if (amountUserInvests < shopItemPrice) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough money to buy 1 **${inventoryItemName} ${inventoryItemType !== 'House' ? inventoryItemType : ''}**!`));
-
-            let numberOfItemsToBuy = itemAmount > 0 ? Math.round(itemAmount) : Math.floor(amountUserInvests / shopItemPrice);
-
-            // @ts-expect-error
-            const itemsInInventory = (await database.getProp('economy', message.author.id, `inventory.${inventoryItemType.toLowerCase()}s`)) || {};
-            const amountOfItemsInInventory = Number(Object.values(itemsInInventory).reduce((a: any, b: any) => a + b, 0));
-
-            const userSlots = await utils.getSlots(message.author.id);
-
-            // @ts-expect-error
-            const itemSlot = userSlots[`${inventoryItemType.toLowerCase()}s`];
-            const remainingSlots = itemSlot - amountOfItemsInInventory;
-
-            if (remainingSlots === 0) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough ${inventoryItemType.toLowerCase()} slots!`));
-            if (amountOfItemsInInventory + numberOfItemsToBuy > itemSlot) numberOfItemsToBuy = itemSlot - amountOfItemsInInventory;
-
-            const totalMoney = numberOfItemsToBuy * shopItemPrice;
-            if (totalMoney > balance) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough money to buy **${numberOfItemsToBuy.toLocaleString()} ${inventoryItemName} ${inventoryItemType !== 'House' ? inventoryItemType : ''}${numberOfItemsToBuy > 1 && inventoryItemType !== 'House' ? 's' : ''}**`));
-
-            // @ts-expect-error
-            await database.addProp('economy', message.author.id, numberOfItemsToBuy, `inventory.${inventoryItemType.toLowerCase()}s.${inventoryItemName.toLowerCase()}`);
-            await database.subtractProp('economy', message.author.id, totalMoney, 'balance');
-
-            validItem = true;
-            message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickYes} You've successfully bought **${numberOfItemsToBuy.toLocaleString()} ${inventoryItemName} ${inventoryItemType !== 'House' ? inventoryItemType : ''}${numberOfItemsToBuy > 1 && inventoryItemType !== 'House' ? 's' : ''}** for **$${totalMoney.toLocaleString()}**`));
-            break;
-        }
+    if (itemAmountString === 'all') amountUserInvests = balance;
+    else if (itemAmountString === 'half') amountUserInvests = balance / 2;
+    else if (itemAmountString === 'quarter') amountUserInvests = balance / 4;
+    else if (itemAmountString.endsWith('%')) amountUserInvests = (Number(itemAmountString.slice(0, -1)) * balance) / 100;
+    else {
+        itemAmount = Number(itemAmountString);
+        if (isNaN(itemAmount)) itemAmount = 1;
+        amountUserInvests = itemAmount * itemPrice;
     }
 
-    if (!validItem) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} That item is not in the shop!`));
+    if (isNaN(amountUserInvests)) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} The amount of item must be a number!`));
+
+    const inventoryItemName = itemName.split(' ')[0].toLowerCase();
+    const inventoryItemType = itemName.split(' ')[1]?.toLowerCase() ?? 'House';
+
+    let numberOfItemsToBuy = itemAmount > 0 ? Math.round(itemAmount) : Math.floor(amountUserInvests / itemPrice);
+
+    const itemsInInventory = userEconomyData.inventory[`${inventoryItemType}s`] || {};
+    const amountOfItemsInInventory = Number(Object.values(itemsInInventory).reduce((a: any, b: any) => a + b, 0));
+
+    const userSlots = await utils.getSlots(message.author.id);
+
+    // @ts-expect-error
+    const itemSlot = userSlots[`${inventoryItemType}s`];
+    const remainingSlots = itemSlot - amountOfItemsInInventory;
+
+    if (remainingSlots === 0) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough **${utils.capitalize(inventoryItemType)}** slots!`));
+    if (amountOfItemsInInventory + numberOfItemsToBuy > itemSlot) numberOfItemsToBuy = itemSlot - amountOfItemsInInventory;
+
+    const totalMoney = numberOfItemsToBuy * itemPrice;
+    if (totalMoney > balance) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You don't have enough money to buy **${numberOfItemsToBuy.toLocaleString()} ${itemName}${numberOfItemsToBuy > 1 ? 's' : ''}**`));
+
+    // @ts-expect-error
+    await database.addProp('economy', message.author.id, numberOfItemsToBuy, `inventory.${inventoryItemType}s.${inventoryItemName}`);
+    await database.subtractProp('economy', message.author.id, totalMoney, 'balance');
+
+    message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickYes} You've successfully bought **${numberOfItemsToBuy.toLocaleString()} ${itemName}${numberOfItemsToBuy > 1 ? 's' : ''}** for **$${totalMoney.toLocaleString()}**`));
 };
 
 export const help = {
