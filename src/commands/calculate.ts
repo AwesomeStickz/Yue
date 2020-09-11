@@ -23,6 +23,9 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
         return message.channel.send(calculatorEmbed.setDescription(`${emojis.tickNo} That's not a valid mathematical expression!`));
     }
 
+    calculatorEmbed.setFooter('Yue');
+    calculatorEmbed.setTimestamp();
+
     message.channel.send(calculatorEmbed.setDescription(`${expression} = ${evaluatedExpression}`));
 };
 
