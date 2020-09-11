@@ -125,22 +125,10 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
 
                 message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickYes} You've successfully bought **${numberOfItemsToBuy.toLocaleString()} ${itemName}${numberOfItemsToBuy > 1 ? 's' : ''}** for **$${totalMoney.toLocaleString()}**`));
             } else {
-                message.channel.send(
-                    embed({
-                        color: message.guild?.me?.displayHexColor,
-                        desc: `${emojis.tickNo} You didn't respond with \`yes\`!`,
-                    })
-                );
+                message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You didn't respond with \`yes\`!`));
             }
         })
-        .catch(() =>
-            message.channel.send(
-                embed({
-                    color: message.guild?.me?.displayHexColor,
-                    desc: `${emojis.tickNo} You didn't respond in time!`,
-                })
-            )
-        );
+        .catch(() => message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You didn't respond in time!`)));
 };
 
 export const help = {
