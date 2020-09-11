@@ -36,7 +36,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         const authorBalance = (await database.getProp('economy', message.author.id, 'balance')) || 0;
         if (authorBalance < 1000) return message.channel.send(robEmbed.setDescription(`${emojis.tickNo} You need at least **$1,000** in your wallet to rob from someone!`));
 
-        const randomNumber = Math.random() * 70 + 30;
+        const randomNumber = Math.round(Math.random() * 100);
         let successfulRob = false;
 
         if (randomNumber > 30) successfulRob = true;
