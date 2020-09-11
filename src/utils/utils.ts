@@ -43,6 +43,17 @@ export const utils = {
 
         if (economyData.balance) networth += economyData.balance;
         if (economyData.bank) networth += economyData.bank;
+        if (economyData.boosters) {
+            const boosters = {
+                xp: 1000,
+            };
+
+            for (const boosterInfo of economyData.boosters) {
+                if (boosterInfo.endTime > Date.now()) {
+                    networth += (boosters as any)[boosterInfo.name];
+                }
+            }
+        }
         if (economyData.jobs) {
             const jobs = {
                 waiter: 600,
