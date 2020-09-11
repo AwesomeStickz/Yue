@@ -167,6 +167,18 @@ export const utils = {
                     }
                 }
             }
+            if (inventory.slots) {
+                const slots = {
+                    workers: 75,
+                    houses: 150,
+                    navigators: 150,
+                    shops: 150,
+                };
+
+                for (const [slotName, slotAmount] of Object.entries(inventory.slots)) {
+                    networth += (slotAmount as number) * (slots as any)[slotName];
+                }
+            }
         }
         return networth;
     },
