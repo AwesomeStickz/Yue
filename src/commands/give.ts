@@ -1,4 +1,4 @@
-import { Client, Message } from 'discord.js';
+import { Client, Message, TextChannel } from 'discord.js';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
@@ -48,6 +48,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     giveEmbed.setDescription(`You gave **$${amount.toLocaleString()}** to **${user.username}**\n\n**${message.author.username}**'s new balance is **$${senderBalance.toLocaleString()}**\n**${user.username}**'s new balance is **$${receiverBalance.toLocaleString()}**`);
 
     message.channel.send(giveEmbed);
+    (client.channels.cache.get('753907023355183104') as TextChannel).send(giveEmbed.setDescription(`**${message.author.tag}** gave **$${amount.toLocaleString()}** to **${user.tag}**\n\n**${message.author.tag}**'s new balance is **$${senderBalance.toLocaleString()}**\n**${user.tag}**'s new balance is **$${receiverBalance.toLocaleString()}**`));
 };
 
 export const help = {
