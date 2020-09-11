@@ -43,6 +43,26 @@ export const utils = {
 
         if (economyData.balance) networth += economyData.balance;
         if (economyData.bank) networth += economyData.bank;
+        if (economyData.jobs) {
+            const jobs = {
+                waiter: 600,
+                cashier: 1000,
+                'construction labourer': 1850,
+                administration: 2400,
+                'marketing manager': 3000,
+                nurse: 6200,
+                fireman: 8000,
+                carpenter: 10000,
+                electrician: 13000,
+                doctor: 32000,
+                engineer: 50000,
+                'architectural engineer': 75000,
+            };
+
+            for (const jobName of economyData.jobs) {
+                if (Object.keys(jobs).includes(jobName)) networth += (jobs as any)[jobName];
+            }
+        }
         if (economyData.inventory) {
             const { inventory } = economyData;
 
