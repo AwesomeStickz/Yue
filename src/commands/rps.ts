@@ -26,7 +26,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
     } else {
         const member = utils.getMember(args[0], message.guild!);
 
-        if (!member) return message.channel.send(rpsEmbed.setDescription(`${emojis.tickNo} I couldn't find that user!`));
+        if (!member) return message.channel.send(rpsEmbed.setDescription(`${emojis.tickNo} I couldn't find that user! Maybe they're not in this server!`));
         if (member.user.bot) return message.channel.send(rpsEmbed.setDescription(`${emojis.tickNo} You can't play rps with bots!`));
 
         const amountString = args[1]?.toLowerCase();

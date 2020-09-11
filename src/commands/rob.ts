@@ -24,7 +24,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         robEmbed.setDescription(`You robbed a user recently! Come back in ${time}!`);
     } else {
         const member = utils.getMember(args.join(' '), message.guild!);
-        if (!member) return message.channel.send(robEmbed.setDescription(`${emojis.tickNo} I couldn't find that user`));
+        if (!member) return message.channel.send(robEmbed.setDescription(`${emojis.tickNo} I couldn't find that user! Maybe they're not in this server!`));
         if (member.id === message.author.id) return message.channel.send(robEmbed.setDescription(`${emojis.tickNo} Why are you even trying to rob from yourself?`));
 
         const userLastRob = (await database.getProp('economy', member.id, 'robbed')) || 0;
