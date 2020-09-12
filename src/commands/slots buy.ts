@@ -44,6 +44,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     }
 
     if (isNaN(amountUserInvests)) return message.channel.send(slotBuyEmbed.setDescription(`${emojis.tickNo} The amount of slots must be a number!`));
+    if (slotAmount < 1) return message.channel.send(slotBuyEmbed.setDescription(`${emojis.tickNo} You cant' buy less than 1 slot!`));
 
     const numberOfSlotsToBuy = slotAmount > 0 ? Math.round(slotAmount) : Math.floor(amountUserInvests / slotPrice);
     const totalMoney = numberOfSlotsToBuy * slotPrice;
