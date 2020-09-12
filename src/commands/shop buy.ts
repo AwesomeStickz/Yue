@@ -98,7 +98,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     if (isNaN(amountUserInvests)) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} The amount of item must be a number!`));
 
     const inventoryItemName = itemName.split(' ')[0].toLowerCase();
-    const inventoryItemType = itemName.split(' ')[1]?.toLowerCase() ?? 'House';
+    const inventoryItemType = itemName.split(' ')[1]?.toLowerCase() ?? 'house';
 
     let numberOfItemsToBuy = itemAmount > 0 ? Math.round(itemAmount) : Math.floor(amountUserInvests / itemPrice);
 
