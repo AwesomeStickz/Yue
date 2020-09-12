@@ -72,7 +72,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         'Diamond Navigator': 500000,
     };
 
-    const fuzzySortedItemNames = fuzzysort.go((isNaN(Number(args[args.length - 1])) ? args : args.slice(0, -1)).join(' '), Object.keys(shopItems), { allowTypo: false, limit: 1, threshold: -5000 });
+    const fuzzySortedItemNames = fuzzysort.go((isNaN(Number(args[args.length - 1])) && !['all', 'half', 'quarter'].includes(args[args.length - 1].toLowerCase()) && !args[args.length - 1].endsWith('%') ? args : args.slice(0, -1)).join(' '), Object.keys(shopItems), { allowTypo: false, limit: 1, threshold: -5000 });
 
     const itemName = fuzzySortedItemNames.total > 0 ? fuzzySortedItemNames[0].target : null;
     if (!itemName) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} That item is not in the shop!`));

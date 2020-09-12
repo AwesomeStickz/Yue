@@ -20,9 +20,9 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         color: message.guild?.me?.displayHexColor,
     });
 
-    const fuzzySortedItemNames = fuzzysort.go((isNaN(Number(args[args.length - 1])) ? args : args.slice(0, -1)).join(' '), Object.keys(slots), { allowTypo: false, limit: 1, threshold: -5000 });
+    const fuzzySortedSlotNames = fuzzysort.go((isNaN(Number(args[args.length - 1])) && !['all', 'half', 'quarter'].includes(args[args.length - 1].toLowerCase()) && !args[args.length - 1].endsWith('%') ? args : args.slice(0, -1)).join(' '), Object.keys(slots), { allowTypo: false, limit: 1, threshold: -5000 });
 
-    const slotName = fuzzySortedItemNames.total > 0 ? fuzzySortedItemNames[0].target.split(' ')[0] : null;
+    const slotName = fuzzySortedSlotNames.total > 0 ? fuzzySortedSlotNames[0].target.split(' ')[0] : null;
     if (!slotName) return message.channel.send(slotBuyEmbed.setDescription(`${emojis.tickNo} That is not a valid slot!`));
 
     const slotPrice = (slots as any)[`${slotName} Slot`];
