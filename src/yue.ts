@@ -1,4 +1,4 @@
-import Discord, { ClientEvents } from 'discord.js';
+import Discord, { ClientEvents, DiscordAPIError } from 'discord.js';
 import 'dotenv/config';
 import fs from 'fs';
 import './database/sequelize';
@@ -33,6 +33,7 @@ fs.readdir('./events/', (error, files) => {
 });
 
 process.on('unhandledRejection', (error) => {
+    if (error instanceof DiscordAPIError && error.name === 'DiscordAPIError') return;
     console.error('Uncaught Promise Error: ', error);
 });
 
