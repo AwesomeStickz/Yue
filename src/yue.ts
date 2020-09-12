@@ -3,7 +3,7 @@ import 'dotenv/config';
 import fs from 'fs';
 import './database/sequelize';
 
-export const client = new Client({ disableMentions: 'everyone', partials: ['MESSAGE'], messageCacheMaxSize: 30, messageCacheLifetime: 60, messageSweepInterval: 60 });
+const client = new Client({ disableMentions: 'everyone', partials: ['MESSAGE'], messageCacheMaxSize: 30, messageCacheLifetime: 60, messageSweepInterval: 60 });
 
 export const commands = new Collection();
 export const aliases = new Collection();
