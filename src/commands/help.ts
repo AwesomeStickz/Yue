@@ -1,8 +1,8 @@
 import { Client, Message } from 'discord.js';
-import { aliases, commands } from '../utils/commandsAndAliases';
 import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
 import { utils } from '../utils/utils';
+import { aliases, commands } from '../yue';
 
 export const run = async (message: Message, client: Client, args: string[], prefix: string): Promise<Message | void> => {
     args = args.join(' ').toLowerCase().split(' ');

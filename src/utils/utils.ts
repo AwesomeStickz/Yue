@@ -1,6 +1,6 @@
 import { Client, Guild, Message } from 'discord.js';
 import lodash from 'lodash';
-import { aliases, commands } from './commandsAndAliases';
+import { aliases, commands } from '../yue';
 import { database } from './databaseFunctions';
 import { embed } from './embed';
 

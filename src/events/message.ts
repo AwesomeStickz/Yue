@@ -1,11 +1,11 @@
 import { Client, Message, PermissionResolvable } from 'discord.js';
 import prettyMs from 'pretty-ms';
-import { aliases, commands } from '../utils/commandsAndAliases';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
 import { tempCache } from '../utils/tempCache';
 import { utils } from '../utils/utils';
+import { aliases, commands } from '../yue';
 
 export const run = async (client: Client, message: Message): Promise<Message | void> => {
     if (message.author.bot) return;
