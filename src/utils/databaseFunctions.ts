@@ -5,7 +5,7 @@ type DatbaseModelNames = 'blacklist' | 'cooldown' | 'economy' | 'guildsettings' 
 type PropertyNames = 'balance' | 'bank' | 'bankcapacity' | 'beg' |'boosters'| 'essence' | 'daily' | 'don' | 'getstarted' | 'getstartedhouse' | 'inventory' | 'inventory.slots' | 'jobs' | 'level' | 'luck' | 'navigate' | 'networth' | 'owners' | 'pat' | 'prefix' | 'rentcollect' | 'reset' |'rep' | 'rob' | 'robbed' | 'shopcollect' | 'streak' | 'tipcollect' | 'weekly' | 'winnings' | 'work';
 
 export const database = {
-    async all(model: DatbaseModelNames): Promise<object[]> {
+    async all(model: DatbaseModelNames) {
         const total = await sequelize.models[model].findAll({ attributes: ['userid', 'data'], raw: true });
         return total;
     },
