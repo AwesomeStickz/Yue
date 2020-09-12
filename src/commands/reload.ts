@@ -1,21 +1,26 @@
 import { Client, Message } from 'discord.js';
-import fs from 'fs';
 import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
+import { aliases, commands } from '../yue';
 
-export const run = async (message: Message, _client: Client, args: string[]) => {
-    fs.access(`./commands/${args.join(' ')}.js`, fs.constants.R_OK | fs.constants.W_OK, (error: any) => {
-        if (error) {
-            const reloadEmbed = embed({ color: message.guild?.me?.displayHexColor, desc: `${emojis.tickNo} Error while reloading!. Reason: The command **${args.join(' ')}** doesn't exist!` });
-
-            message.channel.send(reloadEmbed);
-        } else {
-            delete require.cache[require.resolve(`./${args.join(' ')}`)];
-
-            const reloadEmbed = embed({ color: message.guild?.me?.displayHexColor, desc: `${emojis.tickYes} Successfully reloaded **${args.join(' ')}**!` });
-            message.channel.send(reloadEmbed);
-        }
+export const run = async (message: Message, client: Client, args: string[]): Promise<Message | void> => {
+    const reloadEmbed = embed({
+        author: {
+            image: client.user!.displayAvatarURL(),
+            name: 'Reload',
+        },
+        color: message.guild?.me?.displayHexColor,
+        footer: 'Yue',
+        timestamp: true,
     });
+
+    const commandName = args.join(' ').toLowerCase();
+    if (!aliases.has(commandName.toUpperCase())) return message.channel.send(reloadEmbed.setDescription(`${emojis.tickNo} Command **${commandName}** doesn't exist!`));
+
+    const commandInfo = commands.get(aliases.get(commandName.toUpperCase()));
+    delete require.cache[require.resolve(`./${(commandInfo as any).fileName}`)];
+
+    message.channel.send(reloadEmbed.setDescription(`${emojis.tickYes} Successfully reloaded **${(commandInfo as any).help.name.toLowerCase()}**!`));
 };
 
 export const help = {
