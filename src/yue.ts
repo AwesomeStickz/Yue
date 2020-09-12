@@ -1,10 +1,12 @@
-import { Client, ClientEvents, DiscordAPIError } from 'discord.js';
+import { Client, ClientEvents, Collection, DiscordAPIError } from 'discord.js';
 import 'dotenv/config';
 import fs from 'fs';
 import './database/sequelize';
-import { aliases, commands } from './utils/commandsAndAliases';
 
 export const client = new Client({ disableMentions: 'everyone', partials: ['MESSAGE'], messageCacheMaxSize: 30, messageCacheLifetime: 60, messageSweepInterval: 60 });
+
+export const commands = new Collection();
+export const aliases = new Collection();
 
 //Command handler
 fs.readdir('./commands/', (error, files) => {
