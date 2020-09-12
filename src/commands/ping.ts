@@ -18,7 +18,8 @@ export const help = {
     aliases: ['ping'],
     name: 'Ping',
     description: 'Checks the ping to the discord api and the bot',
-    usage: 'g.ping',
+    usage: 'ping',
+    example: 'ping',
 };
 
 export const config = {
