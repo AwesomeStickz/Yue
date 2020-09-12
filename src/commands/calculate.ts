@@ -1,9 +1,8 @@
 import { Client, Message } from 'discord.js';
 import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
-import { client } from '../yue';
 
-export const run = async (message: Message, _client: Client, args: string[]): Promise<Message | void> => {
+export const run = async (message: Message, client: Client, args: string[]): Promise<Message | void> => {
     const calculatorEmbed = embed({
         author: {
             image: client.user!.displayAvatarURL(),
