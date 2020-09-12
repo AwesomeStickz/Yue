@@ -26,6 +26,14 @@ export const utils = {
         const bankCapacities = [100, 150, 250, 500, 750, 1000, 1500, 2000, 3500, 5000, 7500, 10000, 15000, 20000, 25000, 32000, 40000, 50000, 65000, 80000, 100000, 125000, 150000, 200000, 250000, 350000, 500000, 650000, 825000, 1000000, 1250000, 1500000, 2000000, 2500000, 3000000, 3750000, 5000000, 6000000, 7500000, 8000000, 10000000, 11500000, 13000000, 15000000, 17500000, 20000000, 22500000, 25000000, 30000000, 37500000 ];
         return bankCapacities[level];
     },
+    getChannel(arg: string, guild: Guild) {
+        if (arg?.length < 1 || arg == undefined) return undefined;
+        let channel = guild.channels.cache.get(arg);
+        if (!channel) channel = guild.channels.cache.filter((c) => c.name.toLowerCase().includes(arg.toLowerCase())).first();
+        if (!channel) channel = guild.channels.cache.get(arg.slice(2, -1));
+        if (channel) return channel;
+        else return undefined;
+    },
     getMember(arg: string, guild: Guild) {
         if (arg?.length < 1 || arg == undefined) return undefined;
         let member = guild.members.cache.get(arg);
