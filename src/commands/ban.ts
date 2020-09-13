@@ -13,7 +13,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     });
 
     const user = await utils.getUser(args[0], client, message.guild!);
-    if (!user) return message.channel.send(`${emojis.tickNo} I couldn't find that user`);
+    if (!user) return message.channel.send(banEmbed.setDescription(`${emojis.tickNo} I couldn't find that user`));
 
     const member = utils.getMember(user.id, message.guild!);
     const reason = args.slice(1).join(' ') || `${message.author.tag} used ban command`;

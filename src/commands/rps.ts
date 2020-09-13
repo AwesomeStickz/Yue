@@ -120,7 +120,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
                                             }
                                         } else {
                                             dmMessageOfAuthor.channel.send(rpsEmbed.setDescription(`${emojis.tickNo} That's not a valid input!`));
-                                            message.channel.send(`${emojis.tickNo} ${message.author.toString()} didn't send a correct input!`);
+                                            message.channel.send(rpsEmbed.setDescription(`${emojis.tickNo} ${message.author.toString()} didn't send a correct input!`));
                                         }
                                     })
                                     .catch(() => {
@@ -129,7 +129,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
                                     });
                             } else {
                                 dmMessageOfMember.channel.send(rpsEmbed.setDescription(`${emojis.tickNo} That's not a valid input!`));
-                                message.channel.send(`${emojis.tickNo} ${member.toString()} didn't send a correct input!`);
+                                message.channel.send(rpsEmbed.setDescription(`${emojis.tickNo} ${member.toString()} didn't send a correct input!`));
                             }
                         })
                         .catch(() => {
