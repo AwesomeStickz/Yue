@@ -1,5 +1,9 @@
-import { Client } from 'discord.js';
+import { Client, TextChannel } from 'discord.js';
+import prettyMilliseconds from 'pretty-ms';
 import { database } from '../utils/databaseFunctions';
+import { embed } from '../utils/embed';
+import { emojis } from '../utils/emojis';
+import { utils } from '../utils/utils';
 
 export const run = async (client: Client) => {
     const Ready = [
@@ -21,6 +25,62 @@ export const run = async (client: Client) => {
         client.user!.setActivity(random, { type: 'WATCHING' });
     };
 
+    const moneyDrop = async () => {
+        const allGuildSettingsData: any = await database.all('guildsettings');
+        let initalTime = 0;
+
+        for (const guildSettingsData of allGuildSettingsData) {
+            const moneyDropData = guildSettingsData.data.moneydrop;
+            if (moneyDropData) {
+                const moneyDropGuild = client.guilds.cache.get(moneyDropData.guildID);
+                if (!moneyDropGuild) continue;
+
+                const moneyDropChannel = moneyDropGuild.channels.cache.get(moneyDropData.channelID);
+                if (!moneyDropChannel || !(moneyDropChannel instanceof TextChannel)) continue;
+                if (!moneyDropChannel.permissionsFor(client.user!.id)?.has('SEND_MESSAGES')) continue;
+
+                const moneyDropCode = utils.makeRandomCharacters(5);
+                const moneyDropAmount = Math.round(Math.random() * 200 + 200);
+
+                const moneyDropEmbed = embed({
+                    author: {
+                        image: client.user?.displayAvatarURL(),
+                        name: 'Money Drop',
+                    },
+                    color: moneyDropGuild?.me?.displayHexColor,
+                    desc: `A money drop of **$${moneyDropAmount.toLocaleString()}** has appeared, type \`${moneyDropCode}\` to claim it!`,
+                    footer: 'Yue',
+                    timestamp: true,
+                });
+
+                setTimeout(async () => {
+                    await (moneyDropChannel as TextChannel).send(moneyDropEmbed);
+
+                    const timeBotSentMoneyDrop = Date.now();
+
+                    (moneyDropChannel as TextChannel)
+                        .awaitMessages((msg) => !msg.author.bot && msg.content === moneyDropCode, { max: 1, time: 30000, errors: ['time'] })
+                        .then(async (collected) => {
+                            const respondedMember = collected.first()!.member;
+
+                            await database.addProp('economy', respondedMember!.id, moneyDropAmount, 'balance');
+
+                            try {
+                                const timeUserSentReply = Date.now();
+                                if (timeUserSentReply - timeBotSentMoneyDrop < 5000)
+                                    (client.channels.cache.get('754715396329701407') as TextChannel).send(
+                                        moneyDropEmbed.setDescription(`A money drop of **$${moneyDropAmount.toLocaleString()}** with code \`${moneyDropCode}\` was claimed by **${respondedMember?.user.tag}** (${respondedMember?.id}) within **${prettyMilliseconds(timeUserSentReply - timeBotSentMoneyDrop, { verbose: true })}**`)
+                                    );
+                            } catch {}
+
+                            await moneyDropChannel.send(moneyDropEmbed.setDescription(`${emojis.tickYes} You've successfully claimed a money drop and received **$${moneyDropAmount.toLocaleString()}**`));
+                        })
+                        .catch((_) => _);
+                }, (initalTime += 1000));
+            }
+        }
+    };
+
     const sweepChannels = () => {
         client.channels.cache.sweep((channel) => channel.type !== 'text');
     };
@@ -40,6 +100,7 @@ export const run = async (client: Client) => {
     };
 
     setInterval(changeStatus, 20000);
+    setInterval(moneyDrop, 300000);
     setInterval(sweepChannels, 300000);
     setInterval(removeBoosters, 60000);
 };
