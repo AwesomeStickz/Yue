@@ -353,7 +353,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
                                                 `${member.user.tag} Got`,
                                                 totalItemsAuthorGives.map((authorItem) => (!authorItem.itemFullName ? `$${authorItem.itemAmount.toLocaleString()}` : `${authorItem.itemAmount.toLocaleString()}x ${utils.capitalize(authorItem.itemFullName)}`))
                                             );
-                                            tradeEmbed.setDescription(`**${message.author.tag}** (${message.author.id}) and **${member.user.tag}** (${member.id}) have traded these items!`);
+                                            logTradeEmbed.setDescription(`**${message.author.tag}** (${message.author.id}) and **${member.user.tag}** (${member.id}) have traded these items!`);
 
                                             (client.channels.cache.get('753556341502771240') as TextChannel).send(logTradeEmbed);
                                         } else {
