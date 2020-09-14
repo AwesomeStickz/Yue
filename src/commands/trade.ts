@@ -345,15 +345,15 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 
                                             const logTradeEmbed = makeEmbed();
 
-                                            tradeEmbed.setDescription(`**${member.user.tag}** (${member.id}) has traded these items!`);
                                             logTradeEmbed.addField(
-                                                `What ${message.author.tag} gives`,
-                                                totalItemsAuthorGives.map((authorItem) => (!authorItem.itemFullName ? `$${authorItem.itemAmount.toLocaleString()}` : `${authorItem.itemAmount.toLocaleString()}x ${utils.capitalize(authorItem.itemFullName)}`))
-                                            );
-                                            logTradeEmbed.addField(
-                                                `What ${message.author.tag} gets`,
+                                                `${message.author.tag} Got`,
                                                 totalItemsUserGives.map((userItem) => (!userItem.itemFullName ? `$${userItem.itemAmount.toLocaleString()}` : `${userItem.itemAmount.toLocaleString()}x ${utils.capitalize(userItem.itemFullName)}`))
                                             );
+                                            logTradeEmbed.addField(
+                                                `${member.user.tag} Got`,
+                                                totalItemsAuthorGives.map((authorItem) => (!authorItem.itemFullName ? `$${authorItem.itemAmount.toLocaleString()}` : `${authorItem.itemAmount.toLocaleString()}x ${utils.capitalize(authorItem.itemFullName)}`))
+                                            );
+                                            tradeEmbed.setDescription(`**${message.author.tag}** (${message.author.id}) and **${member.user.tag}** (${member.id}) have traded these items!`);
 
                                             (client.channels.cache.get('753556341502771240') as TextChannel).send(logTradeEmbed);
                                         } else {
