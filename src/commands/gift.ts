@@ -74,7 +74,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     if (user.bot) return message.channel.send(giftEmbed.setDescription(`${emojis.tickNo} You can't gift items to bots!`));
     if (user.id === message.author.id) return message.channel.send(giftEmbed.setDescription(`${emojis.tickNo} You can't gift your items to yourself!`));
 
-    const userFinishedGetStarted = await database.getProp('economy', message.author.id, 'getstarted');
+    const userFinishedGetStarted = await database.getProp('economy', user.id, 'getstarted');
     if (!userFinishedGetStarted) return message.channel.send(giftEmbed.setDescription(`${emojis.tickNo} You can't gift items to ${user.toString()} as they did not use \`get started\` command yet!`));
 
     const giftItemAmountString = args[args.length - 1].toLowerCase();

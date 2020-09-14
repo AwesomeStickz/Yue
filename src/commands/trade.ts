@@ -82,7 +82,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     if (member.user.bot) return message.channel.send(tradeEmbed.setDescription(`${emojis.tickNo} You can't trade items with bots!`));
     if (member.id === message.author.id) return message.channel.send(tradeEmbed.setDescription(`${emojis.tickNo} You can't trade items with yourself!`));
 
-    const userFinishedGetStarted = await database.getProp('economy', message.author.id, 'getstarted');
+    const userFinishedGetStarted = await database.getProp('economy', member.id, 'getstarted');
     if (!userFinishedGetStarted) return message.channel.send(tradeEmbed.setDescription(`${emojis.tickNo} You can't trade items with ${member.toString()} as they did not use \`get started\` command yet!`));
 
     const totalItemsAuthorGives: { itemName: string; itemFullName: string | null; itemType: string | null; itemAmount: number }[] = [];
