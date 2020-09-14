@@ -18,6 +18,9 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     if (user.bot) return message.channel.send(giveEmbed.setDescription(`${emojis.tickNo} You can't give money to bots!`));
     if (user.id === message.author.id) return message.channel.send(giveEmbed.setDescription(`${emojis.tickNo} You can't give money to yourself`));
 
+    const userFinishedGetStarted = await database.getProp('economy', message.author.id, 'getstarted');
+    if (!userFinishedGetStarted) return message.channel.send(giveEmbed.setDescription(`${emojis.tickNo} You can't give money to ${user.toString()} as they did not use \`get started\` command yet!`));
+
     const balance: number = (await database.getProp('economy', message.author.id, 'balance')) || 0;
 
     const amountString = args[1].toLowerCase();

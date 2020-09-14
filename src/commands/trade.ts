@@ -80,7 +80,10 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     const member = utils.getMember(args.shift()!, message.guild!);
     if (!member) return message.channel.send(tradeEmbed.setDescription(`${emojis.tickNo} I couldn't find that user! Maybe they're not in this server!`));
     if (member.user.bot) return message.channel.send(tradeEmbed.setDescription(`${emojis.tickNo} You can't trade items with bots!`));
-    if (member.id === message.author.id) return message.channel.send(tradeEmbed.setDescription(`${emojis.tickNo} You can't trade items to yourself!`));
+    if (member.id === message.author.id) return message.channel.send(tradeEmbed.setDescription(`${emojis.tickNo} You can't trade items with yourself!`));
+
+    const userFinishedGetStarted = await database.getProp('economy', message.author.id, 'getstarted');
+    if (!userFinishedGetStarted) return message.channel.send(tradeEmbed.setDescription(`${emojis.tickNo} You can't trade items with ${member.toString()} as they did not use \`get started\` command yet!`));
 
     const totalItemsAuthorGives: { itemName: string; itemFullName: string | null; itemType: string | null; itemAmount: number }[] = [];
     const totalItemsUserGives: { itemName: string; itemFullName: string | null; itemType: string | null; itemAmount: number }[] = [];
