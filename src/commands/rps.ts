@@ -6,7 +6,7 @@ import { emojis } from '../utils/emojis';
 import { tempCache } from '../utils/tempCache';
 import { utils } from '../utils/utils';
 
-export const run = async (message: Message, _client: Client, args: string[]): Promise<Message | void> => {
+export const run = async (message: Message, client: Client, args: string[]): Promise<Message | void> => {
     const { cooldown } = help;
 
     const lastRPS = tempCache.get(`rps_${message.author.id}`) || 0;
@@ -53,9 +53,9 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
         message.channel.send(rpsEmbed.setDescription(`${member.toString()} Type \`yes\` to play Rock Paper Scissors with ${message.author.toString()} ${!isNaN(amount) ? `for **$${amount.toLocaleString()}**` : ''}`));
         message.channel
             .awaitMessages((msg) => !msg.author.bot && msg.author.id === member.id, { max: 1, time: 20000, errors: ['time'] })
-            .then(async (collected) => {
-                const response = collected.first()?.content.toLowerCase();
-                if ((response === 'yes' || response === 'y') && collected.first()?.author.id === member.id) {
+            .then(async (collectedMessagesOfMember) => {
+                const response = collectedMessagesOfMember.first()?.content.toLowerCase();
+                if ((response === 'yes' || response === 'y') && collectedMessagesOfMember.first()?.author.id === member.id) {
                     let memberChoice = '';
                     let authorChoice = '';
 
@@ -112,6 +112,18 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
                                                 message.channel.send(rpsEmbed.setDescription(`${member.toString()} chose ${memberChoiceEmoji}\n${message.author.toString()} chose ${authorChoiceEmoji}\n\n${member.toString()} won ${isNaN(amount) ? 'the Rock Paper Scissors!' : `**$${amount.toLocaleString()}**`}`));
 
                                                 if (!isNaN(amount)) {
+                                                    const lastGambleAuthor = tempCache.get(`gamble_${message.author.id}`) || 0;
+                                                    const lastGambleUser = tempCache.get(`gamble_${member.id}`) || 0;
+
+                                                    if (Date.now() - lastGambleAuthor > 60000) {
+                                                        tempCache.set(`gamble_${message.author.id}`, Date.now());
+                                                        await utils.updateLevel(message, client);
+                                                    }
+                                                    if (Date.now() - lastGambleUser > 60000) {
+                                                        tempCache.set(`gamble_${member.id}`, Date.now());
+                                                        await utils.updateLevel(collectedMessagesOfMember.first()!, client);
+                                                    }
+
                                                     await database.addProp('economy', member.id, amount, 'balance');
                                                     await database.subtractProp('economy', message.author.id, amount, 'balance');
                                                     await database.addProp('economy', member.id, amount, 'winnings');

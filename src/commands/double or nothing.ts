@@ -1,11 +1,12 @@
-import { Message } from 'discord.js';
+import { Client, Message } from 'discord.js';
 import prettyMs from 'pretty-ms';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
 import { tempCache } from '../utils/tempCache';
+import { utils } from '../utils/utils';
 
-export const run = async (message: Message): Promise<Message | void> => {
+export const run = async (message: Message, client: Client): Promise<Message | void> => {
     const { cooldown } = help;
 
     const lastDon = tempCache.get(`don_${message.author.id}`) || 0;
@@ -74,6 +75,13 @@ export const run = async (message: Message): Promise<Message | void> => {
                             if (balanceNow !== balance) donMessage.edit(donEmbed.setDescription(`${emojis.tickYes} Cancelled double or nothing because your balance is not the same as before!`));
                             else {
                                 donMessage.edit(donEmbed.setDescription(`You just doubled your money and got **+$${(balance * 2).toLocaleString()}**`));
+
+                                const lastGamble = tempCache.get(`gamble_${message.author.id}`) || 0;
+                                if (Date.now() - lastGamble > 60000) {
+                                    tempCache.set(`gamble_${message.author.id}`, Date.now());
+                                    await utils.updateLevel(message, client);
+                                }
+
                                 await database.addProp('economy', message.author.id, balance, 'balance');
                                 await database.addProp('economy', message.author.id, balance, 'winnings');
                             }

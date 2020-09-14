@@ -2,8 +2,10 @@ import { Client, Message } from 'discord.js';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
+import { tempCache } from '../utils/tempCache';
+import { utils } from '../utils/utils';
 
-export const run = async (message: Message, _client: Client, args: string[]): Promise<Message | void> => {
+export const run = async (message: Message, client: Client, args: string[]): Promise<Message | void> => {
     const balance: number = (await database.getProp('economy', message.author.id, 'balance')) || 0;
     const bullets = Math.round(Number(args[0]));
 
@@ -43,6 +45,13 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
     const userLuck = await database.getProp('economy', message.author.id, 'luck');
     if (userLuck == 0) won = false;
     else if (userLuck == 100) won = true;
+
+    const lastGamble = tempCache.get(`gamble_${message.author.id}`) || 0;
+
+    if (Date.now() - lastGamble > 60000) {
+        tempCache.set(`gamble_${message.author.id}`, Date.now());
+        await utils.updateLevel(message, client);
+    }
 
     if (won === true) {
         await database.addProp('economy', message.author.id, money - bet, 'balance');
