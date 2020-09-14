@@ -2,6 +2,7 @@ import { Client, Message } from 'discord.js';
 import prettyMs from 'pretty-ms';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
+import { emojis } from '../utils/emojis';
 import { utils } from '../utils/utils';
 
 export const run = async (message: Message, client: Client): Promise<Message | void> => {
@@ -38,6 +39,8 @@ export const run = async (message: Message, client: Client): Promise<Message | v
         };
 
         const userJobs = (await database.getProp('economy', message.author.id, 'jobs')) || [];
+        if (userJobs.length < 1) return message.channel.send(jobEmbed.setDescription(`${emojis.tickNo} You're not in any jobs! Use \`job join\` to join a job!`));
+
         let totalMoney = 0;
 
         for (const [jobName, jobAmount] of Object.entries(jobs)) {
