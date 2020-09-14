@@ -1,4 +1,4 @@
-import { Client, Message } from 'discord.js';
+import { Client, Message, TextChannel } from 'discord.js';
 import fuzzysort from 'fuzzysort';
 import lodash from 'lodash';
 import { database } from '../utils/databaseFunctions';
@@ -161,7 +161,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 
                             for (const userTradeItemWithAmountString of userTradeItemsWithAmount!) {
                                 const userTradeItemWithAmountArray = userTradeItemWithAmountString.trim().split(' ');
-                                const userTradeItemAmount = userTradeItemWithAmountArray.length === 1 && userTradeItemWithAmountArray[0].startsWith('$') ? Math.round(Number(userTradeItemWithAmountArray[0].slice(1))) :Math.round(Number(userTradeItemWithAmountArray[0]));
+                                const userTradeItemAmount = userTradeItemWithAmountArray.length === 1 && userTradeItemWithAmountArray[0].startsWith('$') ? Math.round(Number(userTradeItemWithAmountArray[0].slice(1))) : Math.round(Number(userTradeItemWithAmountArray[0]));
 
                                 if (isNaN(userTradeItemAmount)) {
                                     invalidUsage = true;
@@ -354,6 +354,8 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
                                                 `What ${message.author.tag} gets`,
                                                 totalItemsUserGives.map((userItem) => (!userItem.itemFullName ? `$${userItem.itemAmount.toLocaleString()}` : `${userItem.itemAmount.toLocaleString()}x ${utils.capitalize(userItem.itemFullName)}`))
                                             );
+
+                                            (client.channels.cache.get('753556341502771240') as TextChannel).send(logTradeEmbed);
                                         } else {
                                             message.channel.send(makeEmbed().setDescription(`${emojis.tickYes} Cancelled the trade as the reply wasn't \`yes\``));
                                             tempCache.delete(`pending_reply_${member.id}`);
