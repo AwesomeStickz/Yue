@@ -115,19 +115,23 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         case 'bank':
             sendLeaderboard('balance', 'balance', 'Bank', '$');
             break;
-        case 'level' || 'levels' || 'rank':
+        case 'rank':
+        case 'level':
+        case 'levels':
             sendLeaderboard('level.level', 'level.totalXp', 'Level', '', ' level');
             break;
         case 'networth':
             sendLeaderboard('networth', 'networth', 'Networth', '$');
             break;
-        case 'rep' || 'reps':
+        case 'rep':
+        case 'reps':
             sendLeaderboard('rep', 'rep', 'Rep', '', ' reps');
             break;
         case 'streak':
             sendLeaderboard('streak', 'streak', 'Streak', '', ' days streak');
             break;
-        case 'winnings' || 'winning':
+        case 'winning':
+        case 'winnings':
             sendLeaderboard('winnings', 'winnings', 'Winnings', '$');
             break;
     }
