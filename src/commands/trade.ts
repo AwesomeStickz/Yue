@@ -323,26 +323,15 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
                                                 }
                                             }
 
-                                            if (authorNotEnoughItems.length > 0) {
-                                                tempCache.delete(`pending_reply_${member.id}`);
-                                                return message.channel.send(makeEmbed().setDescription(`${emojis.tickNo} ${message.author.toString()} doesn't have enough amount of these items: \`${authorNotEnoughItems.join('`, `')}\``));
-                                            }
-                                            if (userNotEnoughItems.length > 0) {
-                                                tempCache.delete(`pending_reply_${member.id}`);
-                                                return message.channel.send(makeEmbed().setDescription(`${emojis.tickNo} ${member.toString()} doesn't have enough amount of these items: \`${userNotEnoughItems.join('`, `')}\``));
-                                            }
-
-                                            if (authorNotEnoughSlots.length > 0) {
-                                                tempCache.delete(`pending_reply_${member.id}`);
-                                                return message.channel.send(makeEmbed().setDescription(`${emojis.tickNo} ${message.author.toString()} doesn't have enough number of these slots: \`${authorNotEnoughSlots.join('`, `')}\``));
-                                            }
-                                            if (userNotEnoughSlots.length > 0) {
-                                                tempCache.delete(`pending_reply_${member.id}`);
-                                                return message.channel.send(makeEmbed().setDescription(`${emojis.tickNo} ${member.toString()} doesn't have these enough number of slots: \`${userNotEnoughSlots.join('`, `')}\``));
-                                            }
+                                            if (authorNotEnoughItems.length > 0) return message.channel.send(makeEmbed().setDescription(`${emojis.tickNo} ${message.author.toString()} doesn't have enough amount of these items: \`${authorNotEnoughItems.join('`, `')}\``));
+                                            if (userNotEnoughItems.length > 0) return message.channel.send(makeEmbed().setDescription(`${emojis.tickNo} ${member.toString()} doesn't have enough amount of these items: \`${userNotEnoughItems.join('`, `')}\``));
+                                            if (authorNotEnoughSlots.length > 0) return message.channel.send(makeEmbed().setDescription(`${emojis.tickNo} ${message.author.toString()} doesn't have enough number of these slots: \`${authorNotEnoughSlots.join('`, `')}\``));
+                                            if (userNotEnoughSlots.length > 0) return message.channel.send(makeEmbed().setDescription(`${emojis.tickNo} ${member.toString()} doesn't have these enough number of slots: \`${userNotEnoughSlots.join('`, `')}\``));
 
                                             await database.set('economy', message.author.id, authorEconomyData);
                                             await database.set('economy', member.id, userEconomyData);
+
+                                            tempCache.delete(`pending_reply_${member.id}`);
 
                                             message.channel.send(makeEmbed().setDescription(`${emojis.tickYes} Trade was successful`));
 
