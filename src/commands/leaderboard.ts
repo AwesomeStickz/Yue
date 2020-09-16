@@ -35,7 +35,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
                 }
 
                 let pageNotExist = false;
-                const totalPages = Math.ceil(sortedData.filter((economy: any) => lodash.get(economy.data, sortname)).length / 10);
+                const totalPages = Math.ceil(sortedData.filter((economy: any) => lodash.get(economy.data, dataname)).length / 10);
                 if (currentPage > totalPages || isNaN(currentPage)) currentPage = 1;
                 if (currentPage < 1) currentPage = totalPages;
 
