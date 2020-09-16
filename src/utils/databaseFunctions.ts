@@ -31,6 +31,7 @@ type PropertyNames =
     | 'robbed'
     | 'shopcollect'
     | 'streak'
+    | 'trade'
     | 'tipcollect'
     | 'weekly'
     | 'winnings'
