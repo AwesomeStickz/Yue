@@ -11,7 +11,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         color: message.guild?.me?.displayHexColor,
     });
 
-    const expression = args.join(' ');
+    const expression = args.filter((arg) => arg !== '--no-comma').join(' ');
     if (/[^-()\d/*+. ]/.test(expression)) return message.channel.send(calculatorEmbed.setDescription(`${emojis.tickNo} That's not a valid mathematical expression!`));
 
     let evaluatedExpression: number;
@@ -25,7 +25,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     calculatorEmbed.setFooter('Yue');
     calculatorEmbed.setTimestamp();
 
-    message.channel.send(calculatorEmbed.setDescription(`${expression} = ${evaluatedExpression}`));
+    message.channel.send(calculatorEmbed.setDescription(`${expression} = ${args.find((arg) => arg.toLowerCase() === '--no-comma') ? evaluatedExpression : evaluatedExpression.toLocaleString()}`));
 };
 
 export const help = {
