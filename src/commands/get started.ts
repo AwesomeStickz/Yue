@@ -116,12 +116,13 @@ export const run = async (message: Message, client: Client, args: string[], pref
                                 return setTimeout(() => awaitMessage(commandIndex + 1), 500);
                             }
                         } else {
-                            if (numberOfTimesFailed === 2) {
+                            numberOfTimesFailed++;
+
+                            if (numberOfTimesFailed === 5) {
                                 getStartedEmbed.setFooter('');
                                 return message.channel.send(getStartedEmbed.setDescription(`${emojis.tickNo} Cancelled get started as you have sent too many wrong inputs!`));
                             }
 
-                            numberOfTimesFailed++;
                             return awaitMessage(commandIndex);
                         }
                     })
