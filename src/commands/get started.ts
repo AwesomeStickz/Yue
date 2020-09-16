@@ -47,16 +47,20 @@ export const run = async (message: Message, client: Client, args: string[], pref
                 [`pat <@${client.user?.id}>`, `pat <@!${client.user?.id}>`],
                 'shop shop',
                 'shop buy flower shop 1',
+                'yes',
                 'shop collect',
                 'shop worker',
                 'shop buy flower worker 1',
+                'yes',
                 'tip collect',
                 'shop navigator',
                 'shop buy iron navigator 1',
+                'yes',
                 'navigate',
                 'essence sell all',
                 'shop slot',
                 'slots buy worker 1',
+                'yes',
                 'capacity buy 1',
                 'bal',
                 'bank',
@@ -71,16 +75,20 @@ export const run = async (message: Message, client: Client, args: string[], pref
                 'Pat me every 1 minute to get some money',
                 'View the list of all shops',
                 'Buy flower shop from shop',
+                'Confirm your purchase of flower shop',
                 'Collect money from your shops',
                 'View the list of all worker',
                 'Buy flower worker from shop',
+                'Confirm your purchase of flower worker',
                 'Collect tips from your workers',
                 'View the list of all navigator',
                 'Buy iron navigator from shop',
+                'Confirm your purchase of iron navigator',
                 'Collect essence from your navigators',
                 'Sell all your essences for money',
                 'View the list of all slots',
                 'Buy worker slot from shop',
+                'Confirm your purchase of worker slot',
                 'Buy bank capacity',
                 'View your balance',
                 'View your bank balance',
@@ -91,14 +99,14 @@ export const run = async (message: Message, client: Client, args: string[], pref
             let numberOfTimesFailed = 0;
 
             const awaitMessage = (commandIndex: number) => {
-                getStartedEmbed.setDescription(`${Array.isArray(allCommands[commandIndex]) ? `${prefix}${allCommands[commandIndex][0]}` : `${prefix}${allCommands[commandIndex]}`} - ${allCommandsDescription[commandIndex]}`);
+                getStartedEmbed.setDescription(allCommands[commandIndex] === 'yes' ? `${allCommands[commandIndex]} - ${allCommandsDescription[commandIndex]}` : Array.isArray(allCommands[commandIndex]) ? `${prefix}${allCommands[commandIndex][0]}` : `${prefix}${allCommands[commandIndex]} - ${allCommandsDescription[commandIndex]}`);
                 message.channel.send(getStartedEmbed);
                 allCommands[commandIndex];
                 message.channel
                     .awaitMessages((msg) => !msg.author.bot && msg.author.id === message.author.id, { max: 1, time: 20000, errors: ['time'] })
                     .then(async (collected) => {
                         const response = collected.first()?.content.toLowerCase();
-                        if (Array.isArray(allCommands[commandIndex]) ? allCommands[commandIndex].includes(response?.slice(prefix.length)!) : response === `${prefix}${allCommands[commandIndex]}` && collected.first()?.author.id === message.author.id) {
+                        if (allCommands[commandIndex] === 'yes' ? response === 'yes' : Array.isArray(allCommands[commandIndex]) ? allCommands[commandIndex].includes(response?.slice(prefix.length)!) : response === `${prefix}${allCommands[commandIndex]}` && collected.first()?.author.id === message.author.id) {
                             if (commandIndex === allCommands.length - 1) {
                                 const finishedGetStarted = await database.getProp('economy', message.author.id, 'getstartedhouse');
 
