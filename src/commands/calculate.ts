@@ -31,9 +31,9 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 export const help = {
     aliases: ['calculate', 'calc'],
     name: 'Calculate',
-    description: 'Calculate a mathematical expression',
+    description: 'Calculate a mathematical expression. This sends the result with comma, you can use `--no-comma` option in end to get result without comma',
     usage: 'calculate <math expression>',
-    example: 'calc (1+1)/2',
+    example: 'calc (1+1)/2\ncalc 1000+2500 --no-comma',
 };
 
 export const config = {
