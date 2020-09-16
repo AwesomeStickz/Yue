@@ -96,12 +96,12 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     }
 
     if (isNaN(amountUserInvests)) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} The amount of item must be a number!`));
-    if (itemAmount < 1) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You can't buy less than 1 item!`));
-
+    
     const inventoryItemName = itemName.split(' ')[0].toLowerCase();
     const inventoryItemType = itemName.split(' ')[1]?.toLowerCase() ?? 'house';
-
+    
     let numberOfItemsToBuy = itemAmount > 0 ? Math.round(itemAmount) : Math.floor(amountUserInvests / itemPrice);
+    if (numberOfItemsToBuy < 1) return message.channel.send(shopBuyEmbed.setDescription(`${emojis.tickNo} You can't buy less than 1 item!`));
 
     const itemsInInventory = userEconomyData.inventory[`${inventoryItemType}s`] || {};
     const amountOfItemsInInventory = Number(Object.values(itemsInInventory).reduce((a: any, b: any) => a + b, 0));
