@@ -9,7 +9,7 @@
         "dotenv": "^8.2.0",
         "fuzzysort": "^1.1.4",
         "lodash": "^4.17.19",
-        "pg": "^8.3.0",
+        "pg": "^8.3.3",
         "pg-hstore": "^2.3.3",
         "pretty-ms": "^7.0.0",
         "sequelize": "^6.3.3",
