@@ -87,12 +87,14 @@ export const run = async (client: Client, oldMessage: Message, newMessage: Messa
         const networth = await utils.getNetworth(newMessage.author.id);
         await database.setProp('economy', newMessage.author.id, networth, 'networth');
 
-        db.query(/*sql*/ `
-            INSERT INTO command_stats
-            VALUES (DEFAULT, '${newMessage.author.id}', '${commandObj.help.name.toLowerCase()}', 1)
-            ON CONFLICT (user_id, command_name)
-            DO UPDATE SET command_uses = command_stats.command_uses + 1
-        `);
+        if (commandObj.config.owner !== true) {
+            db.query(/*sql*/ `
+                INSERT INTO command_stats
+                VALUES (DEFAULT, '${newMessage.author.id}', '${commandObj.help.name.toLowerCase()}', 1)
+                ON CONFLICT (user_id, command_name)
+                DO UPDATE SET command_uses = command_stats.command_uses + 1
+            `);
+        }
     } catch (error) {
         console.error(error);
     }
