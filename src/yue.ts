@@ -1,13 +1,13 @@
 import { Client, ClientEvents, Collection, DiscordAPIError } from 'discord.js';
 import 'dotenv/config';
 import fs from 'fs';
+import './database/index';
 import './database/sequelize';
 
 const client = new Client({ disableMentions: 'everyone', partials: ['MESSAGE'], messageCacheMaxSize: 30, messageCacheLifetime: 60, messageSweepInterval: 60 });
 
 export const commands = new Collection();
 export const aliases = new Collection();
-
 //Command handler
 fs.readdir('./commands/', (error, files) => {
     if (error) return console.error(error);
