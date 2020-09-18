@@ -12,7 +12,7 @@ const sequelize = new Sequelize(process.env.DATABASE_NAME!, process.env.DATABASE
 
 sequelize
     .authenticate()
-    .then(() => console.log('[Database]\tConnection has been established!'))
+    .then(() => console.log('[Database]\tConnection has been established with Sequelize!'))
     .catch((err) => console.error('Problem with connecting to database:', err));
 
 fs.readdir('./database/models/', (err, files) => {

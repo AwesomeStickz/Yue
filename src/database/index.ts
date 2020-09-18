@@ -4,7 +4,7 @@ import { Pool } from 'pg';
 const pool = new Pool();
 
 pool.connect()
-    .then(() => console.log('[Database]\tConnection has been established!'))
+    .then(() => console.log('[Database]\tConnection has been established with PG!'))
     .catch((err) => console.error('Problem with connecting to database:', err));
 
 fs.readdir('./database/tables/', (err, files) => {
