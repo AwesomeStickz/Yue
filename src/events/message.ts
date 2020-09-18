@@ -1,5 +1,6 @@
 import { Client, Message, PermissionResolvable } from 'discord.js';
 import prettyMs from 'pretty-ms';
+import { db } from '../database';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
@@ -82,6 +83,13 @@ export const run = async (client: Client, message: Message): Promise<Message | v
 
         const networth = await utils.getNetworth(message.author.id);
         await database.setProp('economy', message.author.id, networth, 'networth');
+
+        db.query(/*sql*/ `
+            INSERT INTO command_stats
+            VALUES (DEFAULT, '${message.author.id}', '${commandObj.help.name.toLowerCase()}', 1)
+            ON CONFLICT (user_id, command_name)
+            DO UPDATE SET command_uses = command_stats.command_uses + 1
+        `);
     } catch (error) {
         console.error(error);
     }
