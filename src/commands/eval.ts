@@ -4,6 +4,9 @@ import { Client, Message } from 'discord.js';
 export const run = async (message: Message, client: Client, args: string[]): Promise<Message | void> => {
     if (message.author.id !== '228182903140515841') return;
 
+    // @ts-expect-error
+    const { db } = require('../database/index');
+
     const clean = (text: string) => {
         if (typeof text === 'string') return text.replace(/`/g, '`' + String.fromCharCode(8203)).replace(/@/g, '@' + String.fromCharCode(8203));
         else return text;
