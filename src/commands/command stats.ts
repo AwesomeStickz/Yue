@@ -62,7 +62,7 @@ export const run = async (message: Message, client: Client, args: string[], pref
                 }
 
                 commandStatsEmbed.setDescription(leaderboardData.join(''));
-                commandStatsEmbed.setFooter(`Total Commands Used: ${totalCommandsUsed.rows[0].totaluses.toLocaleString()}`);
+                commandStatsEmbed.setFooter(`Total Commands Used: ${Number(totalCommandsUsed.rows[0].totaluses).toLocaleString()}`);
                 commandStatsEmbed.setAuthor(`Command Stats (Page ${currentPage}/${totalPages})`, client.user?.displayAvatarURL({ dynamic: true }));
 
                 if (currentPageUsed !== currentPage) {
