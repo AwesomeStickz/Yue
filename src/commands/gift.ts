@@ -129,6 +129,9 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
             // @ts-expect-error
             await database.addProp('economy', user.id, numberOfItemsToGive, `inventory.${itemName !== 'essence' ? `${inventoryItemType.toLowerCase()}s.` : ''}${inventoryItemName.toLowerCase()}`);
 
+            const receiverNetworth = await utils.getNetworth(user.id);
+            await database.setProp('economy', user.id, receiverNetworth, 'networth');
+
             validItem = true;
             giftEmbed.setDescription(`${emojis.tickYes} You gifted **${numberOfItemsToGive.toLocaleString()} ${fullItemName}** to **${user.username}**\n\n**${message.author.username}**'s new ${fullItemName} amount is **${authorNewItemAmount.toLocaleString()}**\n**${user.username}**'s new ${fullItemName} amount is **${userNewItemAmount.toLocaleString()}**`);
             message.channel.send(giftEmbed);

@@ -348,6 +348,9 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
                                             await database.setProp('cooldown', message.author.id, Date.now(), 'trade');
                                             await database.setProp('cooldown', member.id, Date.now(), 'trade');
 
+                                            const receiverNetworth = await utils.getNetworth(member.id);
+                                            await database.setProp('economy', member.id, receiverNetworth, 'networth');
+
                                             tempCache.delete(`pending_reply_${member.id}`);
 
                                             message.channel.send(makeEmbed().setDescription(`${emojis.tickYes} Trade was successful`));
