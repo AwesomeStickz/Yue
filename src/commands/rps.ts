@@ -6,7 +6,7 @@ import { emojis } from '../utils/emojis';
 import { tempCache } from '../utils/tempCache';
 import { utils } from '../utils/utils';
 
-export const run = async (message: Message, client: Client, args: string[]): Promise<Message | void> => {
+export const run = async (message: Message, _client: Client, args: string[]): Promise<Message | void> => {
     const { cooldown } = help;
 
     const lastRPS = tempCache.get(`rps_${message.author.id}`) || 0;
@@ -103,8 +103,6 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
                                                 if (!isNaN(amount)) {
                                                     await database.addProp('economy', message.author.id, amount, 'balance');
                                                     await database.subtractProp('economy', member.id, amount, 'balance');
-                                                    await database.addProp('economy', message.author.id, amount, 'winnings');
-                                                    await database.subtractProp('economy', member.id, amount, 'winnings');
                                                 }
                                             } else if (isDraw) {
                                                 message.channel.send(rpsEmbed.setDescription(`${member.toString()} chose ${memberChoiceEmoji}\n${message.author.toString()} chose ${authorChoiceEmoji}\n\nThe game has ended in a tie!`));
@@ -112,22 +110,8 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
                                                 message.channel.send(rpsEmbed.setDescription(`${member.toString()} chose ${memberChoiceEmoji}\n${message.author.toString()} chose ${authorChoiceEmoji}\n\n${member.toString()} won ${isNaN(amount) ? 'the Rock Paper Scissors!' : `**$${amount.toLocaleString()}**`}`));
 
                                                 if (!isNaN(amount)) {
-                                                    const lastGambleAuthor = tempCache.get(`gamble_${message.author.id}`) || 0;
-                                                    const lastGambleUser = tempCache.get(`gamble_${member.id}`) || 0;
-
-                                                    if (Date.now() - lastGambleAuthor > 60000) {
-                                                        tempCache.set(`gamble_${message.author.id}`, Date.now());
-                                                        await utils.updateLevel(message, client);
-                                                    }
-                                                    if (Date.now() - lastGambleUser > 60000) {
-                                                        tempCache.set(`gamble_${member.id}`, Date.now());
-                                                        await utils.updateLevel(collectedMessagesOfMember.first()!, client);
-                                                    }
-
                                                     await database.addProp('economy', member.id, amount, 'balance');
                                                     await database.subtractProp('economy', message.author.id, amount, 'balance');
-                                                    await database.addProp('economy', member.id, amount, 'winnings');
-                                                    await database.subtractProp('economy', message.author.id, amount, 'winnings');
                                                 }
                                             }
                                         } else {
