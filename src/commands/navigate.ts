@@ -53,7 +53,7 @@ export const run = async (message: Message, client: Client): Promise<Message | v
         for (const [navigatorName, amountOfEssence] of Object.entries(allNavigatorsEssence)) {
             if (navigators[navigatorName]) {
                 const navigatorAmount = navigators[navigatorName];
-                const essenceToAdd = Math.round(navigatorName !== 'bronze' ? (amountOfEssence as number) * navigatorAmount : (1250 * navigatorAmount) % 500 === 0 ? navigatorAmount * 3 : (navigatorAmount - 1) * 3 + 2);
+                const essenceToAdd = Math.round(navigatorName !== 'bronze' ? (amountOfEssence as number) * navigatorAmount : (1250 * navigatorAmount) % 500 === 0 ? navigatorAmount * 3 : navigatorAmount * 3 - 1);
 
                 totalEssence += essenceToAdd;
                 totalText += `${allNavigatorsEmoji[navigatorName]} ${navigatorAmount.toLocaleString()} ${navigatorName[0].toUpperCase()}${navigatorName.slice(1)} Navigator: **${essenceToAdd.toLocaleString()}** Essence\n`;
