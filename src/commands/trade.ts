@@ -1,6 +1,7 @@
 import { Client, Message, TextChannel } from 'discord.js';
 import fuzzysort from 'fuzzysort';
 import lodash from 'lodash';
+import prettyMs from 'pretty-ms';
 import { database } from '../utils/databaseFunctions';
 import { embed } from '../utils/embed';
 import { emojis } from '../utils/emojis';
@@ -75,6 +76,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     const pendingReplyEndingTimeOfAuthor = tempCache.get(`pending_reply_${message.author.id}`) || 0;
     if (pendingReplyEndingTimeOfAuthor > Date.now()) return message.channel.send(makeEmbed().setDescription(`${emojis.tickNo} ${message.author.toString()}, a command is already waiting for your reply so please send a reply to that if you want to execute this command!`));
 
+    const cooldown = 900000;
     const tradeEmbed = makeEmbed();
 
     const member = utils.getMember(args.shift()!, message.guild!);
@@ -84,6 +86,18 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 
     const userFinishedGetStarted = await database.getProp('economy', member.id, 'getstarted');
     if (!userFinishedGetStarted) return message.channel.send(tradeEmbed.setDescription(`${emojis.tickNo} You can't trade items with ${member.toString()} as they did not use \`get started\` command yet!`));
+
+    const lastTradeOfAuthor = (await database.getProp('cooldown', message.author.id, 'trade')) || 0;
+    const remainingCooldownForAuthor = cooldown - (Date.now() - lastTradeOfAuthor);
+    const remainingTimeForAuthor = remainingCooldownForAuthor > 1000 ? prettyMs(remainingCooldownForAuthor, { secondsDecimalDigits: 0, verbose: true }) : `${(remainingCooldownForAuthor / 1000).toFixed(1)} seconds`;
+
+    if (remainingCooldownForAuthor > 0) return message.channel.send(tradeEmbed.setDescription(`You recently traded with someone so you can't trade with anyone for the next ${remainingTimeForAuthor}!`));
+
+    const lastTradeOfUser = (await database.getProp('cooldown', member.id, 'trade')) || 0;
+    const remainingCooldownForUser = cooldown - (Date.now() - lastTradeOfUser);
+    const remainingTimeForUser = remainingCooldownForUser > 1000 ? prettyMs(remainingCooldownForUser, { secondsDecimalDigits: 0, verbose: true }) : `${(remainingCooldownForUser / 1000).toFixed(1)} seconds`;
+
+    if (remainingCooldownForUser > 0) return message.channel.send(tradeEmbed.setDescription(`${member.toString()} recently traded with someone so they can't trade with anyone for the next ${remainingTimeForUser}!`));
 
     const totalItemsAuthorGives: { itemName: string; itemFullName: string | null; itemType: string | null; itemAmount: number }[] = [];
     const totalItemsUserGives: { itemName: string; itemFullName: string | null; itemType: string | null; itemAmount: number }[] = [];
@@ -330,6 +344,9 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 
                                             await database.set('economy', message.author.id, authorEconomyData);
                                             await database.set('economy', member.id, userEconomyData);
+
+                                            await database.setProp('cooldown', message.author.id, Date.now(), 'trade');
+                                            await database.setProp('cooldown', member.id, Date.now(), 'trade');
 
                                             tempCache.delete(`pending_reply_${member.id}`);
 
