@@ -1,6 +1,6 @@
 import { db } from '..';
 
-db.query(/* sql */ `
+db.query(`
     CREATE TABLE IF NOT EXISTS command_stats (
         id BIGSERIAL PRIMARY KEY,
 
@@ -9,5 +9,5 @@ db.query(/* sql */ `
         command_uses bigint NOT NULL,
 
         UNIQUE(user_id, command_name)
-    )
+    );
 `);

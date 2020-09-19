@@ -85,11 +85,11 @@ export const run = async (client: Client, message: Message): Promise<Message | v
         await database.setProp('economy', message.author.id, networth, 'networth');
 
         if (commandObj.config.owner !== true) {
-            db.query(/*sql*/ `
+            db.query(`
                 INSERT INTO command_stats
                 VALUES (DEFAULT, '${message.author.id}', '${commandObj.help.name.toLowerCase()}', 1)
                 ON CONFLICT (user_id, command_name)
-                DO UPDATE SET command_uses = command_stats.command_uses + 1
+                DO UPDATE SET command_uses = command_stats.command_uses + 1;
             `);
         }
     } catch (error) {
