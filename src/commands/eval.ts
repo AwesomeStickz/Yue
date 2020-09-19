@@ -11,7 +11,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 
     try {
         const code = args.join(' ');
-        let evaled = eval(code);
+        let evaled = await eval(code);
 
         if (typeof evaled !== 'string') evaled = require('util').inspect(evaled);
         if (evaled.includes(process.env.TOKEN)) return message.channel.send(`\`\`\`js\n${'NDM4NDM4MzgzMzY3MzU2NDE2.DjEOFg.Qhu4upnvn_C5feYz2wsdN09QKUI'}\`\`\``);
