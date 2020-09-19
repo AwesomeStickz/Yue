@@ -59,7 +59,7 @@ export const run = async (client: Client) => {
                     const timeBotSentMoneyDrop = Date.now();
 
                     (moneyDropChannel as TextChannel)
-                        .awaitMessages((msg) => !msg.author.bot && msg.content === moneyDropCode, { max: 1, time: 30000, errors: ['time'] })
+                        .awaitMessages((msg) => !msg.author.bot && msg.content === moneyDropCode, { max: 1, time: 180000, errors: ['time'] })
                         .then(async (collected) => {
                             const respondedMember = collected.first()!.member;
 
