@@ -25,7 +25,10 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     calculatorEmbed.setFooter('Yue');
     calculatorEmbed.setTimestamp();
 
-    message.channel.send(calculatorEmbed.setDescription(`${expression} = ${evaluatedExpression === Infinity ? 'Infinity' : args.find((arg) => arg.toLowerCase() === '--no-comma') ? BigInt(evaluatedExpression).toString() : BigInt(evaluatedExpression).toLocaleString()}`));
+    // @ts-expect-error
+    if (evaluatedExpression > Number.MAX_SAFE_INTEGER) evaluatedExpression = evaluatedExpression === Infinity ? 'Infinity' : BigInt(Math.round(evaluatedExpression));
+
+    message.channel.send(calculatorEmbed.setDescription(`${expression} = ${args.find((arg) => arg.toLowerCase() === '--no-comma') ? evaluatedExpression.toString() : evaluatedExpression.toLocaleString()}`));
 };
 
 export const help = {
