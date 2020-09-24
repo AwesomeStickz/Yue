@@ -21,7 +21,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 };
 
 export const help = {
-    aliases: ['bot clean'],
+    aliases: ['bot clean', 'bc'],
     name: 'Bot Clean',
     description: 'Clean messages of bots from a channel',
     usage: 'bot clean [number of bot messages to delete]',
