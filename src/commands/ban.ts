@@ -39,7 +39,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
                     color: '#fef4b5',
                     fields: [
                         { name: 'Moderator', value: message.author.tag },
-                        { name: 'Reason', value: reason === `${message.author.tag} used ban command` ? 'None Given' : reason },
+                        { name: 'Reason', value: reason === `${message.author.tag} used ban command` ? 'None Given' : reason.slice(`${message.author.tag}: `.length) },
                     ],
                     timestamp: true,
                 });
