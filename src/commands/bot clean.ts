@@ -17,7 +17,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
         .filter((m) => m.author.bot)
         .first(limit);
 
-    (message.channel as TextChannel).bulkDelete(fetched).then((deleted) => message.channel.send(botCleanEmbed.setDescription(`${emojis.tickYes} Cleaned **${deleted.size}** bot messages!`)).then((deletedResponseMessage) => deletedResponseMessage.delete({ timeout: 1500 })));
+    (message.channel as TextChannel).bulkDelete(fetched).then((deleted) => message.channel.send(botCleanEmbed.setDescription(`${emojis.tickYes} Cleaned **${deleted.size}** bot messages!`)).then((deletedResponseMessage) => deletedResponseMessage.delete({ timeout: 1000 })));
 };
 
 export const help = {
@@ -29,7 +29,7 @@ export const help = {
 };
 
 export const config = {
-    args: 1,
+    args: 0,
     botPermissions: ['Manage Messages'],
     userPermissions: ['Manage Messages'],
     category: 'moderation',
