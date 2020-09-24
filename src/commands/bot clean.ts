@@ -21,11 +21,11 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
 };
 
 export const help = {
-    aliases: ['ban'],
-    name: 'Ban',
-    description: 'Ban a user from your server',
-    usage: 'ban <user> [reason]',
-    example: 'ban @Conor#0751',
+    aliases: ['bot clean'],
+    name: 'Bot Clean',
+    description: 'Clean messages of bots from a channel',
+    usage: 'bot clean [number of bot messages to delete]',
+    example: 'bot clean\nbot clean 5',
 };
 
 export const config = {
