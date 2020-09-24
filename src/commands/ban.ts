@@ -16,7 +16,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
     if (!user) return message.channel.send(banEmbed.setDescription(`${emojis.tickNo} I couldn't find that user`));
 
     const member = utils.getMember(user.id, message.guild!);
-    const reason = args.slice(1).join(' ') || `${message.author.tag} used ban command`;
+    const reason = `${message.author.tag}: ${args.slice(1).join(' ')}` || `${message.author.tag} used ban command`;
 
     if (member) {
         const userNotOwner = message.guild!.ownerID !== user.id;

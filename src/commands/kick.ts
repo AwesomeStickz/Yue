@@ -15,7 +15,7 @@ export const run = async (message: Message, _client: Client, args: string[]): Pr
     const member = utils.getMember(args[0], message.guild!);
     if (!member) return message.channel.send(kickEmbed.setDescription(`${emojis.tickNo} I couldn't find that user!`));
 
-    const reason = args.slice(1).join(' ') || `${message.author.tag} used kick command`;
+    const reason = `${message.author.tag}: ${args.slice(1).join(' ')}` || `${message.author.tag} used kick command`;
 
     const memberNotOwner = message.guild!.ownerID !== member.id;
     const authorNotOwner = message.guild!.ownerID !== message.author.id;
