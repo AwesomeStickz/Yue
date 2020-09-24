@@ -65,6 +65,8 @@ export const run = async (client: Client) => {
 
                             await database.addProp('economy', respondedMember!.id, moneyDropAmount, 'balance');
 
+                            moneyDropEmbed.setTimestamp();
+
                             try {
                                 const timeUserSentReply = Date.now();
                                 if (timeUserSentReply - timeBotSentMoneyDrop < 5000)
