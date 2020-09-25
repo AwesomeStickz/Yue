@@ -93,7 +93,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
                 .awaitMessages(
                     (msg: Message) =>
                         !msg.author.bot && msg.author.id === message.author.id && (forwardPageValidResponses.includes(msg.content?.toLowerCase()) || backPageValidResponses.includes(msg.content?.toLowerCase()) || msg.content?.toLowerCase().startsWith('go to') || help.aliases.filter((alias) => msg.content?.toLowerCase().slice(prefix.length).startsWith(alias)).length > 0),
-                    { max: 1, time: 15000, errors: ['time'] }
+                    { max: 1, time: 30000, errors: ['time'] }
                 )
                 .then(async (collected) => {
                     const response = collected.first()?.content.toLowerCase();
