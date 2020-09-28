@@ -83,9 +83,9 @@ export const run = async (client: Client) => {
         }
     };
 
-    const sweepChannels = () => {
-        client.channels.cache.sweep((channel) => channel.type !== 'text');
-    };
+    // const sweepChannels = () => {
+    //     client.channels.cache.sweep((channel) => channel.type !== 'text');
+    // };
 
     const removeBoosters = async () => {
         const allEconomyData: any = await database.all('economy');
@@ -103,6 +103,6 @@ export const run = async (client: Client) => {
 
     setInterval(changeStatus, 20000);
     setInterval(moneyDrop, 300000);
-    setInterval(sweepChannels, 300000);
+    // setInterval(sweepChannels, 300000);
     setInterval(removeBoosters, 60000);
 };
