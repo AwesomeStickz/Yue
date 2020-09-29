@@ -11,7 +11,7 @@ export const run = async (message: Message, client: Client) => {
         color: message.guild?.me?.displayHexColor,
     });
     const pingMessage = await message.channel.send(pingEmbed.setDescription(`${emojis.typing} Pinging...`));
-    pingMessage.edit(pingEmbed.setDescription(`Pong! Latency is ${pingMessage.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(client.ws.ping)}ms`));
+    pingMessage.edit(pingEmbed.setDescription(`Pong! Latency is ${pingMessage.createdTimestamp - (message.editedTimestamp ?? message.createdTimestamp)}ms. API Latency is ${Math.round(client.ws.ping)}ms`));
 };
 
 export const help = {
