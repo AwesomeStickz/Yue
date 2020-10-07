@@ -130,9 +130,7 @@ export const run = async (message: Message, client: Client, args: string[], pref
 
                         if (helpEmbedMessage) {
                             await helpEmbedMessage.edit(helpEmbed);
-                            try {
-                                await messageToDelete?.delete();
-                            } catch (_) {}
+                            if (messageToDelete?.deletable) await messageToDelete?.delete();
                         } else {
                             helpEmbedMessage = await message.channel.send(helpEmbed);
                         }

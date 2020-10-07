@@ -76,9 +76,7 @@ export const run = async (message: Message, client: Client, args: string[]): Pro
                         currentPageUsed = currentPage;
                         if (leaderboardEmbedMessage) {
                             await leaderboardEmbedMessage.edit(leaderboardEmbed);
-                            try {
-                                await messageToDelete?.delete();
-                            } catch (_) {}
+                            if (messageToDelete?.deletable) await messageToDelete?.delete();
                         } else {
                             leaderboardEmbedMessage = await message.channel.send(leaderboardEmbed);
                         }
