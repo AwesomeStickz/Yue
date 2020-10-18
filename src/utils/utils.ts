@@ -245,7 +245,7 @@ export const utils = {
 
         const helpEmbed = embed({
             author: {
-                image: client.user?.displayAvatarURL({ dynamic: true }),
+                image: client.user?.displayAvatarURL(),
                 name: commandInfo.help.name,
             },
             color: message.guild?.me?.displayHexColor,
@@ -256,7 +256,7 @@ export const utils = {
             ],
             footer: 'Yue',
             timestamp: true,
-            thumbnail: client.user!.displayAvatarURL({ dynamic: true }),
+            thumbnail: client.user!.displayAvatarURL(),
         });
 
         if (commandInfo.config.owner === true) return;
