@@ -10,13 +10,13 @@ export const run = async (message: Message, client: Client, args: string[], pref
     const categories = ['bot', 'economy', 'image', 'moderation'];
     const helpEmbed = embed({
         author: {
-            image: client.user?.displayAvatarURL({ dynamic: true }),
+            image: client.user?.displayAvatarURL(),
             name: 'Yue Bot: Help',
         },
         color: message.guild?.me?.displayHexColor,
         footer: 'Yue',
         timestamp: true,
-        thumbnail: client.user!.displayAvatarURL({ dynamic: true }),
+        thumbnail: client.user!.displayAvatarURL(),
     });
 
     if (!args[0] || !isNaN(Number(args[0]))) {
@@ -51,7 +51,7 @@ export const run = async (message: Message, client: Client, args: string[], pref
                 if (currentPageUsed !== currentPage) {
                     currentPageUsed = currentPage;
 
-                    helpEmbed.setAuthor(title, client.user!.displayAvatarURL({ dynamic: true }));
+                    helpEmbed.setAuthor(title, client.user!.displayAvatarURL());
                     helpEmbed.setDescription(helpMenuText);
 
                     if (helpEmbedMessage) {
@@ -125,7 +125,7 @@ export const run = async (message: Message, client: Client, args: string[], pref
                     if (currentPageUsed !== currentPage) {
                         currentPageUsed = currentPage;
 
-                        helpEmbed.setAuthor(title, client.user!.displayAvatarURL({ dynamic: true }));
+                        helpEmbed.setAuthor(title, client.user!.displayAvatarURL());
                         helpEmbed.setDescription(helpMenuText);
 
                         if (helpEmbedMessage) {
