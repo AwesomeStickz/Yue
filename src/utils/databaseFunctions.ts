@@ -1,7 +1,7 @@
 import lodash from 'lodash';
 import sequelize from '../database/sequelize';
 
-type DatbaseModelNames = 'blacklist' | 'cooldown' | 'economy' | 'guildsettings' | 'yue';
+type DatabaseModelNames = 'blacklist' | 'cooldown' | 'economy' | 'guildsettings' | 'yue';
 type PropertyNames =
     | 'balance'
     | 'bank'
@@ -38,19 +38,19 @@ type PropertyNames =
     | 'work';
 
 export const database = {
-    async all(model: DatbaseModelNames) {
+    async all(model: DatabaseModelNames) {
         const total = await sequelize.models[model].findAll({ attributes: ['userid', 'data'], raw: true });
         return total;
     },
 
-    async delete(model: DatbaseModelNames, userid: string) {
+    async delete(model: DatabaseModelNames, userid: string) {
         const deleted = await sequelize.models[model].destroy({ force: true, where: { userid } });
 
         if (deleted !== 0) return true;
         else return false;
     },
 
-    async deleteProp(model: DatbaseModelNames, userid: string, prop: PropertyNames) {
+    async deleteProp(model: DatabaseModelNames, userid: string, prop: PropertyNames) {
         const exist = (await this.get(model, userid)) || {};
         lodash.unset(exist, prop);
 
@@ -58,19 +58,19 @@ export const database = {
         else return await this.delete(model, userid);
     },
 
-    async get(model: DatbaseModelNames, userid: string) {
+    async get(model: DatabaseModelNames, userid: string) {
         const result: any = (await sequelize.models[model].findOne({ attributes: ['data'], raw: true, where: { userid } })) || { data: null };
 
         return result.data;
     },
 
-    async getProp(model: DatbaseModelNames, userid: string, prop: PropertyNames) {
+    async getProp(model: DatabaseModelNames, userid: string, prop: PropertyNames) {
         const result: any = (await sequelize.models[model].findOne({ attributes: ['data'], raw: true, where: { userid } })) || { data: null };
 
         return lodash.get(result.data, prop);
     },
 
-    async set(model: DatbaseModelNames, userid: string, data: any) {
+    async set(model: DatabaseModelNames, userid: string, data: any) {
         let exist = await this.get(model, userid);
         if (exist === 0 || exist === '') exist = true;
 
@@ -78,7 +78,7 @@ export const database = {
         else await sequelize.models[model].create({ userid, data });
     },
 
-    async setProp(model: DatbaseModelNames, userid: string, data: any, prop: PropertyNames) {
+    async setProp(model: DatabaseModelNames, userid: string, data: any, prop: PropertyNames) {
         let exist = await this.get(model, userid);
         if (exist === 0 || exist === '') exist = true;
         if (typeof exist !== 'object' || exist == null) exist = {};
@@ -88,7 +88,7 @@ export const database = {
         await this.set(model, userid, obj);
     },
 
-    async add(model: DatbaseModelNames, userid: string, number: number | string) {
+    async add(model: DatabaseModelNames, userid: string, number: number | string) {
         let exist = await this.get(model, userid);
         if (exist === 0 || exist === '') exist = true;
 
@@ -98,7 +98,7 @@ export const database = {
         else await sequelize.models[model].create({ userid, data: number });
     },
 
-    async addProp(model: DatbaseModelNames, userid: string, number: number | string, prop: PropertyNames) {
+    async addProp(model: DatabaseModelNames, userid: string, number: number | string, prop: PropertyNames) {
         let exist = (await this.get(model, userid)) || {};
         if (exist === 0 || exist === '') exist = true;
 
@@ -110,7 +110,7 @@ export const database = {
         await this.set(model, userid, obj);
     },
 
-    async subtract(model: DatbaseModelNames, userid: string, number: number | string) {
+    async subtract(model: DatabaseModelNames, userid: string, number: number | string) {
         let exist = await this.get(model, userid);
         if (exist === 0 || exist === '') exist = true;
 
@@ -120,7 +120,7 @@ export const database = {
         else await sequelize.models[model].create({ userid, data: -number });
     },
 
-    async subtractProp(model: DatbaseModelNames, userid: string, number: number | string, prop: PropertyNames) {
+    async subtractProp(model: DatabaseModelNames, userid: string, number: number | string, prop: PropertyNames) {
         let exist = (await this.get(model, userid)) || {};
         if (exist === 0 || exist === '') exist = true;
 
